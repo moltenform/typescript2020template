@@ -5,6 +5,7 @@ from ts_parsing import *
 
 # extensionInImportStatement = '.ts'
 extensionInImportStatement = ''
+useSingleQuotes = True
 
 def go(dir):
     assertTrue(files.isdir(dir), 'directory not found', dir)
@@ -75,7 +76,8 @@ def autoAddImports(srcdirectory, layers):
         for parts in whatToAdd:
             theImports = parts[1:]
             importFromFile = getImportFromFile(srcdirectory, layerfullpath, parts[0])
-            s = f'''/* auto */ import {{ {', '.join(theImports)} }} from '{importFromFile}';'''
+            quote = "'" if useSingleQuotes else '"'
+            s = f'''/* auto */ import {{ {', '.join(theImports)} }} from {quote}{importFromFile}{quote};'''
             newLinesToAdd.append(s)
         
         if newLinesToAdd:
