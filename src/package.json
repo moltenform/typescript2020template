@@ -1,0 +1,49 @@
+{
+  "name": "typescript2020template",
+  "version": "0.0.1",
+  "author": "moltenform.com (Ben Fisher)",
+  "license": "GPL-3.0-or-later",
+  "description": "a template for typescript",
+  "scripts": {
+    "start": "webpack-dev-server --progress --color --mode development --config webpack.config.development.js",
+    "prebuild": "rimraf ./dist/*",
+    "build": "webpack --color --mode production --config webpack.config.production.js",
+    "buildstyle": "npx sass src/style:static/style",
+    "buildstylewatch": "npx sass --watch src/style:static/style",
+    "autoimportmodules": "cd ../tools/typescript-super-auto-import && main.py",
+    "prettierexceptlongimports": "cd ../tools/prettier-except-long-imports && main.py",
+    "lint": "eslint ./",
+    "lint-rule-timings": "cross-env TIMING=1 yarn lint"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "fork-ts-checker-notifier-webpack-plugin": "^2.0.0",
+    "fork-ts-checker-webpack-plugin": "^4.1.0",
+    "html-webpack-plugin": "next",
+    "prettier": "1.19.1",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.3",
+    "ts-loader": "^6.2.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "@types/number-to-words": "^1.2.0",
+    "core-js": "^3.6.4",
+    "number-to-words": "^1.2.4",
+    "serializer.ts": "0.0.12",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "repository": {
+    "private": true
+  }
+}
