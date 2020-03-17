@@ -1,9 +1,9 @@
 {
   "name": "typescript2020template",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "moltenform.com (Ben Fisher)",
-  "license": "GPL-3.0-or-later",
-  "description": "a template for typescript",
+  "license": "MIT",
+  "description": "how I start a typescript webapp in 2020",
   "scripts": {
     "start": "webpack-dev-server --progress --color --mode development --config webpack.config.development.js",
     "prebuild": "rimraf ./dist/*",
@@ -44,6 +44,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "repository": {
-    "private": true
+    "type": "git",
+    "url": "git+https://github.com/moltenform/typescript2020template.git"
   }
 }
