@@ -10,8 +10,8 @@
     "build": "webpack --color --mode production --config webpack.config.production.js",
     "buildstyle": "npx sass src/style:static/style",
     "buildstylewatch": "npx sass --watch src/style:static/style",
-    "autoimportmodules": "cd ../tools/typescript-super-auto-import && main.py",
-    "prettierexceptlongimports": "cd ../tools/prettier-except-long-imports && main.py",
+    "autoimportmodules": "cd tools/typescript-super-auto-import && main.py",
+    "prettierexceptlongimports": "cd tools/prettier-except-long-imports && main.py",
     "lint": "eslint ./",
     "lint-rule-timings": "cross-env TIMING=1 yarn lint"
   },
