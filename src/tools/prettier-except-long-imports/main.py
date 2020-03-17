@@ -7,6 +7,7 @@ prettierPath = '../../src/node_modules/prettier/bin-prettier.js'
 prettierCfg = '../../src/.prettierrc.js'
 
 def go(srcdirectory):
+    assertTrue(files.isdir(srcdirectory), 'directory not found', srcdirectory)
     goPrettierAll(srcdirectory)
 
 def goPrettierAll(srcdirectory):
@@ -34,6 +35,6 @@ def goPrettier(f):
             files.writeall(f, alltxtNew, encoding='utf-8')
 
 if __name__ == '__main__':
-    dir = os.path.abspath('../../src/src')
+    dir = os.path.abspath('../../src')
     go(dir)
 

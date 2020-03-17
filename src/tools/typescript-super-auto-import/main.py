@@ -7,6 +7,7 @@ from ts_parsing import *
 extensionInImportStatement = ''
 
 def go(dir):
+    assertTrue(files.isdir(dir), 'directory not found', dir)
     confirmNoDuplicateFilenames(dir)
     layers, filesReferencedInLayers, filenamesReferencedInLayers = readLayersFile(dir)
     confirmLayersIncludesFiles(dir, filenamesReferencedInLayers)
@@ -124,5 +125,5 @@ def enforceLayering(srcdirectory):
 
 
 if __name__ == '__main__':
-    dir = os.path.abspath('../../src/src')
+    dir = os.path.abspath('../../src')
     go(dir)
