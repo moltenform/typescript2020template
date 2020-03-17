@@ -3,8 +3,8 @@
 from place_imports_one_line import *
 
 doPlaceImportsOnOneLine = True
-prettierPath = '../../src/node_modules/prettier/bin-prettier.js'
-prettierCfg = '../../src/.prettierrc.js'
+prettierPath = '../../node_modules/prettier/bin-prettier.js'
+prettierCfg = '../../.prettierrc.js'
 
 def go(srcdirectory):
     assertTrue(files.isdir(srcdirectory), 'directory not found', srcdirectory)
