@@ -1,0 +1,10 @@
+
+
+beginTestCategory('testBenBaseUtilsClass')
+
+registerTest('abc', () => {
+    
+    
+})
+
+
