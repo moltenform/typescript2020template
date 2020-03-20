@@ -3,6 +3,9 @@
 // https://github.com/facebook/create-react-app/blob/master/packages/eslint-config-react-app/index.js
 // https://medium.com/@dors718/linting-your-react-typescript-project-with-eslint-and-prettier-2423170c3d42
 
+// to run it from a shell
+// node ..\node_modules\eslint\bin\eslint.js -c ..\.eslintrc.js *.ts
+
 const path = require('path');
 module.exports = {
     parser: '@typescript-eslint/parser', // Specifies the ESLint parser
@@ -31,14 +34,23 @@ module.exports = {
         }
     },
     rules: {
-        // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+        // Place to specify ESLint rules.
+        // Can be used to overwrite rules specified from the extended configs
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/class-name-casing': 'off',
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/triple-slash-reference': 'off',
+        '@typescript-eslint/no-inferrable-types': 'off',
+        '@typescript-eslint/no-unused-vars': 'off', // check locals, not fn params. typescript 6133 takes care of it
+        '@typescript-eslint/prefer-nullish-coalescing': ["error", { // still doesn't catch en.attrs['AC'] || ''; for some reason
+            ignoreConditionalTests: false,
+            ignoreMixedLogicalExpressions: false,
+            forceSuggestionFixer: false,
+          },],
         'prefer-const': 'off',
+        'eqeqeq': 'warn',
     },
     settings: {
     }

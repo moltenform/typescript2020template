@@ -6,8 +6,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const main = [
-    'core-js',
-    'whatwg-fetch',
     './src/bwmain.ts'
 ];
 
