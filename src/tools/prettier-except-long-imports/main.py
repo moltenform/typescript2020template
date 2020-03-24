@@ -2,7 +2,7 @@
 
 from place_imports_one_line import *
 import check_for_null_coalesce
-import check_for_call_and_apply
+import check_for_apply
 
 doPlaceImportsOnOneLine = True
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
@@ -40,7 +40,7 @@ def goPrettier(f):
     text = files.readall(f, encoding='utf-8')
     lines = text.split('\n')
     check_for_null_coalesce.checkText(f, lines)
-    check_for_call_and_apply.checkText(f, lines)
+    check_for_apply.checkText(f, lines)
 
 if __name__ == '__main__':
     dir = os.path.abspath('../../src')
