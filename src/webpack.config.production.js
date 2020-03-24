@@ -1,3 +1,6 @@
+
+// we're not actually in a typescript environment, this is just a config file,
+// so safe to disable the warnings about require statements
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -5,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const main = [
-    './src/bwmain.ts'
+    './src/code/bwmain.ts'
 ];
 
 module.exports = {

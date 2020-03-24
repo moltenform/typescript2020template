@@ -43,12 +43,15 @@ module.exports = {
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/triple-slash-reference': 'off',
         '@typescript-eslint/no-inferrable-types': 'off',
+        '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-unused-vars': 'off', // check locals, not fn params. typescript 6133 takes care of it
         '@typescript-eslint/prefer-nullish-coalescing': ["error", { // still doesn't catch en.attrs['AC'] || ''; for some reason
             ignoreConditionalTests: false,
             ignoreMixedLogicalExpressions: false,
             forceSuggestionFixer: false,
           },],
+        'no-useless-call': 'warn', // don't needlessly have a call() or apply()
+        'prefer-spread': 'warn', // apply() is dangerous because there are max arg limits
         'prefer-const': 'off',
         'eqeqeq': 'warn',
     },

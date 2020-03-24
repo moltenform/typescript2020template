@@ -40,6 +40,7 @@
     - run `npm run autoimportmodules`
 - run prettier on all files, and then put long imports back on one line
     - run `npm run prettierexceptlongimports`
+    - also checks for nullable coalesce
 - code knows if built as release or not
     - use `checkIsRelease()`
 - set output bundle filename so that it can be incremented when updated?
@@ -59,4 +60,6 @@
     - hit the "go async" test button
 
 A few other scripts can be found and run the same way, in the "scripts" section of `package.json`.
+
+
 

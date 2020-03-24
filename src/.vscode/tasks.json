@@ -1,0 +1,43 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    // hit ctrl-shift-b to show these
+    // nevermind the problem matcher, just ctrl-click the error message to be taken there
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "autoimportmodules",
+            "type": "shell",
+            "command": "npm run autoimportmodules",
+            "windows": {
+                "command": "C:\\data\\e5\\unzipped\\software\\Coding\\node-v12.16.1-win-x64\\npm run autoimportmodules"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "prettierexceptlongimports",
+            "type": "shell",
+            "command": "npm run prettierexceptlongimports",
+            "windows": {
+                "command": "C:\\data\\e5\\unzipped\\software\\Coding\\node-v12.16.1-win-x64\\npm run prettierexceptlongimports"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": []
+        },
+    ]
+  }
