@@ -55,6 +55,7 @@ module.exports = {
         clientLogLevel: 'warning',
         open: true,
         historyApiFallback: true,
-        stats: 'errors-only'
+        stats: 'errors-only',
+        liveReload: false, // auto-refresh browser on changes
     }
 };
