@@ -19,21 +19,26 @@ so since our prettier rules put semicolons on everything,
 a good rule of thumb is:
 if the line ends with a ; it should not have a ||
 '''
-
+    
 def simpleStripComments(s):
-    # note: doesn't check for string context, nested /*, or anything more complicated
-    
-    # remove multiline comments
-    parts = re.split(r'\/\*|\*\/', s)
-    
-    # keep only every other (in case there are many /* */ pairs)
-    parts = parts[::2]
-    s = ''.join(parts)
-    
+    s = simpleStripMultilineComments(s, '/*', '*/')
     # remove line comment
     s = s.split('//')[0]
-    
     return s
+
+def simpleStripMultilineComments(text, open, close):
+    # still fails on strings, but handles complicated/nested cases better
+    while True:
+        fnd = text.find(open)
+        if (fnd == -1):
+            return text
+
+        cls = text[fnd:].find(close)
+        if (cls == -1):
+            return text[0: fnd]
+
+        cls += fnd + len(close)
+        text = text[0: fnd] + text[cls:]
     
 def shouldWarnThisLine(line):
     withoutComments = simpleStripComments(line)
@@ -60,6 +65,19 @@ def checkText(f, lines):
                 warn('saw a || a context that looks like nullish-coalescing')
 
 def tests():
+    assertEq('abefij', simpleStripComments('ab/* cd */ef/* gh */ij'))
+    assertEq('abefij', simpleStripComments('ab/* /*cd */ef/* gh */ij'))
+    assertEq('abefij', simpleStripComments('ab/* /*c /*d */ef/* gh */ij'))
+    assertEq('abefij */', simpleStripComments('ab/* /*cd */ef/* gh */ij */'))
+    assertEq('abefij */i', simpleStripComments('ab/* /*cd */ef/* gh */ij */i'))
+    assertEq('abef', simpleStripComments('ab/* cd */ef/* gh ij'))
+    assertEq('', simpleStripComments('/*ab cd ef gh ij'))
+    assertEq('', simpleStripComments('/*ab cd /* ef gh ij'))
+    assertEq('', simpleStripComments('/*ab cd /* ef gh ij*/'))
+    assertEq('', simpleStripComments('/**/'))
+    assertEq('', simpleStripComments('/**//**//**/'))
+    assertEq('ab', simpleStripComments('a/**//**//**/b'))
+    assertEq('ab', simpleStripComments('a/*b*//*c*//*d*/b'))
     assertEq('', simpleStripComments(''))
     assertEq('abc', simpleStripComments('abc'))
     assertEq('abc def', simpleStripComments('abc def'))
