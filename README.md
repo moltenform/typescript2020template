@@ -42,6 +42,8 @@ The template comes with these [contents](./src/contents.md).
   
 * Use `node serve.js` to serve, with the contents
 ```
+// npm install --save-dev connect
+// npm install --save-dev serve-static
 let connect = require('connect');
 let serveStatic = require('serve-static');
 
