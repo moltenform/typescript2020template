@@ -1,6 +1,8 @@
 
 
 from place_imports_one_line import *
+import check_for_null_coalesce
+import check_for_call_and_apply
 
 doPlaceImportsOnOneLine = True
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
@@ -16,7 +18,7 @@ def goPrettierAll(srcdirectory):
         if short.endswith('.ts') and not short.endswith('.d.ts'):
             trace(f)
             goPrettier(f)
-            
+
 def goPrettier(f):
     # first, run prettier
     assertTrue(files.exists(prettierPath), prettierPath)
@@ -33,6 +35,12 @@ def goPrettier(f):
         if alltxt != alltxtNew:
             print('placing import {} back all on one line')
             files.writeall(f, alltxtNew, encoding='utf-8')
+    
+    # check for disallowed calls
+    text = files.readall(f, encoding='utf-8')
+    lines = text.split('\n')
+    check_for_null_coalesce.checkText(f, lines)
+    check_for_call_and_apply.checkText(f, lines)
 
 if __name__ == '__main__':
     dir = os.path.abspath('../../src')
