@@ -1,8 +1,11 @@
 
-/*auto */ import { isRelease } from '../../config.js';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './benBaseUtilsProductname';
+
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
+
+const isRelease = false
 
 
 /**
@@ -288,6 +291,14 @@ export function joinIntoMessage(c0: string, prefix: string, s1?: any, s2?: any, 
  * an error that can be attached with markUI512Err
  */
 export interface UI512AttachableErr {}
+
+/**
+get last of an array
+*/
+export function last<T>(ar:T[]): T{
+    assertTrue(ar.length >= 1, "empty array")
+    return ar[ar.length - 1];
+}
 
 /**
  * break into debugger. V8 js perf sometimes hurt if seeing a debugger statement, so separate it here.

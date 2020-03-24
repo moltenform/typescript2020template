@@ -1,18 +1,18 @@
 
-/* auto */ import { checkIsRelease, range, repeat } from './utils/bwtuiutils';
-/* auto */ import { runAllTests } from './bwtests';
+/* auto */ import { sleep } from './../util/benBaseUtilsHigher';
+/* auto */ import { Util512 } from './../util/benBaseUtils';
 
 ///<reference path="./bowser.d.ts"/>
 declare const bowser: typeof Bowser;
 
 import { toWords } from 'number-to-words';
+import { BenBaseTests } from '../test/testUtils';
 
 function getTestString() {
-    let s1 = repeat(4, 'a').join('_');
-    let s2 = range(1, 5);
+    let s1 = Util512.repeat(4, 'a').join('_');
+    let s2 = Util512.range(1, 5);
     let s3 = toWords(13);
-    let s4 = checkIsRelease() ? 'release' : 'dev';
-    return [s1, s2, s3, s4].join('<br/>');
+    return [s1, s2, s3].join('<br/>');
 }
 
 export function setOutputToTestString() {
@@ -20,10 +20,6 @@ export function setOutputToTestString() {
     if (el) {
         el.innerHTML = getTestString();
     }
-}
-
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function onBtnGoAsync() {
@@ -61,8 +57,8 @@ export function runOnLoad() {
     }
 
     document.body.addEventListener('keydown', evt => {
-        if (evt.code == 'KeyT' && evt.altKey) {
-            runAllTests();
+        if (evt.code === 'KeyT' && evt.altKey) {
+            BenBaseTests.runAllSynchronousTests();
         }
     });
 

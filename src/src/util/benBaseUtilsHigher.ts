@@ -1,5 +1,7 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './benBaseUtilsAssert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512 } from './benBaseUtils';
+
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
@@ -31,16 +33,16 @@ export class Util512Higher {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
     }
-    
+
     /**
      * random number between min and max, inclusive
      */
     static getRandIntInclusiveStrong(min: number, max: number) {
-        assertTrue(min >= 1 && max >= 1);
+        assertTrue(min >= 1 && max >= 1, "getRandIntInclusiveStrong must be >= 1");
         min = Math.ceil(min);
         max = Math.floor(max);
         let nRange = max - min;
-        assertTrue(nRange > 1 && nRange < 255);
+        assertTrue(nRange > 1 && nRange < 255, "getRandIntInclusiveStrong too wide range");
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
             nextPowerOf2 *= 2;
@@ -51,7 +53,7 @@ export class Util512Higher {
         while (true) {
             window.crypto.getRandomValues(buf);
             for (let i = 0; i < buf.length; i++) {
-                assertTrue(buf[i] >= 0 && buf[i] < 256);
+                assertTrue(buf[i] >= 0 && buf[i] < 256, "out of range");
                 let v = buf[i] % nextPowerOf2;
                 if (v <= nRange) {
                     return min + v;
@@ -59,16 +61,16 @@ export class Util512Higher {
             }
         }
     }
-    
+
     /**
      * make random bytes, return as base64.
      */
     static makeCryptRandString(bytes: number) {
         let buf = new Uint8Array(bytes);
         window.crypto.getRandomValues(buf);
-        return Util512.arrayToBase64(buf);
+        return Util512.arrayToBase64(Array.from(buf));
     }
-    
+
     /**
      * download image asynchronously
      */
@@ -116,10 +118,10 @@ export class Util512Higher {
     /**
      * download json asynchronously, and return parsed js object.
      */
-    static asyncBeginLoadJson(url: string): Promise<anyJson> {
+    static asyncBeginLoadJson(url: string): Promise<AnyJson> {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
-            Util512.beginLoadJson(
+            Util512Higher.beginLoadJson(
                 url,
                 req,
                 s => {
@@ -136,7 +138,7 @@ export class Util512Higher {
             );
         });
     }
-    
+
     /**
      * load and run script. must be on same domain.
      */
@@ -144,7 +146,7 @@ export class Util512Higher {
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
             assertTrue(url.startsWith('/'), 'J8|');
-            if (Util512.scriptsAlreadyLoaded[url]) {
+            if (Util512Higher.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;
             }
@@ -161,7 +163,7 @@ export class Util512Higher {
 
             script.onload = () => {
                 if (!loaded) {
-                    Util512.scriptsAlreadyLoaded[url] = true;
+                    Util512Higher.scriptsAlreadyLoaded[url] = true;
                     loaded = true;
                     resolve();
                 }
@@ -200,7 +202,7 @@ export interface Root {
  */
 let rootHolder: Root[] = [];
 export function getRoot(): Root {
-    checkThrow(rootHolder[0], 'J6|root not yet set.');
+    checkThrowUI512(rootHolder[0], 'J6|root not yet set.');
     return rootHolder[0];
 }
 

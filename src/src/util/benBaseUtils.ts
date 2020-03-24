@@ -1,5 +1,6 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
+
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
@@ -9,13 +10,6 @@ export class Util512 {
      */
     static isValidNumber(value: any) {
         return typeof value === 'number' && isFinite(value);
-    }
-
-    /**
-     * use for map/reduce
-     */
-    static add(n1: number, n2: number) {
-        return n1 + n2;
     }
 
     /**
@@ -50,12 +44,12 @@ export class Util512 {
 
         return ret;
     }
-    
+
     /**
      * sets an element, expands array if necessary
      */
-    export function setarr<T>(ar: O<T>[], index: number, val: T) {
-        assertTrue(index >= 0);
+    static setarr<T>(ar: O<T>[], index: number, val: T) {
+        assertTrue(index >= 0, 'must be >= 0');
         if (index >= ar.length) {
             for (let i = 0; i < index - ar.length; i++) {
                 ar.push(undefined);
@@ -67,15 +61,17 @@ export class Util512 {
 
     /**
      * as distinct from Array.concat which returns a new object
+     * don't use splice+apply, might run into issues with max-args-pased
      */
     static extendArray<T>(ar: T[], added: T[]) {
-        let argsToSplice: any[] = [ar.length, 0];
-        Array.prototype.splice.apply(ar, argsToSplice.concat(added));
+        for (let i = 0; i < added.length; i++) {
+            ar.push(added[i]);
+        }
     }
-    
+
     /*
-    * plain parseInt allows trailing text
-    */
+     * plain parseInt allows trailing text
+     */
     static parseIntStrict(s: O<string>) {
         if (!s) {
             return NaN;
@@ -87,6 +83,13 @@ export class Util512 {
         } else {
             return NaN;
         }
+    }
+
+    /**
+     * useful for map/reduce
+     */
+    static add(n1: number, n2: number) {
+        return n1 + n2;
     }
 
     /**
@@ -185,9 +188,9 @@ export class Util512 {
         checkThrowUI512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
-            s
+            s,
         );
-        
+
         let method = me[s];
         assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
         if (method && typeof method === 'function') {
@@ -195,8 +198,11 @@ export class Util512 {
                 me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s),
                 '4H|cannot use parent classes',
                 clsname,
-                s
+                s,
             );
+
+            assertTrue(args.length < 100, clsname, s);
+            /* eslint-disable prefer-spread */
             return method.apply(me, args);
         } else if (okIfNotExists) {
             return undefined;
@@ -263,7 +269,7 @@ export class Util512 {
     /**
      * to base64 with / and + characters
      */
-    static arrayToBase64(b: Iterable<number>) {
+    static arrayToBase64(b: number[]) {
         return btoa(String.fromCharCode.apply(null, b));
     }
 
@@ -284,7 +290,7 @@ export class Util512 {
      */
     static fromBase64UrlSafe(s: string) {
         if (s.length % 4 !== 0) {
-            s += '==='.slice(0, 4 - s.length % 4);
+            s += '==='.slice(0, 4 - (s.length % 4));
         }
         return atob(s.replace(/_/g, '/').replace(/-/g, '+'));
     }
@@ -293,11 +299,13 @@ export class Util512 {
      * generate random string, first byte is specified
      */
     static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
-        assertEq(1, charPrefix.length)
+        assertEq(1, charPrefix.length, 'expected one char');
         let buf = new Uint8Array(nBytes + 1);
         window.crypto.getRandomValues(buf);
         buf[0] = charPrefix.charCodeAt(0);
-        let dataAsString = String.fromCharCode.apply(null, buf);
+        let dataAsString = Array.from(buf)
+            .map(item => String.fromCharCode(item))
+            .join('');
         return Util512.toBase64UrlSafe(dataAsString);
     }
 }
@@ -310,113 +318,105 @@ export class ValHolder<T> {
 }
 
 /**
- * indicates that the value is a plain JS object, can be null
+ * a plain JS object, can be null
  */
-type AnyJsonInner =
-    | string
-    | number
-    | boolean
-    | null
-    | { [property: string]: AnyJsonInner }
-    | AnyJsonInner[];
+type AnyJsonInner = string | number | boolean | null | { [property: string]: AnyJsonInner } | AnyJsonInner[];
 
 /**
  * indicates that the value is a plain JS object
  */
-export type AnyJson =
-    | { [property: string]: AnyJsonInner }
-    | AnyJsonInner[];
+export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 
 //~ /**
 //~ * list enum vals
 //~ */
 //~ function listEnumVals<T>(enm:T) {
-    //~ let s = ''
-    //~ for (let enumMember in enm) {
-        //~ /* show possible values */
-        //~ if (
-            //~ isString(enumMember) &&
-            //~ !enumMember.startsWith('__') &&
-            //~ !enumMember.startsWith('__AlternateForm') &&
-            //~ !scontains('0123456789', enumMember[0].toString())
-        //~ ) {
-            //~ s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
-        //~ }
-    //~ }
-    
-    //~ return s;
+//~ let s = ''
+//~ for (let enumMember in enm) {
+//~ /* show possible values */
+//~ if (
+//~ isString(enumMember) &&
+//~ !enumMember.startsWith('__') &&
+//~ !enumMember.startsWith('__AlternateForm') &&
+//~ !scontains('0123456789', enumMember[0].toString())
+//~ ) {
+//~ s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
 //~ }
-    
+//~ }
+
+//~ return s;
+//~ }
+
 //~ /**
- //~ * string to enum.
- //~ * place __isUI512Enum inside the enum to use this
- //~ * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
- //~ * findStrToEnum(MyEnum, s)
- //~ */
+//~ * string to enum.
+//~ * place __isUI512Enum inside the enum to use this
+//~ * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
+//~ * findStrToEnum(MyEnum, s)
+//~ */
 //~ export function findStrToEnum<InstanceType<T>>(enm: T, s: string): O<InstanceType<T>> {
-    //~ assertTrue(enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
-    //~ if (s.startsWith('__')) {
-        //~ return undefined;
-    //~ } else if (s.startsWith('__AlternateForm')) {
-        //~ return undefined;
-    //~ } else {
-        //~ if (enm['__UI512EnumCapitalize'] !== undefined) {
-            //~ s = Util512.capitalizeFirst(s);
-        //~ }
+//~ assertTrue(enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
+//~ if (s.startsWith('__')) {
+//~ return undefined;
+//~ } else if (s.startsWith('__AlternateForm')) {
+//~ return undefined;
+//~ } else {
+//~ if (enm['__UI512EnumCapitalize'] !== undefined) {
+//~ s = Util512.capitalizeFirst(s);
+//~ }
 
-        //~ let found = enm[s];
-        //~ if (found) {
-            //~ return found;
-        //~ } else {
-            //~ return enm['__AlternateForm' + s];
-        //~ }
-    //~ }
+//~ let found = enm[s];
+//~ if (found) {
+//~ return found;
+//~ } else {
+//~ return enm['__AlternateForm' + s];
+//~ }
+//~ }
 //~ }
 
 //~ /**
- //~ * same as findStrToEnum, but throws if not found, showing possible values.
- //~ */
+//~ * same as findStrToEnum, but throws if not found, showing possible values.
+//~ */
 //~ export function getStrToEnum<InstanceType<T>>(enm: T, msgContext: string, s: string): InstanceType<T> {
-    //~ let found = findStrToEnum(enm, s);
-    //~ if (found !== undefined) {
-        //~ return found;
-    //~ } else {
-        //~ msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
-        //~ if (enm['__isUI512Enum'] !== undefined) {
-            //~ let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
-            //~ msgContext += ' try one of ' + listEnumVals(enm);
-        //~ }
+//~ let found = findStrToEnum(enm, s);
+//~ if (found !== undefined) {
+//~ return found;
+//~ } else {
+//~ msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
+//~ if (enm['__isUI512Enum'] !== undefined) {
+//~ let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
+//~ msgContext += ' try one of ' + listEnumVals(enm);
+//~ }
 
-        //~ throw makeUI512Error(msgContext, '4E|');
-    //~ }
+//~ throw makeUI512Error(msgContext, '4E|');
+//~ }
 //~ }
 
 //~ /**
- //~ * enum to string.
- //~ * checks that the primary string is returned, not a synonym ('alternate form')
- //~ * due to ts limitations, need to type the enum name twice, e.g.
- //~ * findEnumToStr<MyEnum>(MyEnum, n)
- //~ */
+//~ * enum to string.
+//~ * checks that the primary string is returned, not a synonym ('alternate form')
+//~ * due to ts limitations, need to type the enum name twice, e.g.
+//~ * findEnumToStr<MyEnum>(MyEnum, n)
+//~ */
 //~ export function findEnumToStr<T>(enm: any, n: number): O<string> {
-    //~ assertTrue(enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
+//~ assertTrue(enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
 
-    //~ /* using simply e[n] would work, but fragile if enum implementation changes. */
-    //~ for (let enumMember in enm) {
-        //~ if (enm[enumMember] === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
-            //~ let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
-            //~ return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
-        //~ }
-    //~ }
+//~ /* using simply e[n] would work, but fragile if enum implementation changes. */
+//~ for (let enumMember in enm) {
+//~ if (enm[enumMember] === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
+//~ let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
+//~ return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
+//~ }
+//~ }
 
-    //~ return undefined;
+//~ return undefined;
 //~ }
 
 //~ /**
- //~ * findEnumToStr, but returns a fallback value.
- //~ */
+//~ * findEnumToStr, but returns a fallback value.
+//~ */
 //~ export function getEnumToStrOrUnknown<T>(e: any, n: number, fallback = 'Unknown'): string {
-    //~ let found = findEnumToStr<T>(e, n);
-    //~ return found !== undefined ? found : fallback;
+//~ let found = findEnumToStr<T>(e, n);
+//~ return found !== undefined ? found : fallback;
 //~ }
 
 /**
@@ -495,7 +495,7 @@ export function sensibleSort(a: any, b: any): number {
         }
         let howManyElementsToSort = a.length;
         for (let i = 0; i < howManyElementsToSort; i++) {
-            let cmp = defaultSort(a[i], b[i]);
+            let cmp = sensibleSort(a[i], b[i]);
             if (cmp !== 0) {
                 return cmp;
             }
@@ -506,11 +506,11 @@ export function sensibleSort(a: any, b: any): number {
     }
 }
 
-/*
-use the function to provide sort order
-like Python's sort(key=fn)
-often more efficient than passing a comparison function.
-*/
+/**
+ * use the function to provide sort order
+ * like Python's sort(key=fn)
+ * often more efficient than passing a comparison function.
+ */
 export function sortDecorated(ar: any[], fn: Function) {
     // 1) decorate
     let decorated = ar.map((val: any) => [fn(val), val]);
@@ -642,7 +642,7 @@ export enum BrowserOSInfo {
     Unknown,
     Windows,
     Linux,
-    Mac
+    Mac,
 }
 
 /**
@@ -661,7 +661,7 @@ export enum CharClass {
     Space,
     NewLine,
     Word,
-    Punctuation
+    Punctuation,
 }
 
 /**
@@ -723,7 +723,7 @@ export class GetCharClass {
         n: number,
         isLeft: boolean,
         isUntilWord: boolean,
-        includeTrailingSpace: boolean
+        includeTrailingSpace: boolean,
     ) {
         if (len === 0) {
             return n;
@@ -775,13 +775,12 @@ export const base10 = 10;
  */
 export class MapKeyToObject<T> {
     protected objects: { [key: string]: T } = Object.create(null);
-    constructor() {}
     get(key: string) {
         return throwIfUndefined(this.objects[key], '3_|id not found', key);
     }
 
     exists(key: string) {
-        return Object.prototype.hasOwnProperty.call(this.objects, key)
+        return Object.prototype.hasOwnProperty.call(this.objects, key);
     }
 
     find(key: O<string>) {
@@ -832,8 +831,8 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
  * a quick way to throw an expection if value is not what was expected.
  */
 export function checkThrowEq(expected: any, got: any, msg: string, c1: any = '', c2: any = '') {
-    if (defaultSort(expected, got) !== 0) {
-        throw makeVpcScriptErr(`${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`);
+    if (sensibleSort(expected, got) !== 0) {
+        throw makeUI512Error(`${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`);
     }
 }
 
@@ -842,7 +841,7 @@ export function checkThrowEq(expected: any, got: any, msg: string, c1: any = '',
  * 'hard' assert, does not let execution continue.
  */
 export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?: any) {
-    if (defaultSort(expected, received) !== 0) {
+    if (sensibleSort(expected, received) !== 0) {
         let msg = `assertion failed in assertEq, expected '${expected}' but got '${received}'.`;
         throw makeUI512Error(msg, c1, c2, c3);
     }
@@ -853,7 +852,7 @@ export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?
  *  'soft' assert, lets execution continue.
  */
 export function assertEqWarn(expected: any, received: any, c1: string, c2?: any, c3?: any) {
-    if (defaultSort(expected, received) !== 0) {
+    if (sensibleSort(expected, received) !== 0) {
         let msg = `warning, assertion failed in assertEqWarn, expected '${expected}' but got '${received}'.`;
         let er = makeUI512Error(msg, c1, c2, c3);
         if (!window.confirm('continue?')) {
@@ -863,23 +862,8 @@ export function assertEqWarn(expected: any, received: any, c1: string, c2?: any,
 }
 
 /**
-get last of an array
-*/
-export function last<T>(ar:T[]): T{
-    assertTrue(ar.length >= 1)
-    return ar[ar.length - 1];
-}
-
-/**
-is it truthy? anything except false, 0, "", null, undefined, and NaN
-*/
+ * is it truthy? anything except false, 0, "", null, undefined, and NaN
+ */
 export function bool(x: any): boolean {
     return !!x;
-}
-
-/**
-is it a number
-*/
-export function isValidNumber(value: any) {
-    return typeof value === 'number' && isFinite(value);
 }
