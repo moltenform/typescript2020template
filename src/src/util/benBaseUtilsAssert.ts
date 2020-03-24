@@ -5,9 +5,6 @@
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
-const isRelease = false
-
-
 /**
  * make an error object, record the error, and depending on severity, show alert box
  * you can pass in arguments to indicate context of when/why error occurred
@@ -304,7 +301,7 @@ export function last<T>(ar:T[]): T{
  * break into debugger. V8 js perf sometimes hurt if seeing a debugger statement, so separate it here.
  */
 function breakIntoDebugger() {
-    if (!isRelease) {
+    if (!checkIsRelease()) {
         debugger;
     }
 }
@@ -336,3 +333,19 @@ function findTags(s: any, tags: string[]) {
         return s;
     }
 }
+
+declare const WEBPACK_PRODUCTION: boolean;
+
+export function checkIsRelease() {
+    let ret = false;
+    try {
+        // when webpack builds this file it will replace the symbol
+        // with `true` or `false`
+        ret = WEBPACK_PRODUCTION;
+    } catch {
+        ret = false;
+    }
+
+    return ret;
+}
+
