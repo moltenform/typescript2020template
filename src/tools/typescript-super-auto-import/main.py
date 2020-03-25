@@ -8,7 +8,7 @@ extensionInImportStatement = ''
 useSingleQuotes = True
 
 def go(dir):
-    assertTrue(files.isdir(dir), 'directory not found', dir)
+    assertTrueMsg(files.isdir(dir), 'directory not found', dir)
     confirmNoDuplicateFilenames(dir)
     layers, filesReferencedInLayers, filenamesReferencedInLayers = readLayersFile(dir)
     confirmLayersIncludesFiles(dir, filenamesReferencedInLayers)
@@ -28,7 +28,7 @@ def autoAddImports(srcdirectory, layers):
             if symbol:
                 if symbol in mapSymbolNameToLayer:
                     prevFound = mapSymbolNameToLayer[symbol]
-                    assertTrue(symbol == 'runTestsImpl', f'dupe symbol in both {prevFound[0]} and {layer[0]}', symbol)
+                    assertTrueMsg(symbol == 'runTestsImpl', f'dupe symbol in both {prevFound[0]} and {layer[0]}', symbol)
                 mapSymbolNameToLayer[symbol] = layer
     
     # add the imports
@@ -82,7 +82,7 @@ def autoAddImports(srcdirectory, layers):
         
         if newLinesToAdd:
             linesWithNoAuto = [line for line in lines if not (line.startswith('/* auto */ import') and '{' in line )]
-            assertTrue(linesWithNoAuto[0]=='', 'expected file to start with an empty line '+layer[0])
+            assertTrueMsg(linesWithNoAuto[0]=='', 'expected file to start with an empty line '+layer[0])
             addNewLine = linesWithNoAuto[1]!=''
             if addNewLine:
                 newLinesToAdd.append('')

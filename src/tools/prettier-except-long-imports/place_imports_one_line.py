@@ -4,6 +4,8 @@ import sys
 import re
 sys.path.append('../typescript-super-auto-import/bn_python_common.zip')
 from bn_python_common import *
+sys.path.append('../typescript-super-auto-import')
+from ts_parsing import assertTrueMsg
 
 def placeImportsOnOneLine(s):
     lines = s.replace('\r\n', '\n').split('\n')

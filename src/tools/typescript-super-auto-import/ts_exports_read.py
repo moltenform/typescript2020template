@@ -68,7 +68,7 @@ def readAlreadyImportedNotByUs(filelines):
         return imports
 
 def collectExportsAddedManually(line, found):
-    assertTrue(line.startswith('/* ts_exports_read.py add '), line)
+    assertTrueMsg(line.startswith('/* ts_exports_read.py add '), 'internal error, no prefix', line)
     pts = line.replace('*/', '').replace('/* ', '').split(' ')
     pts.pop(0) # remove "ts_exports_read.py"
     pts.pop(0) # remove "add"
@@ -76,7 +76,7 @@ def collectExportsAddedManually(line, found):
         found[pt.strip()] = 1
     
 def collectExportsIgnoredManually(line, found):
-    assertTrue(line.startswith('/* ts_exports_read.py ignore '), line)
+    assertTrueMsg(line.startswith('/* ts_exports_read.py ignore '), 'internal error, no prefix', line)
     pts = line.replace('*/', '').replace('/* ', '').split(' ')
     pts.pop(0) # remove "ts_exports_read.py"
     pts.pop(0) # remove "ignore"

@@ -9,7 +9,7 @@ prettierPath = '../../node_modules/prettier/bin-prettier.js'
 prettierCfg = '../../.prettierrc.js'
 
 def go(srcdirectory):
-    assertTrue(files.isdir(srcdirectory), 'directory not found', srcdirectory)
+    assertTrueMsg(files.isdir(srcdirectory), 'directory not found', srcdirectory)
     goPrettierAll(srcdirectory)
 
 def goPrettierAll(srcdirectory):
@@ -21,8 +21,8 @@ def goPrettierAll(srcdirectory):
 
 def goPrettier(f):
     # first, run prettier
-    assertTrue(files.exists(prettierPath), prettierPath)
-    assertTrue(files.exists(prettierCfg), prettierCfg)
+    assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath)
+    assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg)
     args = ['node', prettierPath, '--config', prettierCfg, '--write', f]
     files.run(args)
 

@@ -20,12 +20,21 @@ def doSomeAutomaticFormatting(lines):
             print('removing whitespace on right of line')
         lines[i] = stripped
 
-testinput = '''abc, def, ghi, v1'''
-expected = ['abc', 'def', 'ghi', 'v1']
-assertEq(expected, list(getSymbolsFromLine(testinput)))
-testinput = '''  x = myFn('', h.walkNext(), 'GO|');'''
-expected = ['x', 'myFn', 'h', 'walkNext']
-assertEq(expected, list(getSymbolsFromLine(testinput)))
-testinput = ''' 's1', `s2`, "s3" '''
-expected = []
-assertEq(expected, list(getSymbolsFromLine(testinput)))
+def assertTrueMsg(condition, *messageArgs):
+    if not condition:
+        s = ' '.join(map(getPrintable, messageArgs)) if messageArgs else ''
+        alert('Could not continue. ' + s)
+        raise AssertionError(s)
+
+def tests():
+    testinput = '''abc, def, ghi, v1'''
+    expected = ['abc', 'def', 'ghi', 'v1']
+    assertEq(expected, list(getSymbolsFromLine(testinput)))
+    testinput = '''  x = myFn('', h.walkNext(), 'GO|');'''
+    expected = ['x', 'myFn', 'h', 'walkNext']
+    assertEq(expected, list(getSymbolsFromLine(testinput)))
+    testinput = ''' 's1', `s2`, "s3" '''
+    expected = []
+    assertEq(expected, list(getSymbolsFromLine(testinput)))
+
+tests()
