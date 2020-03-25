@@ -43,13 +43,18 @@ def simpleStripMultilineComments(text, open, close):
 def shouldWarnThisLine(line):
     withoutComments = simpleStripComments(line)
     withoutComments = withoutComments.strip()
-    if withoutComments.endswith(';') and '||' in withoutComments:
-        if withoutComments.startswith('assert') or withoutComments.startswith('return '):
-            return False
-        else:
-            return True
-    else:
-        return False
+    if withoutComments.endswith(';'): 
+        # the user can say || bool(condition) if it is truly logical or
+        # negative lookahead
+        if re.search(r'\|\| (?!bool)' , withoutComments):
+            if not withoutComments.startswith('assert'):
+                return True
+
+def shouldWarnArraysThisLine(line):
+    # let ar = []; silently gives you an array of type any!
+    # warn you to provide an explicit type
+    if re.search(r' [a-zA-Z0-9]+ = \[\]', line):
+        return True
 
 def checkText(f, lines):
     for i, line in enumerate(lines):
@@ -62,7 +67,12 @@ def checkText(f, lines):
                 trace(f'saw a || in a context that looks like nullish-coalescing')
                 trace(f'please use ?? instead or put /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */')
                 trace(f'on the prior line to silence this warning')
-                warn('saw a || a context that looks like nullish-coalescing')
+                warn('')
+        if shouldWarnArraysThisLine(line):
+            trace(f'in file "{f}" on line {i+1}:')
+            trace(f'saw a statement like "let ar = [];" but we dissallow implicit any[] arrays')
+            trace(f'use "let ar:any = [];" if this was intended')
+            warn('')
 
 def tests():
     assertEq('abefij', simpleStripComments('ab/* cd */ef/* gh */ij'))
@@ -109,5 +119,19 @@ def tests():
     assertTrue(not shouldWarnThisLine('assertTrue(a || b);'))
     assertTrue(not shouldWarnThisLine('    assertTrue(a || b)'))
     assertTrue(not shouldWarnThisLine('    assertTrue(other(a || b))'))
+        
+    assertTrue(shouldWarnThisLine('    a || b;'))
+    assertTrue(shouldWarnThisLine('    return a || b;'))
+    assertTrue(not shouldWarnThisLine('    assert a || b;'))
+    assertTrue(not shouldWarnThisLine('    assertTrue(a || b);'))
+    assertTrue(not shouldWarnThisLine('    a || bool(b);'))
+    assertTrue(not shouldWarnThisLine('    bool(a) || bool(b);'))
+    
+    assertTrue(shouldWarnArraysThisLine('let ar = [];'))
+    assertTrue(not shouldWarnArraysThisLine('let ar:mytype = [];'))
+    assertTrue(not shouldWarnArraysThisLine('let ar:number[] = [];'))
+    assertTrue(shouldWarnArraysThisLine(' ar = [];'))
+    assertTrue(not shouldWarnArraysThisLine(' ar:mytype = [];'))
+    assertTrue(not shouldWarnArraysThisLine(' ar:number[] = [];'))
 
 tests()
