@@ -218,7 +218,7 @@ class RingBufferLocalStorage extends RingBuffer {
 }
 
 /**
- * if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error
+ * if an error is thrown, show a warning message and swallow the error
  */
 export function showWarningIfExceptionThrown(fn: () => void) {
     try {

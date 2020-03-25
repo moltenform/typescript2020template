@@ -55,8 +55,9 @@ export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) 
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        throw makeUI512Error(`1!|It looks like the debugger is set to break on 'All Exceptions'...
-            you probably want to turn this off because many tests intentionally throw exceptions.`);
+        throw makeUI512Error(`1!|It looks like the debugger is set to break
+            on 'All Exceptions'... you probably want to turn this off because 
+            many tests intentionally throw exceptions.`);
     });
 }
 

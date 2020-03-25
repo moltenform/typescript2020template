@@ -3,6 +3,7 @@
 from place_imports_one_line import *
 import check_for_null_coalesce
 import check_for_apply
+import check_for_long_lines
 
 doPlaceImportsOnOneLine = True
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
@@ -17,9 +18,9 @@ def goPrettierAll(srcdirectory):
         f = f.replace('\\', '/')
         if short.endswith('.ts') and not short.endswith('.d.ts'):
             trace(f)
-            goPrettier(f)
+            goPrettier(srcdirectory, f)
 
-def goPrettier(f):
+def goPrettier(srcdirectory, f):
     # first, run prettier
     assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath)
     assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg)
@@ -39,6 +40,7 @@ def goPrettier(f):
     # check for disallowed calls
     text = files.readall(f, encoding='utf-8')
     lines = text.split('\n')
+    check_for_long_lines.checkText(srcdirectory, f, lines)
     check_for_null_coalesce.checkText(f, lines)
     check_for_apply.checkText(f, lines)
 

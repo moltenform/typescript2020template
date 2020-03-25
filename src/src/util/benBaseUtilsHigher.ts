@@ -92,13 +92,21 @@ export class Util512Higher {
      * download image asynchronously
      */
     static beginLoadImage(url: string, img: HTMLImageElement, callback: () => void) {
-        img.addEventListener('load', () => callback());
+        let haveRunCallback = false;
+        img.addEventListener('load', () => {
+            if (!haveRunCallback) {
+                haveRunCallback = true;
+                callback();
+            }
+        });
         img.onerror = () => {
             throw makeUI512Error('4L|failed to load ' + url);
         };
         img.src = url;
         if (img.complete) {
-            /* it might be possible for .complete to be set immediately if image was cached */
+            /* some sources say it might be possible for .complete to be set 
+            immediately if image was cached */
+            haveRunCallback = true;
             callback();
         }
     }
@@ -116,9 +124,7 @@ export class Util512Higher {
         req.open('GET', url, true);
         if (!callbackOnErr) {
             callbackOnErr = () => {
-                throw makeUI512Error(
-                    '4K|failed to load ' + url + ' status=' + req.status,
-                );
+                throw makeUI512Error(`4K|failed to load ${url}, status=${req.status}`);
             };
         }
 
@@ -158,7 +164,7 @@ export class Util512Higher {
 
                     resolve(parsed);
                 },
-                () => reject(new Error('failed to load ' + url + ' with' + req.status)),
+                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`)),
             );
         });
     }
@@ -247,8 +253,10 @@ export function sleep(ms: number) {
     });
 }
 
+/**
+ * get date as month day hh mm
+ */
 export function getdatestring(includeSeconds = false) {
-    // month day hh mm
     let d = new Date();
     let hours = d.getHours();
     if (hours > 12) {

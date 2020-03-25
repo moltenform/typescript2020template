@@ -915,7 +915,8 @@ export function checkThrowEq(
  */
 export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?: any) {
     if (sensibleSort(expected, received) !== 0) {
-        let msg = `assertion failed in assertEq, expected '${expected}' but got '${received}'.`;
+        let msg = longstr(`assertion failed in assertEq,
+            expected '${expected}' but got '${received}'.`);
         throw makeUI512Error(msg, c1, c2, c3);
     }
 }
@@ -932,7 +933,8 @@ export function assertEqWarn(
     c3?: any,
 ) {
     if (sensibleSort(expected, received) !== 0) {
-        let msg = `warning, assertion failed in assertEqWarn, expected '${expected}' but got '${received}'.`;
+        let msg = longstr(`warning, assertion failed in assertEqWarn,
+            expected '${expected}' but got '${received}'.`);
         let er = makeUI512Error(msg, c1, c2, c3);
         if (!window.confirm('continue?')) {
             throw er;
@@ -945,4 +947,11 @@ export function assertEqWarn(
  */
 export function bool(x: any): boolean {
     return !!x;
+}
+
+/**
+ * conveniently write a long string
+ */
+export function longstr(s: string) {
+    return s.replace(/\s*(\r\n|\n)\s*/g, ' ');
 }
