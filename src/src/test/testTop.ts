@@ -15,7 +15,7 @@ export class SimpleSensibleTests {
         let counter = new ValHolder(1);
         for (let category of categories) {
             console.log(`Category: ${category.name}`);
-            if (includeSlow || !scontains(category.type, "slow")) {
+            if (includeSlow || !scontains(category.type, 'slow')) {
                 await SimpleSensibleTests.runCategory(category, countTotal, counter);
             }
         }
@@ -29,7 +29,7 @@ export class SimpleSensibleTests {
             let [tstname, tstfn] = category.tests[i];
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
-            if (scontains(category.type, "async")) {
+            if (scontains(category.type, 'async')) {
                 await tstfn();
             } else {
                 tstfn();

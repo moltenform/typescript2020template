@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { OrderedHash, assertEq, fitIntoInclusive, sensibleSort, findStrToEnum, getStrToEnum, getEnumToStrOrUnknown } from './../util/benBaseUtils';
+/* auto */ import { OrderedHash, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, } from './../util/benBaseUtils';
 
 let tests = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = tests;
@@ -80,7 +80,7 @@ tests.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertEq(pts[0], ` first`, 'DP|');
     assertEq(pts[1], ` second`, 'DO|');
     assertEq(pts[2], ` third (4E)`, 'DN|');
-    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum  try one of`), 'DM|');
+    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
 tests.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
@@ -333,5 +333,5 @@ enum TestEnum {
     Third,
     AlternateFormTheFirst = First,
     AlternateFormScnd = Second,
-    AlternateFormThd = Third
+    AlternateFormThd = Third,
 }

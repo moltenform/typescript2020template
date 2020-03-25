@@ -61,15 +61,15 @@ type AVoidFn = () => Promise<void>;
 
 export class SimpleSensibleTestCategory {
     constructor(public name: string, public type: '' | 'async' | 'slow+async' = '') {}
-    tests: [string, VoidFn|AVoidFn][] = [];
+    tests: [string, VoidFn | AVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!scontains(this.type, "async"), "")
+        assertTrue(!scontains(this.type, 'async'), '');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AVoidFn) {
-        assertTrue(scontains(this.type, "async"), "")
+        assertTrue(scontains(this.type, 'async'), '');
         this.tests.push([s, fn]);
         return this;
     }

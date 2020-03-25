@@ -1,11 +1,5 @@
-/* auto */ import {
-    O,
-    assertTrue,
-    checkThrowUI512,
-    makeUI512Error,
-    scontains,
-    throwIfUndefined,
-} from './benBaseUtilsAssert';
+
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -351,20 +345,23 @@ type AnyJsonInner = string | number | boolean | null | { [property: string]: Any
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: any): T };
-export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & { [k: number]: string };
 
+/**
+ * by jcalz, stackoverflow
+ */
+export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & { [k: number]: string };
 
 /**
  * list enum vals
  */
-export function listEnumVals<T>(enm: T, makeLowercase: boolean) {
+export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
     let s = '';
-    for (let enumMember in enm) {
+    for (let enumMember in Enm) {
         /* show possible values */
         if (
             isString(enumMember) &&
             !enumMember.startsWith('__') &&
-            !enumMember.startsWith('__AlternateForm') &&
+            !enumMember.startsWith('AlternateForm') &&
             !scontains('0123456789', enumMember[0].toString())
         ) {
             s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
@@ -374,7 +371,10 @@ export function listEnumVals<T>(enm: T, makeLowercase: boolean) {
     return s;
 }
 
-
+/**
+ * string to enum.
+ * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
+ */
 export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
     assertTrue(Enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
     if (s.startsWith('__')) {
@@ -395,19 +395,18 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
     }
 }
 
-
 /**
-* same as findStrToEnum, but throws if not found, showing possible values.
-*/
-export function getStrToEnum<E>(enm: TypeLikeAnEnum<E>, msgContext: string, s: string): E {
-    let found = findStrToEnum(enm, s);
+ * same as findStrToEnum, but throws if not found, showing possible values.
+ */
+export function getStrToEnum<E>(Enm: TypeLikeAnEnum<E>, msgContext: string, s: string): E {
+    let found = findStrToEnum(Enm, s);
     if (found !== undefined) {
         return found;
     } else {
-        msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
-        if (enm['__isUI512Enum'] !== undefined) {
-            let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
-            msgContext += ' try one of ' + listEnumVals(enm, makeLowercase);
+        msgContext = msgContext ? `Not a valid choice of ${msgContext}. ` : `Not a valid choice for this value. `;
+        if (Enm['__isUI512Enum'] !== undefined) {
+            let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
+            msgContext += 'try one of' + listEnumVals(Enm, makeLowercase);
         }
 
         throw makeUI512Error(msgContext, '4E|');
@@ -415,16 +414,16 @@ export function getStrToEnum<E>(enm: TypeLikeAnEnum<E>, msgContext: string, s: s
 }
 
 /**
-* enum to string.
-* checks that the primary string is returned, not a synonym ('alternate form')
-*/
-export function findEnumToStr<E>(enm: TypeLikeAnEnum<E>, n: number): O<string> {
-    assertTrue(enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
+ * enum to string.
+ * checks that the primary string is returned, not a synonym ('alternate form')
+ */
+export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
+    assertTrue(Enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
 
-    /* using e[n] would work, but fragile if enum implementation changes. */
-    for (let enumMember in enm) {
-        if (enm[enumMember] as any === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
-            let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
+    /* using e[n] would work, but it's fragile if enum implementation changes. */
+    for (let enumMember in Enm) {
+        if ((Enm[enumMember] as any) === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
+            let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
             return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
         }
     }
@@ -433,10 +432,10 @@ export function findEnumToStr<E>(enm: TypeLikeAnEnum<E>, n: number): O<string> {
 }
 
 /**
-* findEnumToStr, but returns a fallback value.
-*/
-export function getEnumToStrOrUnknown<E>(enm: TypeLikeAnEnum<E>, n: number, fallback = 'Unknown'): string {
-    return findEnumToStr(enm, n) ?? fallback;
+ * findEnumToStr, but returns a fallback value.
+ */
+export function getEnumToStrOrUnknown<E>(Enm: TypeLikeAnEnum<E>, n: number, fallback = 'Unknown'): string {
+    return findEnumToStr(Enm, n) ?? fallback;
 }
 
 /**
