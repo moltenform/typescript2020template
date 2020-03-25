@@ -1,87 +1,87 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { OrderedHash, assertEq, fitIntoInclusive, sensibleSort, findStrToEnumTwo, findStrToEnumFirst } from './../util/benBaseUtils';
+/* auto */ import { OrderedHash, assertEq, fitIntoInclusive, sensibleSort, findStrToEnum, getStrToEnum, getEnumToStrOrUnknown } from './../util/benBaseUtils';
 
 let tests = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = tests;
 
 tests.test('findStrToEnum.FoundPrimary', () => {
-    assertEq(TestEnum.First, findStrToEnumTwo(TestEnum, 'First'), 'Dz|');
-    assertEq(TestEnum.Second, findStrToEnumTwo(TestEnum, 'Second'), 'Dy|');
-    assertEq(TestEnum.Third, findStrToEnumTwo(TestEnum, 'Third'), 'Dx|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dz|');
+    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'), 'Dy|');
+    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Third'), 'Dx|');
 });
 tests.test('findStrToEnum.NotFound', () => {
-    assertEq(undefined, findStrToEnumTwo(TestEnum, ''), 'Dw|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, 'F'), 'Dv|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, 'Firstf'), 'Du|');
+    assertEq(undefined, findStrToEnum(TestEnum, ''), 'Dw|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'F'), 'Dv|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Du|');
 });
 tests.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
-    assertEq(undefined, findStrToEnumTwo(TestEnum, '__isUI512Enum'), 'Dt|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, '__foo'), 'Dr|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__isUI512Enum'), 'Dt|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__foo'), 'Dr|');
 });
 tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
-    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormScnd'), 'Dp|');
-    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormFoo'), 'Do|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'Dp|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'Do|');
 });
-//~ tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
-    //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dn|');
-    //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'first'), 'Dm|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'firsT'), 'Dl|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'FirsT'), 'Dk|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'First '), 'Dj|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), 'Di|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firs'), 'Dh|');
-//~ });
-//~ tests.test('findStrToEnum.UseAlts', () => {
-    //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dg|');
-    //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'TheFirst'), 'Df|');
-    //~ assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Scnd'), 'De|');
-    //~ assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Thd'), 'Dd|');
-//~ });
-//~ tests.test('getEnumToStr.FoundPrimary', () => {
-    //~ assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.First), 'Dc|');
-    //~ assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Second), 'Db|');
-    //~ assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Third), 'Da|');
-//~ });
-//~ tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
-    //~ assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormTheFirst), 'DZ|');
-    //~ assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormScnd), 'DY|');
-    //~ assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormThd), 'DX|');
-//~ });
-//~ tests.test('getEnumToStr.NotFound', () => {
-    //~ assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, -1), 'DW|');
-    //~ assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, 999), 'DV|');
-//~ });
-//~ tests.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
-    //~ assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__isUI512Enum), 'DU|');
-    //~ assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__UI512EnumCapitalize), 'DT|');
-//~ });
-//~ tests.test('getStrToEnum.FoundPrimary', () => {
-    //~ assertEq(TestEnum.First, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First'), 'DS|');
-    //~ assertEq(TestEnum.Second, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Second'), 'DR|');
-    //~ assertEq(TestEnum.Third, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Third'), 'DQ|');
-//~ });
-//~ tests.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
-    //~ let excMessage = '';
-    //~ try {
-        //~ UI512ErrorHandling.breakOnThrow = false;
-        //~ getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Firstf');
-    //~ } catch (e) {
-        //~ excMessage = e.toString();
-    //~ } finally {
-        //~ UI512ErrorHandling.breakOnThrow = true;
-    //~ }
-//~
-    //~ let pts = excMessage.split(',');
-    //~ pts.sort();
-    //~ assertEq(pts[0], ` first`, 'DP|');
-    //~ assertEq(pts[1], ` second`, 'DO|');
-    //~ assertEq(pts[2], ` third (4E)`, 'DN|');
-    //~ assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum  try one of`), 'DM|');
-//~ });
+tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dn|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'first'), 'Dm|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'firsT'), 'Dl|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'FirsT'), 'Dk|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'First '), 'Dj|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Di|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firs'), 'Dh|');
+});
+tests.test('findStrToEnum.UseAlts', () => {
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dg|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'TheFirst'), 'Df|');
+    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Scnd'), 'De|');
+    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'), 'Dd|');
+});
+tests.test('getEnumToStr.FoundPrimary', () => {
+    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.First), 'Dc|');
+    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.Second), 'Db|');
+    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
+});
+tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
+    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormTheFirst), 'DZ|');
+    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormScnd), 'DY|');
+    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormThd), 'DX|');
+});
+tests.test('getEnumToStr.NotFound', () => {
+    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
+    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, 999), 'DV|');
+});
+tests.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
+    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__isUI512Enum), 'DU|');
+    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize), 'DT|');
+});
+tests.test('getStrToEnum.FoundPrimary', () => {
+    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'), 'DS|');
+    assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'), 'DR|');
+    assertEq(TestEnum.Third, getStrToEnum(TestEnum, 'TestEnum', 'Third'), 'DQ|');
+});
+tests.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
+    let excMessage = '';
+    try {
+        UI512ErrorHandling.breakOnThrow = false;
+        getStrToEnum(TestEnum, 'TestEnum', 'Firstf');
+    } catch (e) {
+        excMessage = e.toString();
+    } finally {
+        UI512ErrorHandling.breakOnThrow = true;
+    }
+
+    let pts = excMessage.split(',');
+    pts.sort();
+    assertEq(pts[0], ` first`, 'DP|');
+    assertEq(pts[1], ` second`, 'DO|');
+    assertEq(pts[2], ` third (4E)`, 'DN|');
+    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum  try one of`), 'DM|');
+});
 tests.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
     assertEq(1, fitIntoInclusive(1, 1, 3), 'DK|');
