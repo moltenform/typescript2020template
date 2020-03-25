@@ -1,5 +1,6 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, last, makeUI512Error, scontains, } from './../util/benBaseUtilsAssert';
+import { Util512 } from '../util/benBaseUtils';
 // import { Util512 } from '../util/benBaseUtils';
 
 /**
@@ -61,24 +62,31 @@ export class BenBaseTests {
     constructor(public name: string) {}
     tests: [string, Function][] = [];
     static categories: BenBaseTests[] = [];
-    static runAllSynchronousTests() {
+    static async runAllSynchronousTests(skip = '') {
         console.log('Running tests...');
-        //let allTests: [string, Function][] = [];
-        //let countTotal = BenBaseTests.categories.map(item => item.tests.length).reduce(Util512.add);
-        //for (let category of categories) {
-        //    console.log(`Category: ${category.name}`);
-        //    for (let i=0; i<category.tests.length; i++) {
-        //        let [tstname, tstfn] = category.tests[i]
-        //        console.log(`Test ${i+1}/{category.tests.length}`);
-        //
-        //    }
-        //}
+        let countTotal = BenBaseTests.categories.map(item => item.tests.length).reduce(Util512.add);
+        for (let category of BenBaseTests.categories) {
+            console.log(`Category: ${category.name}`);
+            if (!scontains(skip, "|" + category.name + "|")) {
+                BenBaseTests.runCategory(category, countTotal);
+            }
+        }
+        console.log(`All tests complete.`);
+    }
+
+    static runCategory(category: BenBaseTests, countTotal: number) {
+        for (let i = 0; i < category.tests.length; i++) {
+            let [tstname, tstfn] = category.tests[i];
+            console.log(`Test ${i + 1}/${countTotal}: ${tstname}`);
+            tstfn();
+        }
     }
 
     static beginTestCategory(name: string) {
         BenBaseTests.categories.push(new BenBaseTests(name));
     }
 
+    // registers a test
     static t(testName: string, fn: Function) {
         let currentCategory = last(BenBaseTests.categories);
         currentCategory.tests.push([testName, fn]);
