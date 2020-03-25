@@ -1,31 +1,31 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { OrderedHash, assertEq, fitIntoInclusive, sensibleSort } from './../util/benBaseUtils';
+/* auto */ import { OrderedHash, assertEq, fitIntoInclusive, sensibleSort, findStrToEnumTwo, findStrToEnumFirst } from './../util/benBaseUtils';
 
 let tests = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = tests;
 
-//~ tests.test('findStrToEnum.FoundPrimary', () => {
-    //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dz|');
-    //~ assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Second'), 'Dy|');
-    //~ assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Third'), 'Dx|');
-//~ });
-//~ tests.test('findStrToEnum.NotFound', () => {
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, ''), 'Dw|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'F'), 'Dv|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), 'Du|');
-//~ });
-//~ tests.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__isUI512Enum'), 'Dt|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__foo'), 'Dr|');
-//~ });
-//~ tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormScnd'), 'Dp|');
-    //~ assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormFoo'), 'Do|');
-//~ });
+tests.test('findStrToEnum.FoundPrimary', () => {
+    assertEq(TestEnum.First, findStrToEnumTwo(TestEnum, 'First'), 'Dz|');
+    assertEq(TestEnum.Second, findStrToEnumTwo(TestEnum, 'Second'), 'Dy|');
+    assertEq(TestEnum.Third, findStrToEnumTwo(TestEnum, 'Third'), 'Dx|');
+});
+tests.test('findStrToEnum.NotFound', () => {
+    assertEq(undefined, findStrToEnumTwo(TestEnum, ''), 'Dw|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, 'F'), 'Dv|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, 'Firstf'), 'Du|');
+});
+tests.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
+    assertEq(undefined, findStrToEnumTwo(TestEnum, '__isUI512Enum'), 'Dt|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, '__foo'), 'Dr|');
+});
+tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
+    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormScnd'), 'Dp|');
+    assertEq(undefined, findStrToEnumTwo(TestEnum, 'AlternateFormFoo'), 'Do|');
+});
 //~ tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
     //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dn|');
     //~ assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'first'), 'Dm|');
@@ -321,3 +321,17 @@ tests.test('testOrderedHash.IterReversed', () => {
 
     assertEq([28, 29, 30], result, '0o|');
 });
+
+/**
+ * test-only enum
+ */
+enum TestEnum {
+    __isUI512Enum = 1,
+    __UI512EnumCapitalize,
+    First,
+    Second,
+    Third,
+    AlternateFormTheFirst = First,
+    AlternateFormScnd = Second,
+    AlternateFormThd = Third
+}

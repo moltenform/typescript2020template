@@ -1,5 +1,11 @@
-
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined } from './benBaseUtilsAssert';
+/* auto */ import {
+    O,
+    assertTrue,
+    checkThrowUI512,
+    makeUI512Error,
+    scontains,
+    throwIfUndefined,
+} from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -344,51 +350,77 @@ type AnyJsonInner = string | number | boolean | null | { [property: string]: Any
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 
-//~ /**
-//~ * list enum vals
-//~ */
-//~ function listEnumVals<T>(enm:T) {
-//~ let s = ''
-//~ for (let enumMember in enm) {
-//~ /* show possible values */
-//~ if (
-//~ isString(enumMember) &&
-//~ !enumMember.startsWith('__') &&
-//~ !enumMember.startsWith('__AlternateForm') &&
-//~ !scontains('0123456789', enumMember[0].toString())
-//~ ) {
-//~ s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
-//~ }
-//~ }
+/**
+ * list enum vals
+ */
+export function listEnumVals<T>(enm: T, makeLowercase: boolean) {
+    let s = '';
+    for (let enumMember in enm) {
+        /* show possible values */
+        if (
+            isString(enumMember) &&
+            !enumMember.startsWith('__') &&
+            !enumMember.startsWith('__AlternateForm') &&
+            !scontains('0123456789', enumMember[0].toString())
+        ) {
+            s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
+        }
+    }
 
-//~ return s;
-//~ }
+    return s;
+}
 
-//~ /**
-//~ * string to enum.
-//~ * place __isUI512Enum inside the enum to use this
-//~ * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
-//~ * findStrToEnum(MyEnum, s)
-//~ */
-//~ export function findStrToEnum<InstanceType<T>>(enm: T, s: string): O<InstanceType<T>> {
-//~ assertTrue(enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
-//~ if (s.startsWith('__')) {
-//~ return undefined;
-//~ } else if (s.startsWith('__AlternateForm')) {
-//~ return undefined;
-//~ } else {
-//~ if (enm['__UI512EnumCapitalize'] !== undefined) {
-//~ s = Util512.capitalizeFirst(s);
-//~ }
+export type NoParameterCtor<T> = { new (): T };
+export type AnyParameterCtor<T> = { new (...args: any): T };
 
-//~ let found = enm[s];
-//~ if (found) {
-//~ return found;
-//~ } else {
-//~ return enm['__AlternateForm' + s];
-//~ }
-//~ }
-//~ }
+/**
+ * string to enum.
+ * place __isUI512Enum inside the enum to use this
+ * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
+ * findStrToEnum(MyEnum, s)
+ */
+export function findStrToEnumOne<T extends AnyParameterCtor<unknown>>(Enm: T, s: string): O<InstanceType<T>> {
+    assertTrue(Enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
+    if (s.startsWith('__')) {
+        return undefined;
+    } else if (s.startsWith('__AlternateForm')) {
+        return undefined;
+    } else {
+        if (Enm['__UI512EnumCapitalize'] !== undefined) {
+            s = Util512.capitalizeFirst(s);
+        }
+
+        let found = Enm[s];
+        if (found) {
+            return found;
+        } else {
+            return Enm['__AlternateForm' + s];
+        }
+    }
+}
+
+type TypeLikeAnEnum<E> = Record<keyof E, number | string> & { [k: number]: string };
+
+export function findStrToEnumTwo<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
+    assertTrue(Enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
+    if (s.startsWith('__')) {
+        return undefined;
+    } else if (s.startsWith('AlternateForm')) {
+        return undefined;
+    } else {
+        if (Enm['__UI512EnumCapitalize'] !== undefined) {
+            s = Util512.capitalizeFirst(s);
+        }
+
+        let found = Enm[s];
+        if (found) {
+            return found;
+        } else {
+            return Enm['AlternateForm' + s];
+        }
+    }
+}
+
 
 //~ /**
 //~ * same as findStrToEnum, but throws if not found, showing possible values.
@@ -401,7 +433,7 @@ export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 //~ msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
 //~ if (enm['__isUI512Enum'] !== undefined) {
 //~ let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
-//~ msgContext += ' try one of ' + listEnumVals(enm);
+//~ msgContext += ' try one of ' + listEnumVals(enm, makeLowercase);
 //~ }
 
 //~ throw makeUI512Error(msgContext, '4E|');
