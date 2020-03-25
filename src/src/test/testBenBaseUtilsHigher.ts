@@ -4,10 +4,10 @@
 /* auto */ import { assertTrue, scontains } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
-let tests = new SimpleSensibleTestCategory('testBenBaseUtilsHigher');
-export let testBenBaseUtilsHigher = tests;
+let t = new SimpleSensibleTestCategory('testBenBaseUtilsHigher');
+export let testBenBaseUtilsHigher = t;
 
-tests.test('WeakUuid', () => {
+t.test('WeakUuid', () => {
     let uid1 = Util512Higher.weakUuid();
     let uid2 = Util512Higher.weakUuid();
     assertTrue(uid1 !== uid2, 'Ea|');
@@ -23,12 +23,12 @@ tests.test('WeakUuid', () => {
         }
     }
 });
-tests.test('getRandIntInclusiveWeak.OKIfBoundsEqual', () => {
+t.test('getRandIntInclusiveWeak.OKIfBoundsEqual', () => {
     assertEq(1, Util512Higher.getRandIntInclusiveWeak(1, 1), 'EW|');
     assertEq(2, Util512Higher.getRandIntInclusiveWeak(2, 2), 'EV|');
     assertEq(3, Util512Higher.getRandIntInclusiveWeak(3, 3), 'EU|');
 });
-tests.test('getRandIntInclusiveWeak', () => {
+t.test('getRandIntInclusiveWeak', () => {
     let got = Util512Higher.getRandIntInclusiveWeak(1, 3);
     assertTrue(got >= 1 && got <= 3, 'ET|');
     got = Util512Higher.getRandIntInclusiveWeak(4, 6);
@@ -36,7 +36,7 @@ tests.test('getRandIntInclusiveWeak', () => {
     got = Util512Higher.getRandIntInclusiveWeak(7, 9);
     assertTrue(got >= 7 && got <= 9, 'ER|');
 });
-tests.test('generateUniqueBase64UrlSafe', () => {
+t.test('generateUniqueBase64UrlSafe', () => {
     let generated1 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
     let generated2 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
     assertTrue(generated1 !== generated2, 'D(|');

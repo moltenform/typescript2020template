@@ -3,10 +3,10 @@
 /* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
-let tests = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
-export let testsBenBaseUtilsClass = tests;
+let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
+export let testsBenBaseUtilsClass = t;
 
-tests.test('isValidNumber', () => {
+t.test('isValidNumber', () => {
     assertTrue(Util512.isValidNumber(123), '');
     assertTrue(Util512.isValidNumber(0), '');
     assertTrue(!Util512.isValidNumber(null), '');
@@ -18,7 +18,7 @@ tests.test('isValidNumber', () => {
     assertTrue(!Util512.isValidNumber('12'), '');
     assertTrue(!Util512.isValidNumber(''), '');
 });
-tests.test('Range.Upwards', () => {
+t.test('Range.Upwards', () => {
     assertEq([0], Util512.range(0, 1), 'E`|');
     assertEq([1], Util512.range(1, 2), 'E_|');
     assertEq([0, 1, 2, 3], Util512.range(0, 4), 'E^|');
@@ -27,7 +27,7 @@ tests.test('Range.Upwards', () => {
     assertEq([2, 5, 8], Util512.range(2, 9, 3), 'E@|');
     assertEq([2, 5, 8], Util512.range(2, 10, 3), 'E?|');
 });
-tests.test('Range.Downwards', () => {
+t.test('Range.Downwards', () => {
     assertEq([1], Util512.range(1, 0, -1), 'E>|');
     assertEq([2], Util512.range(2, 1, -1), 'E=|');
     assertEq([5, 4, 3], Util512.range(5, 2, -1), 'E<|');
@@ -35,23 +35,23 @@ tests.test('Range.Downwards', () => {
     assertEq([9, 6, 3], Util512.range(9, 2, -3), 'E:|');
     assertEq([8, 5], Util512.range(8, 2, -3), 'E/|');
 });
-tests.test('Range.None', () => {
+t.test('Range.None', () => {
     assertEq([], Util512.range(5, 2), 'E.|');
     assertEq([], Util512.range(2, 2), 'E-|');
     assertEq([], Util512.range(2, 5, -1), 'E,|');
     assertEq([], Util512.range(2, 2, -1), 'E+|');
 });
-tests.test('Repeat', () => {
-    tests.say('—————————— strings');
+t.test('Repeat', () => {
+    t.say('—————————— strings');
     assertEq(['a', 'a', 'a'], Util512.repeat(3, 'a'), 'F4|');
     assertEq(['a'], Util512.repeat(1, 'a'), 'F3|');
     assertEq([], Util512.repeat(0, 'a'), 'F2|');
-    tests.say('—————————— numbers');
+    t.say('—————————— numbers');
     assertEq([4, 4, 4], Util512.repeat(3, 4), 'F1|');
     assertEq([4], Util512.repeat(1, 4), 'F0|');
     assertEq([], Util512.repeat(0, 4), 'E~|');
 });
-tests.test('setarr', () => {
+t.test('setarr', () => {
     let ar1: number[] = [];
     Util512.setarr(ar1, 0, 12);
     assertEq([12], ar1, '');
@@ -71,21 +71,21 @@ tests.test('setarr', () => {
     Util512.setarr(ar, 3, 12);
     assertEq([1, 2, undefined, 12], ar, '');
 });
-tests.test('extendArray', () => {
-    tests.say('—————————— AppendNothing');
+t.test('extendArray', () => {
+    t.say('—————————— AppendNothing');
     let ar = [1, 2, 3];
     Util512.extendArray(ar, []);
     assertEq([1, 2, 3], ar, 'E}|');
-    tests.say('—————————— AppendOneElem');
+    t.say('—————————— AppendOneElem');
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4]);
     assertEq([1, 2, 3, 4], ar, 'E||');
-    tests.say('—————————— AppendThreeElems');
+    t.say('—————————— AppendThreeElems');
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4, 5, 6]);
     assertEq([1, 2, 3, 4, 5, 6], ar, 'E{|');
 });
-tests.test('parseIntStrict', () => {
+t.test('parseIntStrict', () => {
     assertEq(0, Util512.parseIntStrict('0'), '');
     assertEq(9, Util512.parseIntStrict('9'), '');
     assertEq(12, Util512.parseIntStrict('12'), '');
@@ -98,17 +98,17 @@ tests.test('parseIntStrict', () => {
     assertEq(NaN, Util512.parseIntStrict('1 more'), '');
     assertEq(NaN, Util512.parseIntStrict('1.1'), '');
 });
-tests.test('add', () => {
+t.test('add', () => {
     assertEq(0, Util512.add(0, 0), '');
     assertEq(9, Util512.add(4, 5), '');
     assertEq(6, [1, 2, 3].reduce(Util512.add), '');
     assertEq(9, [1, 2, 3].reduce(Util512.add, 3), '');
     assertEq(0, [].reduce(Util512.add, 0), '');
 });
-tests.test('getBrowserOS', () => {
+t.test('getBrowserOS', () => {
     assertEq('', Util512.getBrowserOS(), '');
 });
-tests.test('isMapEmpty.PlainObject', () => {
+t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: 'def' };
@@ -116,7 +116,7 @@ tests.test('isMapEmpty.PlainObject', () => {
     assertTrue(!Util512.isMapEmpty(obj1), 'EL|');
     assertTrue(!Util512.isMapEmpty(obj2), 'EK|');
 });
-tests.test('isMapEmpty.Class', () => {
+t.test('isMapEmpty.Class', () => {
     let o0 = new TestClsEmpty();
     let o1 = new TestClsOne();
     let o2 = new TestClsOne();
@@ -125,7 +125,7 @@ tests.test('isMapEmpty.Class', () => {
     assertTrue(!Util512.isMapEmpty(o1 as any), 'EI|');
     assertTrue(!Util512.isMapEmpty(o2 as any), 'EH|');
 });
-tests.test('getMapShallowClone.PlainObject', () => {
+t.test('getMapShallowClone.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: '_def' };
@@ -136,7 +136,7 @@ tests.test('getMapShallowClone.PlainObject', () => {
     assertEq(['a'], sorted(Util512.getMapKeys(clone1)), 'D}|');
     assertEq(['abc', 'def'], sorted(Util512.getMapKeys(clone2)), 'D||');
 });
-tests.test('getMapShallowClone.Class', () => {
+t.test('getMapShallowClone.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
@@ -148,7 +148,7 @@ tests.test('getMapShallowClone.Class', () => {
     assertEq(['aSingleProp'], sorted(Util512.getMapKeys(clone1)), 'D`|');
     assertEq(['aSingleAdded', 'aSingleProp'], sorted(Util512.getMapKeys(clone2)), 'D_|');
 });
-tests.test('freezeProperty.PlainObject', () => {
+t.test('freezeProperty.PlainObject', () => {
     let obj1 = { a: true, b: true };
     Util512.freezeProperty(obj1, 'a');
     obj1.b = false;
@@ -156,14 +156,14 @@ tests.test('freezeProperty.PlainObject', () => {
         obj1.a = false;
     });
 });
-tests.test('freezeProperty.Class', () => {
+t.test('freezeProperty.Class', () => {
     let cls1 = new TestClsOne();
     Util512.freezeProperty(cls1, 'aSingleProp');
     assertThrows('Ls|', '', () => {
         cls1.aSingleProp = false;
     });
 });
-tests.test('freezeRecurse.PlainObject', () => {
+t.test('freezeRecurse.PlainObject', () => {
     let obj = { a: true, b: true };
     assertTrue(!Object.isFrozen(obj), 'EG|');
     Util512.freezeRecurse(obj);
@@ -171,7 +171,7 @@ tests.test('freezeRecurse.PlainObject', () => {
         obj.a = false;
     });
 });
-tests.test('freezeRecurse.Class', () => {
+t.test('freezeRecurse.Class', () => {
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
     let cls3 = new TestClsOne();
@@ -191,12 +191,12 @@ tests.test('freezeRecurse.Class', () => {
         (cls1 as any).newProp = true;
     });
 });
-tests.test('EscapeForRegex.NoEscapeNeeded', () => {
+t.test('EscapeForRegex.NoEscapeNeeded', () => {
     assertEq('', Util512.escapeForRegex(''), 'Ew|');
     assertEq('abc', Util512.escapeForRegex('abc'), 'Ev|');
     assertEq('a 1 "', Util512.escapeForRegex('a 1 "'), 'Eu|');
 });
-tests.test('EscapeForRegex.EscapeNeeded', () => {
+t.test('EscapeForRegex.EscapeNeeded', () => {
     assertEq('\\\\', Util512.escapeForRegex('\\'), 'Et|');
     assertEq('a\\?b\\?', Util512.escapeForRegex('a?b?'), 'Es|');
     assertEq('\\/', Util512.escapeForRegex('/'), 'Er|');
@@ -206,7 +206,7 @@ tests.test('EscapeForRegex.EscapeNeeded', () => {
     assertEq('\\+\\+', Util512.escapeForRegex('++'), 'En|');
     assertEq('a\\+\\+b', Util512.escapeForRegex('a++b'), 'Em|');
 });
-tests.test('EscapeForRegex.Consecutive', () => {
+t.test('EscapeForRegex.Consecutive', () => {
     assertEq('', Util512.escapeForRegex(''), 'El|');
     assertEq('abc', Util512.escapeForRegex('abc'), 'Ek|');
     assertEq('\\[abc\\]', Util512.escapeForRegex('[abc]'), 'Ej|');
@@ -220,7 +220,7 @@ tests.test('EscapeForRegex.Consecutive', () => {
     assertEq('\\/\\/', Util512.escapeForRegex('//'), 'Ec|');
     assertEq('\\\\\\\\', Util512.escapeForRegex('\\\\'), 'Eb|');
 });
-tests.test('capitalizeFirst.NonAlphabet', () => {
+t.test('capitalizeFirst.NonAlphabet', () => {
     assertEq('', Util512.capitalizeFirst(''), 'E*|');
     assertEq('1', Util512.capitalizeFirst('1'), 'E)|');
     assertEq('0123', Util512.capitalizeFirst('0123'), 'E(|');
@@ -228,7 +228,7 @@ tests.test('capitalizeFirst.NonAlphabet', () => {
     assertEq(' 1', Util512.capitalizeFirst(' 1'), 'E%|');
     assertEq('!@#1', Util512.capitalizeFirst('!@#1'), 'E$|');
 });
-tests.test('capitalizeFirst.Alphabet', () => {
+t.test('capitalizeFirst.Alphabet', () => {
     assertEq('A', Util512.capitalizeFirst('a'), 'E#|');
     assertEq('Abc', Util512.capitalizeFirst('abc'), 'E!|');
     assertEq('Def ghi', Util512.capitalizeFirst('def ghi'), 'E |');
@@ -236,7 +236,7 @@ tests.test('capitalizeFirst.Alphabet', () => {
     assertEq('ABC', Util512.capitalizeFirst('ABC'), 'Ey|');
     assertEq('DEF ghi', Util512.capitalizeFirst('DEF ghi'), 'Ex|');
 });
-tests.test('callAsMethod.BadCharInMethodName', () => {
+t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lo|', 'requires alphanumeric', () =>
         Util512.callAsMethodOnClass('TestClsWithMethods', o, '', [true, 1], true),
@@ -274,11 +274,11 @@ tests.test('callAsMethod.BadCharInMethodName', () => {
         Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a.b', [true, 1], true),
     );
 });
-tests.test('callAsMethod.MissingMethodWhenAllowed', () => {
+t.test('callAsMethod.MissingMethodWhenAllowed', () => {
     let o = new TestClsWithMethods();
     Util512.callAsMethodOnClass('TestClsWithMethods', o, 'notExist', [true, 1], true);
 });
-tests.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
+t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lf|', 'could not find', () =>
         Util512.callAsMethodOnClass(
@@ -290,7 +290,7 @@ tests.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
         ),
     );
 });
-tests.test('callAsMethod.ValidMethod', () => {
+t.test('callAsMethod.ValidMethod', () => {
     let o1 = new TestClsWithMethods();
     Util512.callAsMethodOnClass('TestClsWithMethods', o1, 'goAbc', [true, 1], false);
     assertEq(true, o1.calledAbc, 'D^|');
@@ -300,7 +300,7 @@ tests.test('callAsMethod.ValidMethod', () => {
     assertEq(false, o2.calledAbc, 'D[|');
     assertEq(true, o2.calledZ, 'D@|');
 });
-tests.test('isMethodOnClass', () => {
+t.test('isMethodOnClass', () => {
     let o1 = new TestClsWithMethods();
     assertTrue(Util512.isMethodOnClass(o1, 'goAbc'), 'D?|');
     assertTrue(Util512.isMethodOnClass(o1, 'goZ'), 'D>|');
@@ -309,7 +309,7 @@ tests.test('isMethodOnClass', () => {
     assertTrue(!Util512.isMethodOnClass(o1, 'notPresent'), 'D;|');
     assertTrue(!Util512.isMethodOnClass(o1, ''), 'D:|');
 });
-tests.test('getMapKeys.PlainObject', () => {
+t.test('getMapKeys.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: '_def' };
@@ -317,7 +317,7 @@ tests.test('getMapKeys.PlainObject', () => {
     assertEq(['a'], sorted(Util512.getMapKeys(obj1)), 'EA|');
     assertEq(['abc', 'def'], sorted(Util512.getMapKeys(obj2)), 'E9|');
 });
-tests.test('getMapKeys.Class', () => {
+t.test('getMapKeys.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
@@ -330,7 +330,7 @@ tests.test('getMapKeys.Class', () => {
         'E6|',
     );
 });
-tests.test('getMapVals.PlainObject', () => {
+t.test('getMapVals.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: '_def' };
@@ -338,7 +338,7 @@ tests.test('getMapVals.PlainObject', () => {
     assertEq([true], sorted(Util512.getMapVals(obj1)), 'E4|');
     assertEq(['_def', 'abc'], sorted(Util512.getMapVals(obj2)), 'E3|');
 });
-tests.test('getMapVals.Class', () => {
+t.test('getMapVals.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
@@ -347,22 +347,22 @@ tests.test('getMapVals.Class', () => {
     assertEq([true], sorted(Util512.getMapVals(cls1 as any)), 'E1|');
     assertEq([false, true], sorted(Util512.getMapVals(cls2 as any)), 'E0|');
 });
-tests.test('padStart', () => {
+t.test('padStart', () => {
     assertEq('123', Util512.padStart(123, 2, '0'), 'D/|');
     assertEq('123', Util512.padStart(123, 3, '0'), 'D.|');
     assertEq('0123', Util512.padStart(123, 4, '0'), 'D-|');
     assertEq('00123', Util512.padStart(123, 5, '0'), 'D,|');
 });
-tests.test('arrayToBase64.arrayOfNumbers', () => {
+t.test('arrayToBase64.arrayOfNumbers', () => {
     let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
     assertEq('aGVsbG8=', Util512.arrayToBase64(nums), 'D+|');
 });
-tests.test('arrayToBase64.Uint8Array', () => {
+t.test('arrayToBase64.Uint8Array', () => {
     let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
     let uint8 = new Uint8Array(nums);
     assertEq('aGVsbG8=', Util512.arrayToBase64(uint8), 'D*|');
 });
-tests.test('arrayToBase64.ArrayBuffer', () => {
+t.test('arrayToBase64.ArrayBuffer', () => {
     let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
     let buffer = new ArrayBuffer(nums.length);
     let view = new Uint8Array(buffer);
@@ -372,7 +372,7 @@ tests.test('arrayToBase64.ArrayBuffer', () => {
 
     assertEq('aGVsbG8=', Util512.arrayToBase64(view), 'D)|');
 });
-tests.test('Base64UrlSafe.StripsAndReAddEqualsSign', () => {
+t.test('Base64UrlSafe.StripsAndReAddEqualsSign', () => {
     let roundTrip = (a: string, b: string) => {
         assertEq(Util512.toBase64UrlSafe(a), b, 'EQ|');
         assertEq(Util512.fromBase64UrlSafe(b), a, 'EP|');
@@ -384,7 +384,7 @@ tests.test('Base64UrlSafe.StripsAndReAddEqualsSign', () => {
     roundTrip('abcdef', 'YWJjZGVm');
     roundTrip('abcdefg', 'YWJjZGVmZw');
 });
-tests.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
+t.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
     let roundTrip = (a: string, b: string) => {
         assertEq(Util512.toBase64UrlSafe(a), b, 'EO|');
         assertEq(Util512.fromBase64UrlSafe(b), a, 'EN|');
@@ -397,12 +397,12 @@ tests.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
     roundTrip('\x01\x05\xf8\xffXYZ<', 'AQX4_1hZWjw');
     roundTrip('\x01\x05\xf8\xffXYZ<>', 'AQX4_1hZWjw-');
 });
-tests.test('stringToCharArray', () => {
+t.test('stringToCharArray', () => {
     assertEq([], Util512.stringToCharArray(''), '');
     assertEq(['a'], Util512.stringToCharArray('a'), '');
     assertEq(['a', 'b', ' ', 'c', 'd'], Util512.stringToCharArray('ab cd'), '');
 });
-tests.test('stringToByteArray', () => {
+t.test('stringToByteArray', () => {
     assertEq([], Util512.stringToByteArray(''), '');
     assertEq([97], Util512.stringToByteArray('a'), '');
     assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'), '');

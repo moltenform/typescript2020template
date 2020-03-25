@@ -3,10 +3,10 @@
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { OrderedHash, ValHolder, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, } from './../util/benBaseUtils';
 
-let tests = new SimpleSensibleTestCategory('testBenBaseUtils');
-export let testsBenBaseUtils = tests;
+let t = new SimpleSensibleTestCategory('testBenBaseUtils');
+export let testsBenBaseUtils = t;
 
-tests.test('ValHolder.param', () => {
+t.test('ValHolder.param', () => {
     function increment(vv: ValHolder<number>) {
         vv.val += 1;
     }
@@ -15,7 +15,7 @@ tests.test('ValHolder.param', () => {
     increment(v);
     assertEq(1, v.val, '');
 });
-tests.test('ValHolder.closure', () => {
+t.test('ValHolder.closure', () => {
     function increment() {
         v.val += 1;
     }
@@ -24,22 +24,22 @@ tests.test('ValHolder.closure', () => {
     increment();
     assertEq(1, v.val, '');
 });
-tests.test('findStrToEnum.FoundPrimary', () => {
+t.test('findStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dz|');
     assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'), 'Dy|');
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Third'), 'Dx|');
 });
-tests.test('findStrToEnum.NotFound', () => {
+t.test('findStrToEnum.NotFound', () => {
     assertEq(undefined, findStrToEnum(TestEnum, ''), 'Dw|');
     assertEq(undefined, findStrToEnum(TestEnum, 'F'), 'Dv|');
     assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Du|');
 });
-tests.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
+t.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
     assertEq(undefined, findStrToEnum(TestEnum, '__isUI512Enum'), 'Dt|');
     assertEq(undefined, findStrToEnum(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
     assertEq(undefined, findStrToEnum(TestEnum, '__foo'), 'Dr|');
 });
-tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
+t.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'Dp|');
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'Do|');
@@ -53,7 +53,7 @@ tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'), 'Dq|');
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'), 'Dq|');
 });
-tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
+t.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dn|');
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'first'), 'Dm|');
     assertEq(undefined, findStrToEnum(TestEnum, 'firsT'), 'Dl|');
@@ -62,18 +62,18 @@ tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
     assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Di|');
     assertEq(undefined, findStrToEnum(TestEnum, 'Firs'), 'Dh|');
 });
-tests.test('findStrToEnum.UseAlts', () => {
+t.test('findStrToEnum.UseAlts', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dg|');
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'TheFirst'), 'Df|');
     assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Scnd'), 'De|');
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'), 'Dd|');
 });
-tests.test('getEnumToStr.FoundPrimary', () => {
+t.test('getEnumToStr.FoundPrimary', () => {
     assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.First), 'Dc|');
     assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.Second), 'Db|');
     assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
 });
-tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
+t.test('getEnumToStr.AlternatesHaveSameVal', () => {
     assertEq(
         'first',
         getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst),
@@ -90,11 +90,11 @@ tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
         'DX|',
     );
 });
-tests.test('getEnumToStr.NotFound', () => {
+t.test('getEnumToStr.NotFound', () => {
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, 999), 'DV|');
 });
-tests.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
+t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__isUI512Enum), 'DU|');
     assertEq(
         'Unknown',
@@ -102,12 +102,12 @@ tests.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
         'DT|',
     );
 });
-tests.test('getStrToEnum.FoundPrimary', () => {
+t.test('getStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'), 'DS|');
     assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'), 'DR|');
     assertEq(TestEnum.Third, getStrToEnum(TestEnum, 'TestEnum', 'Third'), 'DQ|');
 });
-tests.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
+t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     let excMessage = '';
     try {
         UI512ErrorHandling.breakOnThrow = false;
@@ -125,19 +125,19 @@ tests.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertEq(pts[2], ` third (4E)`, 'DN|');
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
-tests.test('fitIntoInclusive.AlreadyWithin', () => {
+t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
     assertEq(1, fitIntoInclusive(1, 1, 3), 'DK|');
     assertEq(2, fitIntoInclusive(2, 1, 3), 'DJ|');
     assertEq(3, fitIntoInclusive(3, 1, 3), 'DI|');
 });
-tests.test('fitIntoInclusive.NeedToTruncate', () => {
+t.test('fitIntoInclusive.NeedToTruncate', () => {
     assertEq(1, fitIntoInclusive(0, 1, 1), 'DH|');
     assertEq(1, fitIntoInclusive(2, 1, 1), 'DG|');
     assertEq(1, fitIntoInclusive(0, 1, 3), 'DF|');
     assertEq(3, fitIntoInclusive(4, 1, 3), 'DE|');
 });
-tests.test('sensibleSort.String', () => {
+t.test('sensibleSort.String', () => {
     assertEq(0, sensibleSort('', ''), '1M|');
     assertEq(0, sensibleSort('a', 'a'), '1L|');
     assertEq(1, sensibleSort('abc', 'abb'), '1K|');
@@ -145,7 +145,7 @@ tests.test('sensibleSort.String', () => {
     assertEq(1, sensibleSort('abcd', 'abc'), '1I|');
     assertEq(-1, sensibleSort('abc', 'abcd'), '1H|');
 });
-tests.test('sensibleSort.StringWithNonAscii', () => {
+t.test('sensibleSort.StringWithNonAscii', () => {
     assertEq(0, sensibleSort('aunicode\u2666char', 'aunicode\u2666char'), '1G|');
     assertEq(1, sensibleSort('aunicode\u2667char', 'aunicode\u2666char'), '1F|');
     assertEq(-1, sensibleSort('aunicode\u2666char', 'aunicode\u2667char'), '1E|');
@@ -161,13 +161,13 @@ tests.test('sensibleSort.StringWithNonAscii', () => {
         '1B|',
     );
 });
-tests.test('sensibleSort.Bool', () => {
+t.test('sensibleSort.Bool', () => {
     assertEq(0, sensibleSort(false, false), '1A|');
     assertEq(0, sensibleSort(true, true), '19|');
     assertEq(1, sensibleSort(true, false), '18|');
     assertEq(-1, sensibleSort(false, true), '17|');
 });
-tests.test('sensibleSort.Number', () => {
+t.test('sensibleSort.Number', () => {
     assertEq(0, sensibleSort(0, 0), '16|');
     assertEq(0, sensibleSort(1, 1), '15|');
     assertEq(0, sensibleSort(12345, 12345), '14|');
@@ -179,7 +179,7 @@ tests.test('sensibleSort.Number', () => {
     assertEq(1, sensibleSort(Number.POSITIVE_INFINITY, 12345), '0}|');
     assertEq(-1, sensibleSort(Number.NEGATIVE_INFINITY, -12345), '0||');
 });
-tests.test('sensibleSort.DiffTypesShouldThrow', () => {
+t.test('sensibleSort.DiffTypesShouldThrow', () => {
     assertThrows('Le|', 'not compare', () => sensibleSort('a', 1));
     assertThrows('Ld|', 'not compare', () => sensibleSort('a', true));
     assertThrows('Lc|', 'not compare', () => sensibleSort('a', undefined));
@@ -201,7 +201,7 @@ tests.test('sensibleSort.DiffTypesShouldThrow', () => {
     assertThrows('LM|', 'not compare', () => sensibleSort([], true));
     assertThrows('LL|', 'not compare', () => sensibleSort([], undefined));
 });
-tests.test('sensibleSort.DiffTypesInArrayShouldThrow', () => {
+t.test('sensibleSort.DiffTypesInArrayShouldThrow', () => {
     assertThrows('LK|', 'not compare', () => sensibleSort(['a', 'a'], ['a', 1]));
     assertThrows('LJ|', 'not compare', () => sensibleSort(['a', 'a'], ['a', true]));
     assertThrows('LI|', 'not compare', () => sensibleSort(['a', 'a'], ['a', undefined]));
@@ -223,12 +223,12 @@ tests.test('sensibleSort.DiffTypesInArrayShouldThrow', () => {
     assertThrows('L2|', 'not compare', () => sensibleSort(['a', []], ['a', true]));
     assertThrows('L1|', 'not compare', () => sensibleSort(['a', []], ['a', undefined]));
 });
-tests.test('sensibleSort.ArrayThreeElements', () => {
+t.test('sensibleSort.ArrayThreeElements', () => {
     assertEq(0, sensibleSort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']), '0@|');
     assertEq(1, sensibleSort([5, 'a', 'abc'], [5, 'a', 'abb']), '0?|');
     assertEq(-1, sensibleSort([5, 'a', 'abb'], [5, 'a', 'abc']), '0>|');
 });
-tests.test('sensibleSort.ArraySameLength', () => {
+t.test('sensibleSort.ArraySameLength', () => {
     assertEq(0, sensibleSort([], []), '0{|');
     assertEq(0, sensibleSort([5, 'a'], [5, 'a']), '0`|');
     assertEq(1, sensibleSort([5, 'a', 7], [5, 'a', 6]), '0_|');
@@ -236,13 +236,13 @@ tests.test('sensibleSort.ArraySameLength', () => {
     assertEq(1, sensibleSort([5, 7, 'a'], [5, 6, 'a']), '0]|');
     assertEq(1, sensibleSort([5, 7, 'a', 600], [5, 6, 'a', 700]), '0[|');
 });
-tests.test('sensibleSort.ArrayDifferentLength', () => {
+t.test('sensibleSort.ArrayDifferentLength', () => {
     assertEq(1, sensibleSort([1], []), '0=|');
     assertEq(-1, sensibleSort([], [1]), '0<|');
     assertEq(1, sensibleSort([10, 20], [10]), '0;|');
     assertEq(-1, sensibleSort([10], [10, 20]), '0:|');
 });
-tests.test('sensibleSort.ArrayNested', () => {
+t.test('sensibleSort.ArrayNested', () => {
     assertEq(0, sensibleSort([[]], [[]]), '0/|');
     assertEq(0, sensibleSort([[], []], [[], []]), '0.|');
     assertEq(0, sensibleSort([[1, 2], []], [[1, 2], []]), '0-|');
@@ -303,7 +303,7 @@ tests.test('sensibleSort.ArrayNested', () => {
     assertEq(1, sensibleSort([[10, 20], 60, [30]], [[10, 20], 50, [30]]), '0#|');
     assertEq(-1, sensibleSort([[10, 20], 50, [30]], [[10, 20], 60, [30]]), '0!|');
 });
-tests.test('forOf', () => {
+t.test('forOf', () => {
     let ar = [11, 22, 33];
     let result: number[] = [];
     for (let item of ar) {
@@ -312,7 +312,7 @@ tests.test('forOf', () => {
 
     assertEq([11, 22, 33], result, '0t|');
 });
-tests.test('forOfEmpty', () => {
+t.test('forOfEmpty', () => {
     let ar: number[] = [];
     let result: number[] = [];
     for (let item of ar) {
@@ -321,7 +321,7 @@ tests.test('forOfEmpty', () => {
 
     assertEq([], result, 'DD|');
 });
-tests.test('forOfGenerator', () => {
+t.test('forOfGenerator', () => {
     function* myGenerator() {
         yield 10;
         yield 20;
@@ -336,7 +336,7 @@ tests.test('forOfGenerator', () => {
 
     assertEq([10, 20, 30, 40], result, '0s|');
 });
-tests.test('testOrderedHash.IterKeys', () => {
+t.test('testOrderedHash.IterKeys', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -348,7 +348,7 @@ tests.test('testOrderedHash.IterKeys', () => {
 
     assertEq(['ccc', 'ccb', 'cca'], result, '0q|');
 });
-tests.test('testOrderedHash.IterVals', () => {
+t.test('testOrderedHash.IterVals', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -360,7 +360,7 @@ tests.test('testOrderedHash.IterVals', () => {
 
     assertEq([30, 29, 28], result, '0p|');
 });
-tests.test('testOrderedHash.IterReversed', () => {
+t.test('testOrderedHash.IterReversed', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
