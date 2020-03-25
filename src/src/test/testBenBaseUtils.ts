@@ -25,6 +25,15 @@ tests.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'Dp|');
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'Do|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'), 'Dp|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'), 'Do|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Scnd'), 'Dp|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Foo'), 'Do|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'), 'Dq|');
 });
 tests.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dn|');
@@ -47,9 +56,9 @@ tests.test('getEnumToStr.FoundPrimary', () => {
     assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
 });
 tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
-    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormTheFirst), 'DZ|');
-    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormScnd), 'DY|');
-    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.AlternateFormThd), 'DX|');
+    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst), 'DZ|');
+    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd), 'DY|');
+    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd), 'DX|');
 });
 tests.test('getEnumToStr.NotFound', () => {
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
@@ -331,7 +340,7 @@ enum TestEnum {
     First,
     Second,
     Third,
-    AlternateFormTheFirst = First,
-    AlternateFormScnd = Second,
-    AlternateFormThd = Third,
+    __AlternateForm__TheFirst = First,
+    __AlternateForm__Scnd = Second,
+    __AlternateForm__Thd = Third,
 }

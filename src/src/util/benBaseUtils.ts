@@ -361,7 +361,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
         if (
             isString(enumMember) &&
             !enumMember.startsWith('__') &&
-            !enumMember.startsWith('AlternateForm') &&
+            !enumMember.startsWith('__AlternateForm__') &&
             !scontains('0123456789', enumMember[0].toString())
         ) {
             s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
@@ -381,6 +381,8 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
         return undefined;
     } else if (s.startsWith('AlternateForm')) {
         return undefined;
+    } else if (s.startsWith('__AlternateForm__')) {
+        return undefined;
     } else {
         if (Enm['__UI512EnumCapitalize'] !== undefined) {
             s = Util512.capitalizeFirst(s);
@@ -390,7 +392,7 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
         if (found) {
             return found;
         } else {
-            return Enm['AlternateForm' + s];
+            return Enm['__AlternateForm__' + s];
         }
     }
 }
@@ -422,7 +424,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
 
     /* using e[n] would work, but it's fragile if enum implementation changes. */
     for (let enumMember in Enm) {
-        if ((Enm[enumMember] as any) === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
+        if ((Enm[enumMember] as any) === n && !enumMember.startsWith('__') && !enumMember.startsWith('__AlternateForm__')) {
             let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
             return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
         }
