@@ -131,6 +131,14 @@ export class Util512 {
     }
 
     /**
+     * freeze a property
+     */
+    static freezeProperty(o: any, propName: string) {
+        Object.freeze(o[propName]);
+        Object.defineProperty(o, propName, { configurable: false, writable: false });
+    }
+
+    /**
      * https://github.com/substack/deep-freeze
      * public domain
      */
@@ -147,14 +155,6 @@ export class Util512 {
                 Util512.freezeRecurse(o[prop]);
             }
         }
-    }
-
-    /**
-     * freeze a property
-     */
-    static freezeProperty(o: any, propName: string) {
-        Object.freeze(o[propName]);
-        Object.defineProperty(o, propName, { configurable: false, writable: false });
     }
 
     /**
@@ -940,6 +940,14 @@ export function assertEqWarn(
             throw er;
         }
     }
+}
+
+/**
+get last of an array
+*/
+export function last<T>(ar: T[]): T {
+    assertTrue(ar.length >= 1, 'empty array');
+    return ar[ar.length - 1];
 }
 
 /**

@@ -1,6 +1,6 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, } from './../util/benBaseUtilsAssert';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, scontains, throwIfUndefined, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
@@ -147,6 +147,20 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     assertEq(['f', 'e'], buf.retrieve(2), 'CA|');
     buf.append('g');
     assertEq(['g', 'f'], buf.retrieve(2), 'C9|');
+});
+t.test('scontains', () => {
+    t.say('—————————— typical usage');
+    assertTrue(scontains('a test string', 'e'), '');
+    assertTrue(scontains('a test string', 'test'), '');
+    assertTrue(scontains('a test string', 'a test'), '');
+    assertTrue(scontains('a test string', 'a test string'), '');
+    assertTrue(!scontains('a test string', 'a test string '), '');
+    assertTrue(!scontains('a test string', 'x'), '');
+    t.say('—————————— edge cases');
+    assertTrue(scontains('test', 'test'), '');
+    assertTrue(scontains('test', ''), '');
+    assertTrue(!scontains('', 'test'), '');
+    assertTrue(scontains('', ''), '');
 });
 
 /**

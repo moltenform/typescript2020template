@@ -1,5 +1,6 @@
 
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
+/* auto */ import { last } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -321,14 +322,6 @@ export function joinIntoMessage(
 export interface UI512AttachableErr {}
 
 /**
-get last of an array
-*/
-export function last<T>(ar: T[]): T {
-    assertTrue(ar.length >= 1, 'empty array');
-    return ar[ar.length - 1];
-}
-
-/**
  * break into debugger. V8 js perf sometimes hurt if seeing a debugger
  * statement, so separate it here.
  */
@@ -368,7 +361,7 @@ function findTags(s: any, tags: string[]) {
 
 declare const WEBPACK_PRODUCTION: boolean;
 
-export function checkIsRelease() {
+export function checkIsRelease(): boolean {
     let ret = false;
     try {
         // when webpack builds this file it will replace the symbol

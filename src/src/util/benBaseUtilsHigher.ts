@@ -104,7 +104,7 @@ export class Util512Higher {
         };
         img.src = url;
         if (img.complete) {
-            /* some sources say it might be possible for .complete to be set 
+            /* some sources say it might be possible for .complete to be set
             immediately if image was cached */
             haveRunCallback = true;
             callback();

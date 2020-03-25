@@ -1,11 +1,29 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { OrderedHash, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, } from './../util/benBaseUtils';
+/* auto */ import { OrderedHash, ValHolder, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, } from './../util/benBaseUtils';
 
 let tests = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = tests;
 
+tests.test('ValHolder.param', () => {
+    function increment(vv: ValHolder<number>) {
+        vv.val += 1;
+    }
+
+    let v = new ValHolder(0);
+    increment(v);
+    assertEq(1, v.val, '');
+});
+tests.test('ValHolder.closure', () => {
+    function increment() {
+        v.val += 1;
+    }
+
+    let v = new ValHolder(0);
+    increment();
+    assertEq(1, v.val, '');
+});
 tests.test('findStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dz|');
     assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'), 'Dy|');
