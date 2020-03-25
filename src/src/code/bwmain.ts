@@ -6,8 +6,8 @@
 declare const bowser: typeof Bowser;
 
 import { toWords } from 'number-to-words';
-import { BenBaseTests } from '../test/testUtils';
 import { checkIsRelease } from '../util/benBaseUtilsAssert';
+import { SimpleSensibleTests } from '../test/testTop';
 
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
@@ -60,7 +60,7 @@ export function runOnLoad() {
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            BenBaseTests.runAllSynchronousTests();
+            SimpleSensibleTests.runTests(true);
         }
     });
 

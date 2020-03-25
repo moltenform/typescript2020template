@@ -1,11 +1,12 @@
 
-import { BenBaseTests } from './testUtils';
+import { SimpleSensibleTestCategory } from './testUtils';
 
-BenBaseTests.beginTestCategory('testBenBaseUtilsClass');
+export let tests = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
 
-BenBaseTests.t('abc', () => {
+tests.test('abc', () => {
     console.log('cool');
 });
-BenBaseTests.t('fdghhh', () => {
+
+tests.test('fdghhh', () => {
     console.log('cool');
 });
