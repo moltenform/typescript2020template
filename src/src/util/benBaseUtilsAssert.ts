@@ -80,7 +80,7 @@ export function checkThrowUI512(condition: any, msg: string, s1: any = '', s2: a
  * a way to safely go from optional<T> to T
  */
 export function throwIfUndefined<T>(v: O<T>, s1: string, s2: any = '', s3: any = ''): T {
-    if (v === undefined) {
+    if (v === undefined || v === null) {
         let msg = 'not defined';
         if (s1 !== '') {
             msg += ', ' + s1.toString();

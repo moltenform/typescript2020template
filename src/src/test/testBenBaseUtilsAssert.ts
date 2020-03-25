@@ -6,49 +6,35 @@
 let tests = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
 export let testsBenBaseUtilsAssert = tests
 
-tests.test('assertTrue', () => {
-    assertTrue(3 === 3, '');
-    assertTrue(true, '');
-    assertThrows('', 'assertion failed', () => {
-        assertTrue(false, '');
-    });
-});
-tests.test('checkThrowUI512', () => {
-    checkThrowUI512(3 === 3, 'msg');
-    checkThrowUI512(true, 'msg');
-    assertThrows('', 'msg', () => {
-        checkThrowUI512(false, 'msg');
-    });
-});
 tests.test('assertThrows', () => {
-    // Gets Message From Custom Error
+    tests.say('—————————— Gets Message From Custom Error')
     assertThrows('L0|', 'mymessage', () => {
         throw makeUI512Error('1N|1 mymessage 2');
     });
-    // Gets Message From Plain Error
+    tests.say('—————————— Gets Message From Plain Error')
     assertThrows('K~|', 'xyz', () => {
         throw new Error('1 xyz 2');
     });
 });
 tests.test('CheckThrow', () => {
-    // Should Not Throw
+    tests.say('—————————— Should Not Throw')
     checkThrowUI512(1, 'K<|should not throw');
     checkThrowUI512(true, 'K;|should not throw');
-    // False Should Throw
+    tests.say('—————————— False Should Throw')
     assertThrows('K}|', 'mymessage s1 s2', () => {
         checkThrowUI512(false, 'K:|mymessage', 's1', 's2');
     });
-    // Null Should Throw
+    tests.say('—————————— Null Should Throw')
     assertThrows('K||', 'mymessage s1 s2', () => {
         checkThrowUI512(null, 'K/|mymessage', 's1', 's2');
     });
-    // Undefined Should Throw
+    tests.say('—————————— Undefined Should Throw')
     assertThrows('K{|', 'mymessage s1 s2', () => {
         checkThrowUI512(undefined, 'K.|mymessage', 's1', 's2');
     });
 });
 tests.test('ThrowIfUndefined', () => {
-    // Truthy Should Not Throw
+    tests.say('—————————— Truthy Should Not Throw')
     let n1 = throwIfUndefined(1, 'Cq|should not throw');
     assertEq(1, n1, 'Cp|');
 
@@ -57,7 +43,8 @@ tests.test('ThrowIfUndefined', () => {
 
     let b1 = throwIfUndefined(true, 'Cm|should not throw');
     assertEq(b1, true, 'Cl|');
-    // Falsy Should Not Throw
+
+    tests.say('—————————— Falsy Should Not Throw')
     let n0 = throwIfUndefined(0, 'Ck|should not throw');
     assertEq(0, n0, 'Cj|');
 
@@ -66,7 +53,8 @@ tests.test('ThrowIfUndefined', () => {
 
     let b0 = throwIfUndefined(false, 'Cg|should not throw');
     assertEq(b0, false, 'Cf|');
-    // NullAndUndefinedShouldThrow
+    
+    tests.say('—————————— NullAndUndefinedShouldThrow')
     assertThrows('K`|', 'mymessage, s1, s2', () => {
         throwIfUndefined(null, 'Ce|mymessage', 's1', 's2');
     });
@@ -75,11 +63,11 @@ tests.test('ThrowIfUndefined', () => {
     });
 });
 tests.test('JoinIntoMessage', () => {
-    // WithoutTags
+    tests.say('—————————— WithoutTags')
     let got = joinIntoMessage('without|tags', 'prefix:');
     assertEq('prefix: without|tags', got, 'Cc|');
 
-    // ShouldMoveTagsToTheEnd
+    tests.say('—————————— ShouldMoveTagsToTheEnd')
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
     assertEq('prefix: \nc, d, e (ab)', got, 'Cb|');
     got = joinIntoMessage('ab|the message', 'prefix:');

@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
 /* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
 /* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
@@ -25,6 +25,7 @@ export class SimpleSensibleTests {
     }
 
     static async runCategory(category: SimpleSensibleTestCategory, countTotal: number, counter:ValHolder<number>) {
+        notifyUserIfDebuggerIsSetToAllExceptions()
         for (let i = 0; i < category.tests.length; i++) {
             let [tstname, tstfn] = category.tests[i];
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);

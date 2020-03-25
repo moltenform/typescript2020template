@@ -59,11 +59,16 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export class SimpleSensibleTestCategory {
     constructor(public name: string, public type:""|"async"|"slow" = "") {}
     tests: [string, Function][] = [];
+    _context = ''
     public test(s:string, fn:Function) {
         this.tests.push([s, fn])
         return this
     }
     public register(list:[string, Function][]) {
         this.tests = this.tests.concat(list)
+    }
+    public say(context: string) {
+        this._context = context.replace(/\//g, '')
+        console.log("                      " + this._context);
     }
 }
