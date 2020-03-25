@@ -1,3 +1,4 @@
+
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
@@ -10,4 +11,3 @@ export const msgNotification = 'Simple Notification: ';
 export const ui512InternalErr = 'ui512: ';
 export const cProductName = 'ExampleProduct';
 export const cAltProductName = 'ExampleProduct 1.0';
-

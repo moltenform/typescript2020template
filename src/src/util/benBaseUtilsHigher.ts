@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './benBaseUtilsAssert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512 } from './benBaseUtils';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -38,11 +38,11 @@ export class Util512Higher {
      * random number between min and max, inclusive
      */
     static getRandIntInclusiveStrong(min: number, max: number) {
-        assertTrue(min >= 1 && max >= 1, "getRandIntInclusiveStrong must be >= 1");
+        assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
         let nRange = max - min;
-        assertTrue(nRange > 1 && nRange < 255, "getRandIntInclusiveStrong too wide range");
+        assertTrue(nRange > 1 && nRange < 255, 'getRandIntInclusiveStrong too wide range');
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
             nextPowerOf2 *= 2;
@@ -53,7 +53,7 @@ export class Util512Higher {
         while (true) {
             window.crypto.getRandomValues(buf);
             for (let i = 0; i < buf.length; i++) {
-                assertTrue(buf[i] >= 0 && buf[i] < 256, "out of range");
+                assertTrue(buf[i] >= 0 && buf[i] < 256, 'out of range');
                 let v = buf[i] % nextPowerOf2;
                 if (v <= nRange) {
                     return min + v;
@@ -69,6 +69,20 @@ export class Util512Higher {
         let buf = new Uint8Array(bytes);
         window.crypto.getRandomValues(buf);
         return Util512.arrayToBase64(Array.from(buf));
+    }
+
+    /**
+     * generate random string, first byte is specified
+     */
+    static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
+        assertEq(1, charPrefix.length, 'expected one char');
+        let buf = new Uint8Array(nBytes + 1);
+        window.crypto.getRandomValues(buf);
+        buf[0] = charPrefix.charCodeAt(0);
+        let dataAsString = Array.from(buf)
+            .map(item => String.fromCharCode(item))
+            .join('');
+        return Util512.toBase64UrlSafe(dataAsString);
     }
 
     /**
@@ -134,7 +148,7 @@ export class Util512Higher {
 
                     resolve(parsed);
                 },
-                () => reject(new Error('failed to load ' + url + ' with' + req.status))
+                () => reject(new Error('failed to load ' + url + ' with' + req.status)),
             );
         });
     }
@@ -213,7 +227,6 @@ export function setRoot(r: Root) {
     rootHolder[0] = r;
 }
 
-
 /**
  * sleep, if called in an async function.
  * await sleep(1000) to wait one second.
@@ -235,6 +248,7 @@ export function getdatestring(includeSeconds = false) {
     }
 
     let sc = includeSeconds ? '-' + ('0' + d.getSeconds()).slice(-2) : '';
-    return `${d.getMonth() + 1} ${d.getDate()}, ` + ('0' + hours).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2) + sc;
+    return (
+        `${d.getMonth() + 1} ${d.getDate()}, ` + ('0' + hours).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2) + sc
+    );
 }
-

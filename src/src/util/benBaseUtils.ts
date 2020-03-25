@@ -269,8 +269,13 @@ export class Util512 {
     /**
      * to base64 with / and + characters
      */
-    static arrayToBase64(b: number[]) {
-        return btoa(String.fromCharCode.apply(null, b));
+    static arrayToBase64(b: number[] | Uint8Array) {
+        let s = '';
+        for (let i = 0, len = b.length; i < len; i++) {
+            s += String.fromCharCode(b[i]);
+        }
+
+        return btoa(s);
     }
 
     /**
@@ -296,17 +301,29 @@ export class Util512 {
     }
 
     /**
-     * generate random string, first byte is specified
+     * split by character. decided not to use the
+     * Array.prototype.map.call trick.
      */
-    static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
-        assertEq(1, charPrefix.length, 'expected one char');
-        let buf = new Uint8Array(nBytes + 1);
-        window.crypto.getRandomValues(buf);
-        buf[0] = charPrefix.charCodeAt(0);
-        let dataAsString = Array.from(buf)
-            .map(item => String.fromCharCode(item))
-            .join('');
-        return Util512.toBase64UrlSafe(dataAsString);
+    static stringToCharArray(s: string) {
+        let ar: string[] = [];
+        for (let i = 0; i < s.length; i++) {
+            ar.push(s[i]);
+        }
+
+        return ar;
+    }
+
+    /**
+     * split to bytes. decided not to use the
+     * Array.prototype.map.call trick.
+     */
+    static stringToByteArray(s: string) {
+        let ar: number[] = [];
+        for (let i = 0; i < s.length; i++) {
+            ar.push(s.charCodeAt(i));
+        }
+
+        return ar;
     }
 }
 
@@ -443,7 +460,7 @@ export function cast<T>(instance: any, ctor: { new (...args: any[]): T }, contex
  * be extra cautious in case string was made via new String
  */
 export function isString(v: any) {
-    return typeof v === 'string' || v instanceof String;
+    return bool(typeof v === 'string') || bool(v instanceof String);
 }
 
 /**

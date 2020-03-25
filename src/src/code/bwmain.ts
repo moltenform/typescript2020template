@@ -13,7 +13,7 @@ function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
     let s2 = Util512.range(1, 5);
     let s3 = toWords(13);
-    let s4 = checkIsRelease() ? "release" : "debug";
+    let s4 = checkIsRelease() ? 'release' : 'debug';
     return [s1, s2, s3, s4].join('<br/>');
 }
 

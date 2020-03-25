@@ -1,7 +1,6 @@
 
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './benBaseUtilsProductname';
 
-
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
@@ -164,7 +163,7 @@ export abstract class RingBuffer {
      * more intuitive with negative numbers than the % operator
      */
     mod(a: number, n: number) {
-        return (a % n + n) % n;
+        return ((a % n) + n) % n;
     }
 
     abstract getAt(index: number): string;
@@ -199,11 +198,11 @@ class RingBufferLocalStorage extends RingBuffer {
 /**
  * if an error is thrown, show a warning message and swallow the error
  */
-export function showWarningIfExceptionThrown(fn: ()=> void) {
+export function showWarningIfExceptionThrown(fn: () => void) {
     try {
-        fn()
-    } catch(e) {
-        assertTrueWarn(false, e.toString())
+        fn();
+    } catch (e) {
+        assertTrueWarn(false, e.toString());
     }
 }
 
@@ -292,8 +291,8 @@ export interface UI512AttachableErr {}
 /**
 get last of an array
 */
-export function last<T>(ar:T[]): T{
-    assertTrue(ar.length >= 1, "empty array")
+export function last<T>(ar: T[]): T {
+    assertTrue(ar.length >= 1, 'empty array');
     return ar[ar.length - 1];
 }
 
@@ -348,4 +347,3 @@ export function checkIsRelease() {
 
     return ret;
 }
-

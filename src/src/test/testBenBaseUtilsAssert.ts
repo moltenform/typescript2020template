@@ -1,40 +1,40 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined } from './../util/benBaseUtilsAssert';
+/* auto */ import { RingBuffer, UI512Compress, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
-let tests = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
-export let testsBenBaseUtilsAssert = tests
+let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
+export let testsBenBaseUtilsAssert = t;
 
-tests.test('assertThrows', () => {
-    tests.say('—————————— Gets Message From Custom Error')
+t.test('assertThrows', () => {
+    t.say('—————————— Gets Message From Custom Error');
     assertThrows('L0|', 'mymessage', () => {
         throw makeUI512Error('1N|1 mymessage 2');
     });
-    tests.say('—————————— Gets Message From Plain Error')
+    t.say('—————————— Gets Message From Plain Error');
     assertThrows('K~|', 'xyz', () => {
         throw new Error('1 xyz 2');
     });
 });
-tests.test('CheckThrow', () => {
-    tests.say('—————————— Should Not Throw')
+t.test('CheckThrow', () => {
+    t.say('—————————— Should Not Throw');
     checkThrowUI512(1, 'K<|should not throw');
     checkThrowUI512(true, 'K;|should not throw');
-    tests.say('—————————— False Should Throw')
+    t.say('—————————— False Should Throw');
     assertThrows('K}|', 'mymessage s1 s2', () => {
         checkThrowUI512(false, 'K:|mymessage', 's1', 's2');
     });
-    tests.say('—————————— Null Should Throw')
+    t.say('—————————— Null Should Throw');
     assertThrows('K||', 'mymessage s1 s2', () => {
         checkThrowUI512(null, 'K/|mymessage', 's1', 's2');
     });
-    tests.say('—————————— Undefined Should Throw')
+    t.say('—————————— Undefined Should Throw');
     assertThrows('K{|', 'mymessage s1 s2', () => {
         checkThrowUI512(undefined, 'K.|mymessage', 's1', 's2');
     });
 });
-tests.test('ThrowIfUndefined', () => {
-    tests.say('—————————— Truthy Should Not Throw')
+t.test('ThrowIfUndefined', () => {
+    t.say('—————————— Truthy Should Not Throw');
     let n1 = throwIfUndefined(1, 'Cq|should not throw');
     assertEq(1, n1, 'Cp|');
 
@@ -44,7 +44,7 @@ tests.test('ThrowIfUndefined', () => {
     let b1 = throwIfUndefined(true, 'Cm|should not throw');
     assertEq(b1, true, 'Cl|');
 
-    tests.say('—————————— Falsy Should Not Throw')
+    t.say('—————————— Falsy Should Not Throw');
     let n0 = throwIfUndefined(0, 'Ck|should not throw');
     assertEq(0, n0, 'Cj|');
 
@@ -53,8 +53,8 @@ tests.test('ThrowIfUndefined', () => {
 
     let b0 = throwIfUndefined(false, 'Cg|should not throw');
     assertEq(b0, false, 'Cf|');
-    
-    tests.say('—————————— NullAndUndefinedShouldThrow')
+
+    t.say('—————————— NullAndUndefinedShouldThrow');
     assertThrows('K`|', 'mymessage, s1, s2', () => {
         throwIfUndefined(null, 'Ce|mymessage', 's1', 's2');
     });
@@ -62,12 +62,12 @@ tests.test('ThrowIfUndefined', () => {
         throwIfUndefined(undefined, 'Cd|mymessage', 's1', 's2');
     });
 });
-tests.test('JoinIntoMessage', () => {
-    tests.say('—————————— WithoutTags')
+t.test('JoinIntoMessage', () => {
+    t.say('—————————— WithoutTags');
     let got = joinIntoMessage('without|tags', 'prefix:');
     assertEq('prefix: without|tags', got, 'Cc|');
 
-    tests.say('—————————— ShouldMoveTagsToTheEnd')
+    t.say('—————————— ShouldMoveTagsToTheEnd');
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
     assertEq('prefix: \nc, d, e (ab)', got, 'Cb|');
     got = joinIntoMessage('ab|the message', 'prefix:');
@@ -75,21 +75,21 @@ tests.test('JoinIntoMessage', () => {
     got = joinIntoMessage('the message', 'prefix:', 'ab|c');
     assertEq('prefix: the message\nc (ab)', got, 'CZ|');
 });
-tests.test('CompressString', () => {
+t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''), 'CY|');
     assertEq('\u10E8 ', UI512Compress.compressString('a'), 'CX|');
     assertEq('\u10E6\u4866\u4AEA  ', UI512Compress.compressString('aaaaaaaabbbbbbbb'), 'CW|');
     assertEq('\u10E6\u4866\u4AE8\u31B0 ', UI512Compress.compressString('aaaaaaaabbbbbbbbc'), 'CV|');
     assertEq('\u10E6\u7070\u0256\u4CF0 ', UI512Compress.compressString('aaaaaaa\nbbbbbbbbb'), 'CU|');
 });
-tests.test('DecompressString', () => {
+t.test('DecompressString', () => {
     assertEq('', UI512Compress.decompressString('\u2020 '), 'CT|');
     assertEq('a', UI512Compress.decompressString('\u10E8 '), 'CS|');
     assertEq('aaaaaaaabbbbbbbb', UI512Compress.decompressString('\u10E6\u4866\u4AEA  '), 'CR|');
     assertEq('aaaaaaaabbbbbbbbc', UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 '), 'CQ|');
     assertEq('aaaaaaa\nbbbbbbbbb', UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 '), 'CP|');
 });
-tests.test('RingBufferSizeRemainsConstant', () => {
+t.test('RingBufferSizeRemainsConstant', () => {
     let buf = new RingBufferArray(4);
     buf.append('a');
     buf.append('b');
@@ -106,7 +106,7 @@ tests.test('RingBufferSizeRemainsConstant', () => {
     assertEq('c', buf.getAt(3), 'CI|');
     assertEq('', buf.getAt(5), 'CH|');
 });
-tests.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
+t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     let buf = new RingBufferArray(4);
     assertEq(['', ''], buf.retrieve(2), 'CG|');
     buf.append('a');
@@ -132,7 +132,7 @@ class RingBufferArray extends RingBuffer {
     arr: string[] = [];
     ptrLatest = 0;
     getAt(index: number): string {
-        return this.arr[index] || '';
+        return this.arr[index] ?? '';
     }
 
     setAt(index: number, s: string) {
