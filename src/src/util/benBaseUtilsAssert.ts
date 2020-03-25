@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './benBaseUtilsProductname';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license

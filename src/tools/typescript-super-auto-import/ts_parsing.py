@@ -62,9 +62,3 @@ def tests():
     assertEq(expected, list(getSymbolsFromLine(testinput)))
 
 tests()
-
-if __name__=='__main__':
-    infile = r"C:\data\data_1\pieces\repos\d-d\typescript2020template\typescript2020template\src\src\util\benBaseUtilsAssert.ts"
-    lines = getFileLines(infile, True)
-    files.writeall(infile+'.out', '\n'.join(lines), encoding='utf8')
-    

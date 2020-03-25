@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -331,6 +331,30 @@ export class Util512 {
 
         return ar;
     }
+
+    /**
+     * use the function to provide sort order
+     * like Python's sort(key=fn)
+     * often more efficient than passing a comparison function.
+     */
+    static sortDecorated(ar: unknown[], fn: Function) {
+        // 1) decorate
+        let decorated = ar.map((val) => [fn(val), val]);
+        // 2) sort
+        let comparer = function(a: unknown[], b: unknown[]) {
+            return sensibleSort(a[0], b[0]);
+        };
+        decorated.sort(comparer);
+        // 3) undecorate
+        return decorated.map(val => val[1]);
+    }
+
+    /**
+     * normalize newlines to \n
+     */
+    static normalizeNewlines(s: string) {
+        return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
 }
 
 /**
@@ -517,20 +541,6 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
 }
 
 /**
- * just a flag indicating that the operation is complete.
- */
-export class RenderComplete {
-    complete = true;
-    and(other: RenderComplete) {
-        this.complete = this.complete && other.complete;
-    }
-
-    andB(other: boolean) {
-        this.complete = this.complete && other;
-    }
-}
-
-/**
  * compare two objects.
  * confirms that types match.
  * works on arbitrarily nested array structures.
@@ -564,47 +574,6 @@ export function sensibleSort(a: unknown, b: unknown): number {
         return 0;
     } else {
         throw makeUI512Error(`4B|could not compare types ${a} and ${b}`);
-    }
-}
-
-/**
- * use the function to provide sort order
- * like Python's sort(key=fn)
- * often more efficient than passing a comparison function.
- */
-export function sortDecorated(ar: unknown[], fn: Function) {
-    // 1) decorate
-    let decorated = ar.map((val) => [fn(val), val]);
-    // 2) sort
-    let comparer = function(a: unknown[], b: unknown[]) {
-        return sensibleSort(a[0], b[0]);
-    };
-    decorated.sort(comparer);
-    // 3) undecorate
-    return decorated.map(val => val[1]);
-}
-
-/**
- * can be used to build a periodic timer.
- */
-export class RepeatingManualTimer {
-    periodInMilliseconds = 0;
-    lasttimeseen = 0;
-    started = 0;
-    constructor(periodInMilliseconds: number) {
-        this.periodInMilliseconds = periodInMilliseconds;
-    }
-
-    update(ms: number) {
-        this.lasttimeseen = ms;
-    }
-
-    isDue(): boolean {
-        return this.lasttimeseen - this.started > this.periodInMilliseconds;
-    }
-
-    reset() {
-        this.started = this.lasttimeseen;
     }
 }
 
@@ -707,130 +676,6 @@ export enum BrowserOSInfo {
 }
 
 /**
- * CharClassify
- *
- * Permission to use, copy, modify, and distribute this software and its
- * documentation for all purposes and without fee is hereby granted,
- * provided that the above copyright notice appear in all copies and that
- * both that copyright notice and this permission notice appear in
- * supporting documentation.
- * Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
- * Ported from C++ to TypeScript by Ben Fisher, 2017
- */
-export enum CharClass {
-    __isUI512Enum = 1,
-    Space,
-    NewLine,
-    Word,
-    Punctuation,
-}
-
-/**
- * Porting SciTE's logic for typing move-to-next-word and move-to-prev-word.
- */
-export class GetCharClass {
-    static readonly a = 'a'.charCodeAt(0);
-    static readonly z = 'z'.charCodeAt(0);
-    static readonly A = 'A'.charCodeAt(0);
-    static readonly Z = 'Z'.charCodeAt(0);
-    static readonly n0 = '0'.charCodeAt(0);
-    static readonly n9 = '9'.charCodeAt(0);
-    static readonly hash = '#'.charCodeAt(0);
-    static readonly under = '_'.charCodeAt(0);
-    static readonly dash = '-'.charCodeAt(0);
-    static readonly nl = '\n'.charCodeAt(0);
-    static readonly cr = '\r'.charCodeAt(0);
-    static readonly space = ' '.charCodeAt(0);
-    static readonly nonbreakingspace = '\xCA'.charCodeAt(0);
-
-    /**
-     * classify a character as word or whitespace
-     */
-    static get(c: number) {
-        if (c === GetCharClass.cr || c === GetCharClass.nl) {
-            return CharClass.NewLine;
-        } else if (
-            c < 0x20 ||
-            c === GetCharClass.space ||
-            c === GetCharClass.nonbreakingspace
-        ) {
-            return CharClass.Space;
-        } else if (
-            (c >= 0x80 && c <= 0xff) ||
-            (c >= GetCharClass.a && c <= GetCharClass.z) ||
-            (c >= GetCharClass.A && c <= GetCharClass.Z) ||
-            (c >= GetCharClass.n0 && c <= GetCharClass.n9) ||
-            c === GetCharClass.hash ||
-            c === GetCharClass.under ||
-            c === GetCharClass.dash
-        ) {
-            return CharClass.Word;
-        } else if (c <= 0xff) {
-            return CharClass.Punctuation;
-        } else {
-            /* let's choose to treat all unicode non-ascii as word. */
-            return CharClass.Word;
-        }
-    }
-
-    /**
-     * move left or right in the text editor...
-     * charCodeAt gets the character code at an index in the string
-     * len is the length of the string
-     * n is current index (caret position) in the string
-     * isLeft is true if moving left, false if moving right
-     * isUntilWord means to keep moving until word boundary is seen.
-     * returns the next caret position.
-     */
-    static getLeftRight(
-        charCodeAt: (pos: number) => number,
-        len: number,
-        n: number,
-        isLeft: boolean,
-        isUntilWord: boolean,
-        includeTrailingSpace: boolean,
-    ) {
-        if (len === 0) {
-            return n;
-        }
-
-        if (isUntilWord && isLeft) {
-            if (includeTrailingSpace) {
-                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === CharClass.Space) {
-                    n--;
-                }
-            }
-
-            if (n > 0) {
-                let classStart = GetCharClass.get(charCodeAt(n - 1));
-                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === classStart) {
-                    n--;
-                }
-            }
-        } else if (isUntilWord && !isLeft) {
-            if (n === len) {
-                n -= 1;
-            }
-
-            let classStart = GetCharClass.get(charCodeAt(n));
-            while (n < len && GetCharClass.get(charCodeAt(n)) === classStart) {
-                n++;
-            }
-
-            if (includeTrailingSpace) {
-                while (n < len && GetCharClass.get(charCodeAt(n)) === CharClass.Space) {
-                    n++;
-                }
-            }
-        } else {
-            n += isLeft ? -1 : 1;
-        }
-
-        return fitIntoInclusive(n, 0, len);
-    }
-}
-
-/**
  * just to avoid magic number in parseInt(x, 10)
  */
 export const base10 = 10;
@@ -840,12 +685,12 @@ export const base10 = 10;
  */
 export class MapKeyToObject<T> {
     protected objects: { [key: string]: T } = Object.create(null);
-    get(key: string) {
-        return throwIfUndefined(this.objects[key], '3_|id not found', key);
-    }
-
     exists(key: string) {
         return Object.prototype.hasOwnProperty.call(this.objects, key);
+    }
+
+    get(key: string) {
+        return throwIfUndefined(this.objects[key], '3_|id not found', key);
     }
 
     find(key: O<string>) {
@@ -895,13 +740,13 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
 /**
  * a quick way to throw an expection if value is not what was expected.
  */
-export function checkThrowEq(
-    expected: unknown,
+export function checkThrowEq<T>(
+    expected: T,
     got: unknown,
     msg: string,
     c1: unknown = '',
     c2: unknown = '',
-) {
+): asserts got is T {
     if (sensibleSort(expected, got) !== 0) {
         throw makeUI512Error(
             `${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
@@ -963,3 +808,4 @@ export function bool(x: unknown): boolean {
 export function longstr(s: string) {
     return s.replace(/\s*(\r\n|\n)\s*/g, ' ');
 }
+

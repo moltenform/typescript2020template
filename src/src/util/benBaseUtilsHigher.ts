@@ -1,6 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './benBaseUtilsAssert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq } from './benBaseUtils';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './benBaseUtilsAssert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -204,6 +204,29 @@ export class Util512Higher {
             window.document.getElementsByTagName('head')[0].appendChild(script);
         });
     }
+
+    /**
+     * get date as month day hh mm
+     */
+    static getdatestring(includeSeconds = false) {
+        let d = new Date();
+        let hours = d.getHours();
+        if (hours > 12) {
+            hours -= 12;
+        } else if (hours === 0) {
+            hours = 12;
+        }
+
+        let sc = includeSeconds ? '-' + ('0' + d.getSeconds()).slice(-2) : '';
+        return (
+            `${d.getMonth() + 1} ${d.getDate()}, ` +
+            ('0' + hours).slice(-2) +
+            '-' +
+            ('0' + d.getMinutes()).slice(-2) +
+            sc
+        );
+    }
+
 }
 
 /**
@@ -244,6 +267,44 @@ export function setRoot(r: Root) {
 }
 
 /**
+ * can be used to build a periodic timer.
+ */
+export class RepeatingManualTimer {
+    periodInMilliseconds = 0;
+    lasttimeseen = 0;
+    started = 0;
+    constructor(periodInMilliseconds: number) {
+        this.periodInMilliseconds = periodInMilliseconds;
+    }
+
+    update(ms: number) {
+        this.lasttimeseen = ms;
+    }
+
+    isDue(): boolean {
+        return this.lasttimeseen - this.started > this.periodInMilliseconds;
+    }
+
+    reset() {
+        this.started = this.lasttimeseen;
+    }
+}
+
+/**
+ * just a flag indicating that the operation is complete.
+ */
+export class RenderComplete {
+    complete = true;
+    and(other: RenderComplete) {
+        this.complete = this.complete && other.complete;
+    }
+
+    andB(other: boolean) {
+        this.complete = this.complete && other;
+    }
+}
+
+/**
  * sleep, if called in an async function.
  * await sleep(1000) to wait one second.
  */
@@ -254,23 +315,125 @@ export function sleep(ms: number) {
 }
 
 /**
- * get date as month day hh mm
+ * CharClassify
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for all purposes and without fee is hereby granted,
+ * provided that the above copyright notice appear in all copies and that
+ * both that copyright notice and this permission notice appear in
+ * supporting documentation.
+ * Copyright 1998-2003 by Neil Hodgson <neilh@scintilla.org>
+ * Ported from C++ to TypeScript by Ben Fisher, 2017
  */
-export function getdatestring(includeSeconds = false) {
-    let d = new Date();
-    let hours = d.getHours();
-    if (hours > 12) {
-        hours -= 12;
-    } else if (hours === 0) {
-        hours = 12;
+export enum CharClass {
+    __isUI512Enum = 1,
+    Space,
+    NewLine,
+    Word,
+    Punctuation,
+}
+
+/**
+ * Porting SciTE's logic for typing move-to-next-word and move-to-prev-word.
+ */
+export class GetCharClass {
+    static readonly a = 'a'.charCodeAt(0);
+    static readonly z = 'z'.charCodeAt(0);
+    static readonly A = 'A'.charCodeAt(0);
+    static readonly Z = 'Z'.charCodeAt(0);
+    static readonly n0 = '0'.charCodeAt(0);
+    static readonly n9 = '9'.charCodeAt(0);
+    static readonly hash = '#'.charCodeAt(0);
+    static readonly under = '_'.charCodeAt(0);
+    static readonly dash = '-'.charCodeAt(0);
+    static readonly nl = '\n'.charCodeAt(0);
+    static readonly cr = '\r'.charCodeAt(0);
+    static readonly space = ' '.charCodeAt(0);
+    static readonly nonbreakingspace = '\xCA'.charCodeAt(0);
+
+    /**
+     * classify a character as word or whitespace
+     */
+    static get(c: number) {
+        if (c === GetCharClass.cr || c === GetCharClass.nl) {
+            return CharClass.NewLine;
+        } else if (
+            c < 0x20 ||
+            c === GetCharClass.space ||
+            c === GetCharClass.nonbreakingspace
+        ) {
+            return CharClass.Space;
+        } else if (
+            (c >= 0x80 && c <= 0xff) ||
+            (c >= GetCharClass.a && c <= GetCharClass.z) ||
+            (c >= GetCharClass.A && c <= GetCharClass.Z) ||
+            (c >= GetCharClass.n0 && c <= GetCharClass.n9) ||
+            c === GetCharClass.hash ||
+            c === GetCharClass.under ||
+            c === GetCharClass.dash
+        ) {
+            return CharClass.Word;
+        } else if (c <= 0xff) {
+            return CharClass.Punctuation;
+        } else {
+            /* let's choose to treat all unicode non-ascii as word. */
+            return CharClass.Word;
+        }
     }
 
-    let sc = includeSeconds ? '-' + ('0' + d.getSeconds()).slice(-2) : '';
-    return (
-        `${d.getMonth() + 1} ${d.getDate()}, ` +
-        ('0' + hours).slice(-2) +
-        '-' +
-        ('0' + d.getMinutes()).slice(-2) +
-        sc
-    );
+    /**
+     * move left or right in the text editor...
+     * charCodeAt gets the character code at an index in the string
+     * len is the length of the string
+     * n is current index (caret position) in the string
+     * isLeft is true if moving left, false if moving right
+     * isUntilWord means to keep moving until word boundary is seen.
+     * returns the next caret position.
+     */
+    static getLeftRight(
+        charCodeAt: (pos: number) => number,
+        len: number,
+        n: number,
+        isLeft: boolean,
+        isUntilWord: boolean,
+        includeTrailingSpace: boolean,
+    ) {
+        if (len === 0) {
+            return n;
+        }
+
+        if (isUntilWord && isLeft) {
+            if (includeTrailingSpace) {
+                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === CharClass.Space) {
+                    n--;
+                }
+            }
+
+            if (n > 0) {
+                let classStart = GetCharClass.get(charCodeAt(n - 1));
+                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === classStart) {
+                    n--;
+                }
+            }
+        } else if (isUntilWord && !isLeft) {
+            if (n === len) {
+                n -= 1;
+            }
+
+            let classStart = GetCharClass.get(charCodeAt(n));
+            while (n < len && GetCharClass.get(charCodeAt(n)) === classStart) {
+                n++;
+            }
+
+            if (includeTrailingSpace) {
+                while (n < len && GetCharClass.get(charCodeAt(n)) === CharClass.Space) {
+                    n++;
+                }
+            }
+        } else {
+            n += isLeft ? -1 : 1;
+        }
+
+        return fitIntoInclusive(n, 0, len);
+    }
 }

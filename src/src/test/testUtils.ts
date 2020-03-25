@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains, } from './../util/benBaseUtilsAssert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains } from './../util/benBaseUtilsAssert';
 
 /**
  * assert that an exception is thrown, with a certain message
@@ -47,6 +47,15 @@ export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) 
         msg !== undefined && scontains(msg, expectedErr),
         `9d|message "${msg}" did not contain "${expectedErr}" ${tagMsg}`,
     );
+}
+
+/**
+ * test-only code, since this is inefficient
+ */
+export function sorted(ar: any[]) {
+    let arCopy = ar.slice();
+    arCopy.sort();
+    return arCopy;
 }
 
 /**

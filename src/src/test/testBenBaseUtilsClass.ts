@@ -1,7 +1,7 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory, assertThrows, sorted } from './testUtils';
 /* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512, assertEq, BrowserOSInfo, longstr } from './../util/benBaseUtils';
+/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
 export let testsBenBaseUtilsClass = t;
@@ -422,6 +422,19 @@ t.test('stringToByteArray', () => {
     assertEq([97], Util512.stringToByteArray('a'), '');
     assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'), '');
 });
+t.test('sortDecorated', () => {
+    let input: string[] = ['abc', 'dba', 'aab', 'ffd'];
+    let ret = Util512.sortDecorated(input, (s: string) => s.charAt(2));
+    assertEq('dba|aab|abc|ffd', ret.join('|'), '');
+});
+t.test('normalizeNewlines', () => {
+    assertEq('ab', Util512.normalizeNewlines('ab'), '');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\nb\n'), '');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\r\n'), '');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r'), '');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r\n'), '');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\n'), '');
+});
 
 /**
  * test-only code. class with no members
@@ -454,11 +467,3 @@ class TestClsWithMethods {
     }
 }
 
-/**
- * test-only code, since this is inefficient
- */
-function sorted(ar: any[]) {
-    let arCopy = ar.slice();
-    arCopy.sort();
-    return arCopy;
-}
