@@ -20,6 +20,30 @@ def doSomeAutomaticFormatting(lines):
             print('removing whitespace on right of line')
         lines[i] = stripped
 
+def getFileLines(f, tryToStripComments):
+    text = files.readall(f, encoding='utf8')
+    if tryToStripComments:
+        text = simpleStripMultilineComments(text, '/*', '*/')
+    lines = text.replace('\r\n', '\n').split('\n')
+    if tryToStripComments:
+        lines = [line.split('//')[0] for line in lines]
+    return lines
+
+def simpleStripMultilineComments(text, open, close):
+    # still fails on strings, but handles complicated/nested cases better
+    # tests in check_for_null_coalesce.py
+    while True:
+        fnd = text.find(open)
+        if (fnd == -1):
+            return text
+
+        cls = text[fnd:].find(close)
+        if (cls == -1):
+            return text[0: fnd]
+
+        cls += fnd + len(close)
+        text = text[0: fnd] + text[cls:]
+
 def assertTrueMsg(condition, *messageArgs):
     if not condition:
         s = ' '.join(map(getPrintable, messageArgs)) if messageArgs else ''

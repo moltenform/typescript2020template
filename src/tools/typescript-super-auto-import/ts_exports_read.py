@@ -6,9 +6,9 @@ import os
 import sys
 import re
 from collections import OrderedDict
+from ts_parsing import *
 
-sys.path.append('bn_python_common.zip')
-from bn_python_common import *
+tryToStripComments = True
 
 def collectExportsLine(line, found, which):
     pts = re.split(' +', line)
@@ -25,13 +25,9 @@ def collectExportsLine(line, found, which):
         found[ret] = 1
 
 def collectExports(file):
-    # nb: does not yet respect commented out /* */ section
-    short = os.path.split(file)[-1]
-    shortd = short.replace('.ts', '.js')
-    f = open(file, 'r', encoding='utf8')
+    lines = getFileLines(file, tryToStripComments)
     found = OrderedDict()
-    for line in f:
-        line = line.rstrip()
+    for line in lines:
         if line.startswith('export class ') or \
             line.startswith('export function ') or \
             line.startswith('export enum ') or \
@@ -54,8 +50,9 @@ def collectExports(file):
     return found
 
 def readAlreadyImportedNotByUs(filelines):
-    # not supported since many prettifiers want to put the imports
-    # on multiple lines, not worth parsing
+    # not supported:
+    # 1) many prettifiers want to put the imports on multiple lines, so it's annoying to parse
+    # 2) typescript will warn us if a symbol is imported twice, so no need.
     return {}
     if False:
         imports = dict()

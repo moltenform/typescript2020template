@@ -26,20 +26,6 @@ def simpleStripComments(s):
     s = s.split('//')[0]
     return s
 
-def simpleStripMultilineComments(text, open, close):
-    # still fails on strings, but handles complicated/nested cases better
-    while True:
-        fnd = text.find(open)
-        if (fnd == -1):
-            return text
-
-        cls = text[fnd:].find(close)
-        if (cls == -1):
-            return text[0: fnd]
-
-        cls += fnd + len(close)
-        text = text[0: fnd] + text[cls:]
-    
 def shouldWarnThisLine(line):
     withoutComments = simpleStripComments(line)
     withoutComments = withoutComments.strip()

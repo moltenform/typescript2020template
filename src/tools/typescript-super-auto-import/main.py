@@ -40,17 +40,12 @@ def autoAddImports(srcdirectory, layers):
         if layershortnoext.startswith('bridge'):
             continue
         
-        alltxt = files.readall(layerfullpath, encoding='utf-8')
-        lines = alltxt.replace('\r\n', '\n').split('\n')
-        alreadyImported = {} # it's not worth the effort to parse what has already been imported
+        lines = getFileLines(layerfullpath, tryToStripComments)
         
         addNewForThisFile = []
         for line in lines:
             if not line.startswith('import ') and not line.startswith('/* auto */ import'):
                 for symbol in getSymbolsFromLine(line):
-                    if symbol in alreadyImported:
-                        continue
-                    
                     foundFromExports = mapSymbolNameToLayer.get(symbol, None)
                     if foundFromExports is not None:
                         if foundFromExports[0] == layerfullpath:
@@ -81,7 +76,8 @@ def autoAddImports(srcdirectory, layers):
             newLinesToAdd.append(s)
         
         if newLinesToAdd:
-            linesWithNoAuto = [line for line in lines if not (line.startswith('/* auto */ import') and '{' in line )]
+            linesOrigFile = getFileLines(layerfullpath, False)
+            linesWithNoAuto = [line for line in linesOrigFile if not (line.startswith('/* auto */ import') and '{' in line )]
             assertTrueMsg(linesWithNoAuto[0]=='', 'expected file to start with an empty line '+layer[0])
             addNewLine = linesWithNoAuto[1]!=''
             if addNewLine:
@@ -90,7 +86,7 @@ def autoAddImports(srcdirectory, layers):
             
             doSomeAutomaticFormatting(linesWithNoAuto)
             alltxtNew = '\n'.join(linesWithNoAuto)
-            if alltxtNew != alltxt:
+            if alltxtNew != '\n'.join(linesOrigFile):
                 print('Writing')
                 print('\n'.join(newLinesToAdd))
                 files.writeall(layerfullpath, alltxtNew, encoding='utf-8')
@@ -109,7 +105,7 @@ def enforceLayering(srcdirectory):
     layers, filesReferencedInLayers, filenamesReferencedInLayers = readLayersFile(srcdirectory)
     for layer in layers:
         # read file
-        basefilecontents = files.readall(layer[0], encoding='utf-8')
+        basefilecontents = '\n'.join(getFileLines(layer[0], tryToStripComments))
         
         # this layer should not be able to import from anything above it
         disallowImportsFromGreaterThan = layer[2]
@@ -117,6 +113,7 @@ def enforceLayering(srcdirectory):
             if jlayer[2] < disallowImportsFromGreaterThan:
                 # check that the current layer didn't import from this greaterthan one
                 disallowedfilename = re.escape(jlayer[1])
+                assertTrue(not disallowedfilename.endswith('.js') and not disallowedfilename.endswith('.ts'))
                 
                 # disallow "example.js", allow "_example.js_"
                 if re.search(r'\b' + disallowedfilename + r'\.(ts|js)\b', basefilecontents) or \
