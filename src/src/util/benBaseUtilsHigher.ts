@@ -1,6 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './benBaseUtilsAssert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive } from './benBaseUtils';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './benBaseUtilsAssert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -226,7 +226,6 @@ export class Util512Higher {
             sc
         );
     }
-
 }
 
 /**

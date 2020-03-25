@@ -1,6 +1,6 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, scontains, throwIfUndefined } from './../util/benBaseUtilsAssert';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, scontains, throwIfUndefined, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
@@ -165,23 +165,23 @@ t.test('scontains', () => {
 t.test('unknownToString', () => {
     class CustomToString {
         public toString() {
-            return "abc";
+            return 'abc';
         }
     }
 
-    let a:unknown = new CustomToString()
-    let b:unknown = "a string"
-    let c:unknown = 123
-    let d:unknown = undefined
-    let e:unknown = null
-    let f:unknown = false
-    assertEq("abc", '' + a, '')
-    assertEq("a string", '' + b, '')
-    assertEq("123", '' + c, '')
-    assertEq("undefined", '' + d, '')
-    assertEq("null", '' + e, '')
-    assertEq("false", '' + f, '')
-})
+    let a: unknown = new CustomToString();
+    let b: unknown = 'a string';
+    let c: unknown = 123;
+    let d: unknown = undefined;
+    let e: unknown = null;
+    let f: unknown = false;
+    assertEq('abc', '' + a, '');
+    assertEq('a string', '' + b, '');
+    assertEq('123', '' + c, '');
+    assertEq('undefined', '' + d, '');
+    assertEq('null', '' + e, '');
+    assertEq('false', '' + f, '');
+});
 
 /**
  * implementation of RingBuffer backed by a simple array

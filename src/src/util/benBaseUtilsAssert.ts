@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './benBaseUtilsProductname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -68,7 +68,12 @@ export function assertTrue(
 /**
  * a 'soft' assert. Record the error, but allow execution to continue
  */
-export function assertTrueWarn(condition: unknown, s1: string, s2?: unknown, s3?: unknown) {
+export function assertTrueWarn(
+    condition: unknown,
+    s1: string,
+    s2?: unknown,
+    s3?: unknown,
+) {
     if (!condition) {
         let er = makeUI512Error(
             'warning, assertion failed in assertTrueWarn.',
@@ -99,7 +104,12 @@ export function checkThrowUI512(
 /**
  * a way to safely go from optional<T> to T
  */
-export function throwIfUndefined<T>(v: O<T>, s1: string, s2: unknown = '', s3: unknown = ''): T {
+export function throwIfUndefined<T>(
+    v: O<T>,
+    s1: string,
+    s2: unknown = '',
+    s3: unknown = '',
+): T {
     if (v === undefined || v === null) {
         let msg = 'not defined';
         if (s1 !== '') {
@@ -302,7 +312,7 @@ export function joinIntoMessage(
     s3?: unknown,
 ) {
     let tags: string[] = [];
-    c0 = findTags(c0, tags);
+    c0 = findTags(c0, tags) ?? '';
     s1 = findTags(s1, tags);
     let message = prefix + ' ' + c0;
     message += s1 ? '\n' + s1 : '';
@@ -349,10 +359,12 @@ function recordAndShowErr(firstMsg: string, msg: string) {
  * we have more context about the site of failure.
  * assert tags are in the form xx|; this fn extracts them from a string.
  */
-function findTags(s: unknown, tags: string[]) {
+function findTags(s: unknown, tags: string[]): O<string> {
     if (s && typeof s === 'string' && s[2] === '|') {
         tags.push(s.slice(0, 2));
         return s.slice(3);
+    } else if (!s) {
+        return undefined;
     } else {
         return '' + s;
     }

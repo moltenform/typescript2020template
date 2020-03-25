@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -339,7 +339,7 @@ export class Util512 {
      */
     static sortDecorated(ar: unknown[], fn: Function) {
         // 1) decorate
-        let decorated = ar.map((val) => [fn(val), val]);
+        let decorated = ar.map(val => [fn(val), val]);
         // 2) sort
         let comparer = function(a: unknown[], b: unknown[]) {
             return sensibleSort(a[0], b[0]);
@@ -758,7 +758,13 @@ export function checkThrowEq<T>(
  * a quick way to trigger assertion if value is not what was expected.
  * 'hard' assert, does not let execution continue.
  */
-export function assertEq(expected: unknown, received: unknown, c1: string, c2?: unknown, c3?: unknown) {
+export function assertEq(
+    expected: unknown,
+    received: unknown,
+    c1: string,
+    c2?: unknown,
+    c3?: unknown,
+) {
     if (sensibleSort(expected, received) !== 0) {
         let msg = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
@@ -805,7 +811,6 @@ export function bool(x: unknown): boolean {
 /**
  * conveniently write a long string
  */
-export function longstr(s: string) {
-    return s.replace(/\s*(\r\n|\n)\s*/g, ' ');
+export function longstr(s: string, newlinesBecome = ' ') {
+    return s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
 }
-

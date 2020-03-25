@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
 /* auto */ import { testExternalLibs } from './testExternalLibs';
 /* auto */ import { testBenBaseUtilsHigher } from './testBenBaseUtilsHigher';
 /* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';

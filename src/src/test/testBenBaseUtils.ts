@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows, sorted } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, bool, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength } from './../util/benBaseUtils';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, bool, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength, } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = t;
@@ -126,46 +126,46 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
 t.test('slength', () => {
-    assertEq(0, slength(null), '')
-    assertEq(0, slength(undefined), '')
-    assertEq(0, slength(''), '')
-    assertEq(3, slength('abc'), '')
+    assertEq(0, slength(null), '');
+    assertEq(0, slength(undefined), '');
+    assertEq(0, slength(''), '');
+    assertEq(3, slength('abc'), '');
 });
 t.test('cast', () => {
     class Parent {
         public a() {
-            return 'parent'
+            return 'parent';
         }
     }
     class Child extends Parent {
         public a() {
-            return 'child'
+            return 'child';
         }
     }
     class Other {
         public a() {
-            return 'other'
+            return 'other';
         }
     }
 
-    let o1:unknown = new Parent()
-    assertEq('parent', cast(o1, Parent).a(), '')
-    o1 = new Child()
-    assertEq('child', cast(o1, Parent).a(), '')
-    o1 = new Other()
+    let o1: unknown = new Parent();
+    assertEq('parent', cast(o1, Parent).a(), '');
+    o1 = new Child();
+    assertEq('child', cast(o1, Parent).a(), '');
+    o1 = new Other();
     assertThrows('', 'type cast exception', () => {
-        cast(o1, Parent)
-    })
+        cast(o1, Parent);
+    });
 });
 t.test('isString', () => {
-    assertTrue(isString(''), '')
-    assertTrue(isString('abc'), '')
-    assertTrue(isString(String('abc')), '')
-    assertTrue(isString(new String('abc')), '')
-    assertTrue(!isString(123), '')
-    assertTrue(!isString(null), '')
-    assertTrue(!isString(undefined), '')
-    assertTrue(!isString(['a']), '')
+    assertTrue(isString(''), '');
+    assertTrue(isString('abc'), '');
+    assertTrue(isString(String('abc')), '');
+    assertTrue(isString(new String('abc')), '');
+    assertTrue(!isString(123), '');
+    assertTrue(!isString(null), '');
+    assertTrue(!isString(undefined), '');
+    assertTrue(!isString(['a']), '');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
@@ -421,76 +421,75 @@ t.test('testOrderedHash.IterReversed', () => {
     assertEq([28, 29, 30], result, '0o|');
 });
 t.test('MapKeyToObjectCanSet', () => {
-    let o = new MapKeyToObjectCanSet<number>()
-    o.add("five", 5)
-    o.add("six", 6)
+    let o = new MapKeyToObjectCanSet<number>();
+    o.add('five', 5);
+    o.add('six', 6);
     t.say('—————————— exists');
-    assertTrue(o.exists('five'), '')
-    assertTrue(o.exists('six'), '')
-    assertTrue(!o.exists('seven'), '')
-    assertTrue(!o.exists(''), '')
+    assertTrue(o.exists('five'), '');
+    assertTrue(o.exists('six'), '');
+    assertTrue(!o.exists('seven'), '');
+    assertTrue(!o.exists(''), '');
     t.say('—————————— get');
-    assertEq(5, o.get('five'), '')
-    assertEq(6, o.get('six'), '')
+    assertEq(5, o.get('five'), '');
+    assertEq(6, o.get('six'), '');
     assertThrows('', 'not found', () => {
-        o.get('seven')
-    })
+        o.get('seven');
+    });
     assertThrows('', 'not found', () => {
-        o.get('')
-    })
+        o.get('');
+    });
     t.say('—————————— find');
-    assertEq(5, o.find('five'), '')
-    assertEq(6, o.find('six'), '')
-    assertEq(undefined, o.find('seven'), '')
-    assertEq(undefined, o.find(''), '')
+    assertEq(5, o.find('five'), '');
+    assertEq(6, o.find('six'), '');
+    assertEq(undefined, o.find('seven'), '');
+    assertEq(undefined, o.find(''), '');
     t.say('—————————— getKeys');
-    assertEq(['five', 'six'], sorted(o.getKeys()), '')
-    assertEq([5, 6], sorted(o.getVals()), '')
+    assertEq(['five', 'six'], sorted(o.getKeys()), '');
+    assertEq([5, 6], sorted(o.getVals()), '');
     t.say('—————————— remove');
-    o.remove('five')
-    assertEq(undefined, o.find('five'), '')
+    o.remove('five');
+    assertEq(undefined, o.find('five'), '');
 });
 t.test('checkThrowEq', () => {
-    checkThrowEq(1, 1, '')
-    checkThrowEq("abc", "abc", '')
+    checkThrowEq(1, 1, '');
+    checkThrowEq('abc', 'abc', '');
     assertThrows('', 'but got', () => {
-        checkThrowEq(1, 2, '')
-    })
+        checkThrowEq(1, 2, '');
+    });
     assertThrows('', 'but got', () => {
-        checkThrowEq("abc", "ABC", '')
-    })
+        checkThrowEq('abc', 'ABC', '');
+    });
 });
 t.test('last', () => {
-    assertEq(3, last([1,2,3]), '')
-    assertEq(1, last([1]), '')
+    assertEq(3, last([1, 2, 3]), '');
+    assertEq(1, last([1]), '');
 });
 t.test('bool', () => {
-    assertEq(true, bool(true), '')
-    assertEq(true, bool(['abc']), '')
-    assertEq(true, bool('abc'), '')
-    assertEq(true, bool(123), '')
-    assertEq(false, bool(false), '')
-    assertEq(false, bool([]), '')
-    assertEq(false, bool(''), '')
-    assertEq(false, bool(0), '')
-    assertEq(false, bool(null), '')
-    assertEq(false, bool(undefined), '')
-    assertEq(false, bool(NaN), '')
+    assertEq(true, bool(true), '');
+    assertEq(true, bool(['abc']), '');
+    assertEq(true, bool('abc'), '');
+    assertEq(true, bool(123), '');
+    assertEq(false, bool(false), '');
+    assertEq(false, bool(''), '');
+    assertEq(false, bool(0), '');
+    assertEq(true, bool([]), '');
+    assertEq(false, bool(null), '');
+    assertEq(false, bool(undefined), '');
+    assertEq(false, bool(NaN), '');
 });
 t.test('longstr', () => {
     let s = longstr(`a long
         string across
         a few lines`);
-    assertEq("a long string across a few lines", s, '')
+    assertEq('a long string across a few lines', s, '');
     s = `a long
     string across
     a few lines`;
-    let sUnix = Util512.normalizeNewlines(s)
-    assertEq("a long string across a few lines", longstr(sUnix), '')
-    let sWindows = Util512.normalizeNewlines(s).replace(/\n/g, '\r\n')
-    assertEq("a long string across a few lines", longstr(sWindows), '')
+    let sUnix = Util512.normalizeNewlines(s);
+    assertEq('a long string across a few lines', longstr(sUnix), '');
+    let sWindows = Util512.normalizeNewlines(s).replace(/\n/g, '\r\n');
+    assertEq('a long string across a few lines', longstr(sWindows), '');
 });
-
 
 /**
  * test-only enum

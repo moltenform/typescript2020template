@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory } from './testUtils';
 /* auto */ import { O, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { assertEq } from './../util/benBaseUtils';
+/* auto */ import { assertEq, longstr } from './../util/benBaseUtils';
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
@@ -26,7 +26,10 @@ t.test('testSimpleSerialize', () => {
     let oAsJson = serialize(o);
     let oAsString = JSON.stringify(oAsJson);
     let gotJson = JSON.parse(oAsString);
-    let oFromString = deserialize<ClassTestSimpleSerialization>(ClassTestSimpleSerialization, gotJson);
+    let oFromString = deserialize<ClassTestSimpleSerialization>(
+        ClassTestSimpleSerialization,
+        gotJson,
+    );
     assertTrue(oFromString instanceof ClassTestSimpleSerialization, '');
     assertEq('id1001', oFromString.id, '');
     assertEq('content', oFromString.content, '');
@@ -42,8 +45,12 @@ t.test('testClassSerialization', () => {
     hr.fingers = [new Finger(11, 'fr1'), new Finger(12, 'fr2'), new Finger(13, 'fr3')];
     hl.currentOrientation = 'dn';
     hl.holding = ['a', 'b'];
-    let expectedS =
-        'p=jim,h=[hid=1,hnm=left,hol=a|b,o=dn,f=[id=1nm=[fl1],id=2nm=[fl2],id=3nm=[fl3]],hid=1,hnm=right,hol=,o=up,f=[id=11nm=[fr1],id=12nm=[fr2],id=13nm=[fr3]]]';
+    let expectedS = longstr(
+        `p=jim,h=[hid=1,hnm=left,hol=a|b,o=dn,f=[id=1nm=[fl1],
+        id=2nm=[fl2],id=3nm=[fl3]],hid=1,hnm=right,hol=,o=up,f=[id=11nm=[fr1],
+        id=12nm=[fr2],id=13nm=[fr3]]]`,
+        '',
+    );
     assertEq(expectedS, person.asString(), '');
 
     let serialized = JSON.stringify(serialize(person));
@@ -131,7 +138,9 @@ class Hand {
 
     asString() {
         let f = this.fingers.map(a => a.asString()).join(',');
-        return `hid=${this.id},hnm=${this.name},hol=${this.holding.join('|')},o=${this.currentOrientation},f=[${f}]`;
+        return `hid=${this.id},hnm=${this.name},hol=${this.holding.join('|')},o=${
+            this.currentOrientation
+        },f=[${f}]`;
     }
 }
 
