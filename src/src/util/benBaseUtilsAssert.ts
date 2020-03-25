@@ -1,6 +1,5 @@
 
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
-/* auto */ import { last } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -12,9 +11,9 @@
 function makeUI512ErrorGeneric(
     firstMsg: string,
     prefix: string,
-    s1?: any,
-    s2?: any,
-    s3?: any,
+    s1?: unknown,
+    s2?: unknown,
+    s3?: unknown,
 ) {
     let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
@@ -30,7 +29,7 @@ function makeUI512ErrorGeneric(
 /**
  * make ui exception
  */
-export function makeUI512Error(msg: string, s1?: any, s2?: any, s3?: any) {
+export function makeUI512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unknown) {
     return makeUI512ErrorGeneric(msg, ui512InternalErr, s1, s2, s3);
 }
 
@@ -56,10 +55,10 @@ export function respondUI512Error(e: Error, context: string) {
  * use assertTrueWarn if it's not a very important check
  */
 export function assertTrue(
-    condition: any,
+    condition: unknown,
     s1: string,
-    s2?: any,
-    s3?: any,
+    s2?: unknown,
+    s3?: unknown,
 ): asserts condition {
     if (!condition) {
         throw makeUI512Error('assertion failed in assertTrue.', s1, s2, s3);
@@ -69,7 +68,7 @@ export function assertTrue(
 /**
  * a 'soft' assert. Record the error, but allow execution to continue
  */
-export function assertTrueWarn(condition: any, s1: string, s2?: any, s3?: any) {
+export function assertTrueWarn(condition: unknown, s1: string, s2?: unknown, s3?: unknown) {
     if (!condition) {
         let er = makeUI512Error(
             'warning, assertion failed in assertTrueWarn.',
@@ -87,10 +86,10 @@ export function assertTrueWarn(condition: any, s1: string, s2?: any, s3?: any) {
  * a quick way to throw an exception if condition is false
  */
 export function checkThrowUI512(
-    condition: any,
+    condition: unknown,
     msg: string,
-    s1: any = '',
-    s2: any = '',
+    s1: unknown = '',
+    s2: unknown = '',
 ): asserts condition {
     if (!condition) {
         throw makeUI512Error(`${msg} ${s1} ${s2}`);
@@ -100,19 +99,19 @@ export function checkThrowUI512(
 /**
  * a way to safely go from optional<T> to T
  */
-export function throwIfUndefined<T>(v: O<T>, s1: string, s2: any = '', s3: any = ''): T {
+export function throwIfUndefined<T>(v: O<T>, s1: string, s2: unknown = '', s3: unknown = ''): T {
     if (v === undefined || v === null) {
         let msg = 'not defined';
         if (s1 !== '') {
-            msg += ', ' + s1.toString();
+            msg += ', ' + s1;
         }
 
         if (s2 !== '') {
-            msg += ', ' + s2.toString();
+            msg += ', ' + s2;
         }
 
         if (s3 !== '') {
-            msg += ', ' + s3.toString();
+            msg += ', ' + s3;
         }
 
         throw makeUI512Error(msg);
@@ -298,17 +297,17 @@ export function cleanExceptionMsg(s: string) {
 export function joinIntoMessage(
     c0: string,
     prefix: string,
-    s1?: any,
-    s2?: any,
-    s3?: any,
+    s1?: unknown,
+    s2?: unknown,
+    s3?: unknown,
 ) {
     let tags: string[] = [];
     c0 = findTags(c0, tags);
     s1 = findTags(s1, tags);
     let message = prefix + ' ' + c0;
-    message += s1 ? '\n' + s1.toString() : '';
-    message += s2 ? ', ' + s2.toString() : '';
-    message += s3 ? ', ' + s3.toString() : '';
+    message += s1 ? '\n' + s1 : '';
+    message += s2 ? ', ' + s2 : '';
+    message += s3 ? ', ' + s3 : '';
     if (tags.length) {
         message += ' (' + tags.join(',') + ')';
     }
@@ -350,12 +349,12 @@ function recordAndShowErr(firstMsg: string, msg: string) {
  * we have more context about the site of failure.
  * assert tags are in the form xx|; this fn extracts them from a string.
  */
-function findTags(s: any, tags: string[]) {
+function findTags(s: unknown, tags: string[]) {
     if (s && typeof s === 'string' && s[2] === '|') {
         tags.push(s.slice(0, 2));
         return s.slice(3);
     } else {
-        return s;
+        return '' + s;
     }
 }
 

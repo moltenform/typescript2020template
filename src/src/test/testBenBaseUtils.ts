@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { OrderedHash, ValHolder, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, } from './../util/benBaseUtils';
+/* auto */ import { OrderedHash, ValHolder, assertEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, sensibleSort, slength, cast, } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testsBenBaseUtils = t;
@@ -125,6 +125,19 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertEq(pts[2], ` third (4E)`, 'DN|');
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
+t.test('slength', () => {
+    assertEq(0, slength(null), '')
+    assertEq(0, slength(undefined), '')
+    assertEq(0, slength(''), '')
+    assertEq(3, slength('abc'), '')
+});
+t.test('cast', () => {
+    assertEq(0, cast("abc", String), '')
+});
+
+
+
+
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
     assertEq(1, fitIntoInclusive(1, 1, 3), 'DK|');

@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
+/* auto */ import { Util512, assertEq, BrowserOSInfo, longstr } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
 export let testsBenBaseUtilsClass = t;
@@ -106,7 +106,22 @@ t.test('add', () => {
     assertEq(0, [].reduce(Util512.add, 0), '');
 });
 t.test('getBrowserOS', () => {
-    assertEq('', Util512.getBrowserOS(), '');
+    let s = longstr(`Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X)
+        AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a
+        Safari/604.1`)
+    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), '');
+    s = longstr(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+        (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246`)
+    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), '');
+    s = longstr(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9
+        (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9`)
+    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), '');
+    s = longstr(`Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML,
+        like Gecko) Chrome/47.0.2526.111 Safari/537.36`)
+    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), '');
+    s = longstr(`Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101
+        Firefox/15.0.1`)
+    assertEq(BrowserOSInfo.Linux, Util512.getBrowserOS(s), '');
 });
 t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
@@ -440,7 +455,7 @@ class TestClsWithMethods {
 }
 
 /**
- * test-only code, since this is needlessly slow (like Python's sorted)
+ * test-only code, since this is inefficient
  */
 function sorted(ar: any[]) {
     let arCopy = ar.slice();

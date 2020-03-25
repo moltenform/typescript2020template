@@ -8,7 +8,7 @@ export class Util512 {
     /**
      * checks for NaN and Infinity
      */
-    static isValidNumber(value: any) {
+    static isValidNumber(value: unknown) {
         return typeof value === 'number' && isFinite(value);
     }
 
@@ -126,14 +126,14 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-    static shallowClone(o: any) {
+    static shallowClone(o: object) {
         return Object.assign({}, o);
     }
 
     /**
      * freeze a property
      */
-    static freezeProperty(o: any, propName: string) {
+    static freezeProperty(o: object, propName: string) {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     }
@@ -142,7 +142,7 @@ export class Util512 {
      * https://github.com/substack/deep-freeze
      * public domain
      */
-    static freezeRecurse(o: any) {
+    static freezeRecurse(o: object) {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -188,7 +188,7 @@ export class Util512 {
         clsname: string,
         me: any,
         s: string,
-        args: any[],
+        args: unknown[],
         okIfNotExists: boolean,
     ) {
         checkThrowUI512(
@@ -220,7 +220,7 @@ export class Util512 {
     /**
      * for use with callAsMethodOnClass
      */
-    static isMethodOnClass(me: any, s: string) {
+    static isMethodOnClass(me: object, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
     }
 
@@ -356,7 +356,7 @@ type AnyJsonInner =
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 export type NoParameterCtor<T> = { new (): T };
-export type AnyParameterCtor<T> = { new (...args: any): T };
+export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 
 /**
  * by jcalz, stackoverflow
@@ -489,8 +489,8 @@ export function slength(s: string | null | undefined) {
  * let myObj = cast(o, MyClass)
  */
 export function cast<T>(
-    instance: any,
-    ctor: { new (...args: any[]): T },
+    instance: unknown,
+    ctor: AnyParameterCtor<T>,
     context?: string,
 ): T {
     if (instance instanceof ctor) {
@@ -503,7 +503,7 @@ export function cast<T>(
 /**
  * be extra cautious in case string was made via new String
  */
-export function isString(v: any) {
+export function isString(v: unknown): v is string {
     return bool(typeof v === 'string') || bool(v instanceof String);
 }
 
@@ -531,12 +531,12 @@ export class RenderComplete {
 }
 
 /**
- * compare any two objects.
+ * compare two objects.
  * confirms that types match.
  * works on arbitrarily nested array structures.
  * can be used in .sort() or just to compare values.
  */
-export function sensibleSort(a: any, b: any): number {
+export function sensibleSort(a: unknown, b: unknown): number {
     if (a === undefined && b === undefined) {
         return 0;
     } else if (a === null && b === null) {
@@ -572,16 +572,16 @@ export function sensibleSort(a: any, b: any): number {
  * like Python's sort(key=fn)
  * often more efficient than passing a comparison function.
  */
-export function sortDecorated(ar: any[], fn: Function) {
+export function sortDecorated(ar: unknown[], fn: Function) {
     // 1) decorate
-    let decorated = ar.map((val: any) => [fn(val), val]);
+    let decorated = ar.map((val) => [fn(val), val]);
     // 2) sort
-    let comparer = function(a: any[], b: any[]) {
+    let comparer = function(a: unknown[], b: unknown[]) {
         return sensibleSort(a[0], b[0]);
     };
     decorated.sort(comparer);
     // 3) undecorate
-    return decorated.map((val: any[]) => val[1]);
+    return decorated.map(val => val[1]);
 }
 
 /**
@@ -710,7 +710,7 @@ export enum BrowserOSInfo {
  * CharClassify
  *
  * Permission to use, copy, modify, and distribute this software and its
- * documentation for any purpose and without fee is hereby granted,
+ * documentation for all purposes and without fee is hereby granted,
  * provided that the above copyright notice appear in all copies and that
  * both that copyright notice and this permission notice appear in
  * supporting documentation.
@@ -896,11 +896,11 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
  * a quick way to throw an expection if value is not what was expected.
  */
 export function checkThrowEq(
-    expected: any,
-    got: any,
+    expected: unknown,
+    got: unknown,
     msg: string,
-    c1: any = '',
-    c2: any = '',
+    c1: unknown = '',
+    c2: unknown = '',
 ) {
     if (sensibleSort(expected, got) !== 0) {
         throw makeUI512Error(
@@ -913,7 +913,7 @@ export function checkThrowEq(
  * a quick way to trigger assertion if value is not what was expected.
  * 'hard' assert, does not let execution continue.
  */
-export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?: any) {
+export function assertEq(expected: unknown, received: unknown, c1: string, c2?: unknown, c3?: unknown) {
     if (sensibleSort(expected, received) !== 0) {
         let msg = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
@@ -926,11 +926,11 @@ export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?
  *  'soft' assert, lets execution continue.
  */
 export function assertEqWarn(
-    expected: any,
-    received: any,
+    expected: unknown,
+    received: unknown,
     c1: string,
-    c2?: any,
-    c3?: any,
+    c2?: unknown,
+    c3?: unknown,
 ) {
     if (sensibleSort(expected, received) !== 0) {
         let msg = longstr(`warning, assertion failed in assertEqWarn,
@@ -953,7 +953,7 @@ export function last<T>(ar: T[]): T {
 /**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */
-export function bool(x: any): boolean {
+export function bool(x: unknown): boolean {
     return !!x;
 }
 

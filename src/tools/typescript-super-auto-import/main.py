@@ -44,7 +44,7 @@ def autoAddImports(srcdirectory, layers):
         
         addNewForThisFile = []
         for line in lines:
-            if not line.startswith('import ') and not line.startswith('/* auto */ import'):
+            if not line.strip().startswith('import ') and not line.strip().startswith('/* auto */ import'):
                 for symbol in getSymbolsFromLine(line):
                     foundFromExports = mapSymbolNameToLayer.get(symbol, None)
                     if foundFromExports is not None:
