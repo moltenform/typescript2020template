@@ -7,12 +7,6 @@
 let tests = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
 export let testsBenBaseUtilsClass = tests;
 
-tests.test('abc', () => {
-    console.log('cool');
-});
-tests.test('fdghhh', () => {
-    console.log('cool');
-});
 tests.test('Repeat.String', () => {
     assertEq(['a', 'a', 'a'], Util512.repeat(3, 'a'), 'F4|');
     assertEq(['a'], Util512.repeat(1, 'a'), 'F3|');
