@@ -6,12 +6,12 @@
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
 export let testsBenBaseUtilsAssert = t;
 
-t.test('assertThrows', () => {
-    t.say('—————————— Gets Message From Custom Error');
+t.test('AssertThrows', () => {
+    t.say('—————————— Get Message From Custom Error');
     assertThrows('L0|', 'mymessage', () => {
         throw makeUI512Error('1N|1 mymessage 2');
     });
-    t.say('—————————— Gets Message From Plain Error');
+    t.say('—————————— Get Message From Plain Error');
     assertThrows('K~|', 'xyz', () => {
         throw new Error('1 xyz 2');
     });
@@ -78,16 +78,40 @@ t.test('JoinIntoMessage', () => {
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''), 'CY|');
     assertEq('\u10E8 ', UI512Compress.compressString('a'), 'CX|');
-    assertEq('\u10E6\u4866\u4AEA  ', UI512Compress.compressString('aaaaaaaabbbbbbbb'), 'CW|');
-    assertEq('\u10E6\u4866\u4AE8\u31B0 ', UI512Compress.compressString('aaaaaaaabbbbbbbbc'), 'CV|');
-    assertEq('\u10E6\u7070\u0256\u4CF0 ', UI512Compress.compressString('aaaaaaa\nbbbbbbbbb'), 'CU|');
+    assertEq(
+        '\u10E6\u4866\u4AEA  ',
+        UI512Compress.compressString('aaaaaaaabbbbbbbb'),
+        'CW|',
+    );
+    assertEq(
+        '\u10E6\u4866\u4AE8\u31B0 ',
+        UI512Compress.compressString('aaaaaaaabbbbbbbbc'),
+        'CV|',
+    );
+    assertEq(
+        '\u10E6\u7070\u0256\u4CF0 ',
+        UI512Compress.compressString('aaaaaaa\nbbbbbbbbb'),
+        'CU|',
+    );
 });
 t.test('DecompressString', () => {
     assertEq('', UI512Compress.decompressString('\u2020 '), 'CT|');
     assertEq('a', UI512Compress.decompressString('\u10E8 '), 'CS|');
-    assertEq('aaaaaaaabbbbbbbb', UI512Compress.decompressString('\u10E6\u4866\u4AEA  '), 'CR|');
-    assertEq('aaaaaaaabbbbbbbbc', UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 '), 'CQ|');
-    assertEq('aaaaaaa\nbbbbbbbbb', UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 '), 'CP|');
+    assertEq(
+        'aaaaaaaabbbbbbbb',
+        UI512Compress.decompressString('\u10E6\u4866\u4AEA  '),
+        'CR|',
+    );
+    assertEq(
+        'aaaaaaaabbbbbbbbc',
+        UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 '),
+        'CQ|',
+    );
+    assertEq(
+        'aaaaaaa\nbbbbbbbbb',
+        UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 '),
+        'CP|',
+    );
 });
 t.test('RingBufferSizeRemainsConstant', () => {
     let buf = new RingBufferArray(4);

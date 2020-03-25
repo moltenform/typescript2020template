@@ -56,9 +56,21 @@ tests.test('getEnumToStr.FoundPrimary', () => {
     assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
 });
 tests.test('getEnumToStr.AlternatesHaveSameVal', () => {
-    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst), 'DZ|');
-    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd), 'DY|');
-    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd), 'DX|');
+    assertEq(
+        'first',
+        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst),
+        'DZ|',
+    );
+    assertEq(
+        'second',
+        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd),
+        'DY|',
+    );
+    assertEq(
+        'third',
+        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd),
+        'DX|',
+    );
 });
 tests.test('getEnumToStr.NotFound', () => {
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
@@ -66,7 +78,11 @@ tests.test('getEnumToStr.NotFound', () => {
 });
 tests.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
     assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__isUI512Enum), 'DU|');
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize), 'DT|');
+    assertEq(
+        'Unknown',
+        getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize),
+        'DT|',
+    );
 });
 tests.test('getStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'), 'DS|');
@@ -116,8 +132,16 @@ tests.test('sensibleSort.StringWithNonAscii', () => {
     assertEq(1, sensibleSort('aunicode\u2667char', 'aunicode\u2666char'), '1F|');
     assertEq(-1, sensibleSort('aunicode\u2666char', 'aunicode\u2667char'), '1E|');
     assertEq(0, sensibleSort('accented\u00e9letter', 'accented\u00e9letter'), '1D|');
-    assertEq(1, sensibleSort('accented\u00e9letter', 'accented\u0065\u0301letter'), '1C|');
-    assertEq(-1, sensibleSort('accented\u0065\u0301letter', 'accented\u00e9letter'), '1B|');
+    assertEq(
+        1,
+        sensibleSort('accented\u00e9letter', 'accented\u0065\u0301letter'),
+        '1C|',
+    );
+    assertEq(
+        -1,
+        sensibleSort('accented\u0065\u0301letter', 'accented\u00e9letter'),
+        '1B|',
+    );
 });
 tests.test('sensibleSort.Bool', () => {
     assertEq(0, sensibleSort(false, false), '1A|');

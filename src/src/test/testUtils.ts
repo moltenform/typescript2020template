@@ -1,10 +1,14 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains } from './../util/benBaseUtilsAssert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains, } from './../util/benBaseUtilsAssert';
 
 /**
  * assert that an exception is thrown, with a certain message
  */
-export async function assertThrowsAsync<T>(tagMsg: string, expectedErr: string, fn: () => Promise<T>) {
+export async function assertThrowsAsync<T>(
+    tagMsg: string,
+    expectedErr: string,
+    fn: () => Promise<T>,
+) {
     let msg: O<string>;
     let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
     UI512ErrorHandling.breakOnThrow = false;

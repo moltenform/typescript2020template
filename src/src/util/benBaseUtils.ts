@@ -184,7 +184,13 @@ export class Util512 {
      * let method = 'goAbc'
      * callAsMethodOnClass('MyClass', inst, method, [], true)
      */
-    static callAsMethodOnClass(clsname: string, me: any, s: string, args: any[], okIfNotExists: boolean) {
+    static callAsMethodOnClass(
+        clsname: string,
+        me: any,
+        s: string,
+        args: any[],
+        okIfNotExists: boolean,
+    ) {
         checkThrowUI512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
@@ -337,7 +343,13 @@ export class ValHolder<T> {
 /**
  * a plain JS object, can be null
  */
-type AnyJsonInner = string | number | boolean | null | { [property: string]: AnyJsonInner } | AnyJsonInner[];
+type AnyJsonInner =
+    | string
+    | number
+    | boolean
+    | null
+    | { [property: string]: AnyJsonInner }
+    | AnyJsonInner[];
 
 /**
  * indicates that the value is a plain JS object
@@ -349,7 +361,9 @@ export type AnyParameterCtor<T> = { new (...args: any): T };
 /**
  * by jcalz, stackoverflow
  */
-export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & { [k: number]: string };
+export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & {
+    [k: number]: string;
+};
 
 /**
  * list enum vals
@@ -376,7 +390,10 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
  * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
  */
 export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
-    assertTrue(Enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
+    assertTrue(
+        Enm['__isUI512Enum'] !== undefined,
+        '4F|must provide an enum type with __isUI512Enum defined.',
+    );
     if (s.startsWith('__')) {
         return undefined;
     } else if (s.startsWith('AlternateForm')) {
@@ -400,12 +417,18 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
 /**
  * same as findStrToEnum, but throws if not found, showing possible values.
  */
-export function getStrToEnum<E>(Enm: TypeLikeAnEnum<E>, msgContext: string, s: string): E {
+export function getStrToEnum<E>(
+    Enm: TypeLikeAnEnum<E>,
+    msgContext: string,
+    s: string,
+): E {
     let found = findStrToEnum(Enm, s);
     if (found !== undefined) {
         return found;
     } else {
-        msgContext = msgContext ? `Not a valid choice of ${msgContext}. ` : `Not a valid choice for this value. `;
+        msgContext = msgContext
+            ? `Not a valid choice of ${msgContext}. `
+            : `Not a valid choice for this value. `;
         if (Enm['__isUI512Enum'] !== undefined) {
             let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
             msgContext += 'try one of' + listEnumVals(Enm, makeLowercase);
@@ -420,13 +443,22 @@ export function getStrToEnum<E>(Enm: TypeLikeAnEnum<E>, msgContext: string, s: s
  * checks that the primary string is returned, not a synonym ('alternate form')
  */
 export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
-    assertTrue(Enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
+    assertTrue(
+        Enm['__isUI512Enum'] !== undefined,
+        '4D|must provide an enum type with __isUI512Enum defined.',
+    );
 
     /* using e[n] would work, but it's fragile if enum implementation changes. */
     for (let enumMember in Enm) {
-        if ((Enm[enumMember] as any) === n && !enumMember.startsWith('__') && !enumMember.startsWith('__AlternateForm__')) {
+        if (
+            (Enm[enumMember] as any) === n &&
+            !enumMember.startsWith('__') &&
+            !enumMember.startsWith('__AlternateForm__')
+        ) {
             let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
-            return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
+            return makeLowercase
+                ? enumMember.toString().toLowerCase()
+                : enumMember.toString();
         }
     }
 
@@ -436,7 +468,11 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
 /**
  * findEnumToStr, but returns a fallback value.
  */
-export function getEnumToStrOrUnknown<E>(Enm: TypeLikeAnEnum<E>, n: number, fallback = 'Unknown'): string {
+export function getEnumToStrOrUnknown<E>(
+    Enm: TypeLikeAnEnum<E>,
+    n: number,
+    fallback = 'Unknown',
+): string {
     return findEnumToStr(Enm, n) ?? fallback;
 }
 
@@ -452,7 +488,11 @@ export function slength(s: string | null | undefined) {
  * ts inference lets us type simply
  * let myObj = cast(o, MyClass)
  */
-export function cast<T>(instance: any, ctor: { new (...args: any[]): T }, context?: string): T {
+export function cast<T>(
+    instance: any,
+    ctor: { new (...args: any[]): T },
+    context?: string,
+): T {
     if (instance instanceof ctor) {
         return instance;
     }
@@ -709,7 +749,11 @@ export class GetCharClass {
     static get(c: number) {
         if (c === GetCharClass.cr || c === GetCharClass.nl) {
             return CharClass.NewLine;
-        } else if (c < 0x20 || c === GetCharClass.space || c === GetCharClass.nonbreakingspace) {
+        } else if (
+            c < 0x20 ||
+            c === GetCharClass.space ||
+            c === GetCharClass.nonbreakingspace
+        ) {
             return CharClass.Space;
         } else if (
             (c >= 0x80 && c <= 0xff) ||
@@ -851,9 +895,17 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
 /**
  * a quick way to throw an expection if value is not what was expected.
  */
-export function checkThrowEq(expected: any, got: any, msg: string, c1: any = '', c2: any = '') {
+export function checkThrowEq(
+    expected: any,
+    got: any,
+    msg: string,
+    c1: any = '',
+    c2: any = '',
+) {
     if (sensibleSort(expected, got) !== 0) {
-        throw makeUI512Error(`${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`);
+        throw makeUI512Error(
+            `${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
+        );
     }
 }
 
@@ -872,7 +924,13 @@ export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?
  * a quick way to trigger assertion if value is not what was expected.
  *  'soft' assert, lets execution continue.
  */
-export function assertEqWarn(expected: any, received: any, c1: string, c2?: any, c3?: any) {
+export function assertEqWarn(
+    expected: any,
+    received: any,
+    c1: string,
+    c2?: any,
+    c3?: any,
+) {
     if (sensibleSort(expected, received) !== 0) {
         let msg = `warning, assertion failed in assertEqWarn, expected '${expected}' but got '${received}'.`;
         let er = makeUI512Error(msg, c1, c2, c3);

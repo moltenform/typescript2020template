@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
 /* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
 /* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
 /* auto */ import { testsBenBaseUtils } from './testBenBaseUtils';
@@ -9,7 +9,11 @@
 export class SimpleSensibleTests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
-        let categories = [testsBenBaseUtilsClass, testsBenBaseUtils, testsBenBaseUtilsAssert];
+        let categories = [
+            testsBenBaseUtilsClass,
+            testsBenBaseUtils,
+            testsBenBaseUtilsAssert,
+        ];
 
         let countTotal = categories.map(item => item.tests.length).reduce(Util512.add);
         let counter = new ValHolder(1);
@@ -23,7 +27,11 @@ export class SimpleSensibleTests {
         console.log(`All tests complete.`);
     }
 
-    static async runCategory(category: SimpleSensibleTestCategory, countTotal: number, counter: ValHolder<number>) {
+    static async runCategory(
+        category: SimpleSensibleTestCategory,
+        countTotal: number,
+        counter: ValHolder<number>,
+    ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         for (let i = 0; i < category.tests.length; i++) {
             let [tstname, tstfn] = category.tests[i];

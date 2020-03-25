@@ -229,7 +229,11 @@ tests.test('getMapKeys.Class', () => {
     (cls2 as any).aSingleAdded = 1;
     assertEq([], sorted(Util512.getMapKeys(cls0 as any)), 'E8|');
     assertEq(['aSingleProp'], sorted(Util512.getMapKeys(cls1 as any)), 'E7|');
-    assertEq(['aSingleAdded', 'aSingleProp'], sorted(Util512.getMapKeys(cls2 as any)), 'E6|');
+    assertEq(
+        ['aSingleAdded', 'aSingleProp'],
+        sorted(Util512.getMapKeys(cls2 as any)),
+        'E6|',
+    );
 });
 tests.test('getMapVals.PlainObject', () => {
     let obj0 = {};
@@ -316,7 +320,13 @@ tests.test('callAsMethod.MissingMethodWhenAllowed', () => {
 tests.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lf|', 'could not find', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'notExist', [true, 1], false),
+        Util512.callAsMethodOnClass(
+            'TestClsWithMethods',
+            o,
+            'notExist',
+            [true, 1],
+            false,
+        ),
     );
 });
 tests.test('callAsMethod.ValidMethod', () => {

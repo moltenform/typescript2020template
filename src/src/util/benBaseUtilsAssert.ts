@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './benBaseUtilsProductname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -8,7 +8,13 @@
  * make an error object, record the error, and depending on severity, show alert box
  * you can pass in arguments to indicate context of when/why error occurred
  */
-function makeUI512ErrorGeneric(firstMsg: string, prefix: string, s1?: any, s2?: any, s3?: any) {
+function makeUI512ErrorGeneric(
+    firstMsg: string,
+    prefix: string,
+    s1?: any,
+    s2?: any,
+    s3?: any,
+) {
     let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
     try {
@@ -48,7 +54,12 @@ export function respondUI512Error(e: Error, context: string) {
  * note: this is a 'hard' assert that always throws an exception + shows a dialog
  * use assertTrueWarn if it's not a very important check
  */
-export function assertTrue(condition: any, s1: string, s2?: any, s3?: any): asserts condition {
+export function assertTrue(
+    condition: any,
+    s1: string,
+    s2?: any,
+    s3?: any,
+): asserts condition {
     if (!condition) {
         throw makeUI512Error('assertion failed in assertTrue.', s1, s2, s3);
     }
@@ -59,7 +70,12 @@ export function assertTrue(condition: any, s1: string, s2?: any, s3?: any): asse
  */
 export function assertTrueWarn(condition: any, s1: string, s2?: any, s3?: any) {
     if (!condition) {
-        let er = makeUI512Error('warning, assertion failed in assertTrueWarn.', s1, s2, s3);
+        let er = makeUI512Error(
+            'warning, assertion failed in assertTrueWarn.',
+            s1,
+            s2,
+            s3,
+        );
         if (!window.confirm('continue?')) {
             throw er;
         }
@@ -69,7 +85,12 @@ export function assertTrueWarn(condition: any, s1: string, s2?: any, s3?: any) {
 /**
  * a quick way to throw an exception if condition is false
  */
-export function checkThrowUI512(condition: any, msg: string, s1: any = '', s2: any = ''): asserts condition {
+export function checkThrowUI512(
+    condition: any,
+    msg: string,
+    s1: any = '',
+    s2: any = '',
+): asserts condition {
     if (!condition) {
         throw makeUI512Error(`${msg} ${s1} ${s2}`);
     }
@@ -129,7 +150,8 @@ export class UI512Compress {
 }
 
 /**
- * store the last <size> log entries, without needing to move contents or allocate more memory.
+ * store the last <size> log entries, without needing to
+ * move contents or allocate more memory.
  */
 export abstract class RingBuffer {
     constructor(protected size: number) {}
@@ -196,7 +218,7 @@ class RingBufferLocalStorage extends RingBuffer {
 }
 
 /**
- * if an error is thrown, show a warning message and swallow the error
+ * if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error if an error is thrown, show a warning message and swallow the error
  */
 export function showWarningIfExceptionThrown(fn: () => void) {
     try {
@@ -226,7 +248,11 @@ export class UI512ErrorHandling {
     }
 
     static appendErrMsgToLogs(showedDialog: boolean, s: string) {
-        if (!UI512ErrorHandling.runningTests && !!window.localStorage && !scontains(s, msgNotification)) {
+        if (
+            !UI512ErrorHandling.runningTests &&
+            !!window.localStorage &&
+            !scontains(s, msgNotification)
+        ) {
             let severity = showedDialog ? '1' : '2';
             let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
             UI512ErrorHandling.store.append(encoded);
@@ -268,7 +294,13 @@ export function cleanExceptionMsg(s: string) {
 /**
  * combine strings, and move all 'tags' to the end
  */
-export function joinIntoMessage(c0: string, prefix: string, s1?: any, s2?: any, s3?: any) {
+export function joinIntoMessage(
+    c0: string,
+    prefix: string,
+    s1?: any,
+    s2?: any,
+    s3?: any,
+) {
     let tags: string[] = [];
     c0 = findTags(c0, tags);
     s1 = findTags(s1, tags);
@@ -297,7 +329,8 @@ export function last<T>(ar: T[]): T {
 }
 
 /**
- * break into debugger. V8 js perf sometimes hurt if seeing a debugger statement, so separate it here.
+ * break into debugger. V8 js perf sometimes hurt if seeing a debugger
+ * statement, so separate it here.
  */
 function breakIntoDebugger() {
     if (!checkIsRelease()) {

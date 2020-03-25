@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './benBaseUtilsAssert';
 /* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
@@ -42,7 +42,10 @@ export class Util512Higher {
         min = Math.ceil(min);
         max = Math.floor(max);
         let nRange = max - min;
-        assertTrue(nRange > 1 && nRange < 255, 'getRandIntInclusiveStrong too wide range');
+        assertTrue(
+            nRange > 1 && nRange < 255,
+            'getRandIntInclusiveStrong too wide range',
+        );
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
             nextPowerOf2 *= 2;
@@ -103,12 +106,19 @@ export class Util512Higher {
     /**
      * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
-    static beginLoadJson(url: string, req: XMLHttpRequest, callback: (s: string) => void, callbackOnErr?: () => void) {
+    static beginLoadJson(
+        url: string,
+        req: XMLHttpRequest,
+        callback: (s: string) => void,
+        callbackOnErr?: () => void,
+    ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
         if (!callbackOnErr) {
             callbackOnErr = () => {
-                throw makeUI512Error('4K|failed to load ' + url + ' status=' + req.status);
+                throw makeUI512Error(
+                    '4K|failed to load ' + url + ' status=' + req.status,
+                );
             };
         }
 
@@ -249,6 +259,10 @@ export function getdatestring(includeSeconds = false) {
 
     let sc = includeSeconds ? '-' + ('0' + d.getSeconds()).slice(-2) : '';
     return (
-        `${d.getMonth() + 1} ${d.getDate()}, ` + ('0' + hours).slice(-2) + '-' + ('0' + d.getMinutes()).slice(-2) + sc
+        `${d.getMonth() + 1} ${d.getDate()}, ` +
+        ('0' + hours).slice(-2) +
+        '-' +
+        ('0' + d.getMinutes()).slice(-2) +
+        sc
     );
 }
