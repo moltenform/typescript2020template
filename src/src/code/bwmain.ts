@@ -1,13 +1,13 @@
 
+/* auto */ import { SimpleSensibleTests } from './../test/testTop';
 /* auto */ import { sleep } from './../util/benBaseUtilsHigher';
+/* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512 } from './../util/benBaseUtils';
 
 ///<reference path="./bowser.d.ts"/>
 declare const bowser: typeof Bowser;
 
 import { toWords } from 'number-to-words';
-import { checkIsRelease } from '../util/benBaseUtilsAssert';
-import { SimpleSensibleTests } from '../test/testTop';
 
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');

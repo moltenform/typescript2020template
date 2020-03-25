@@ -1,7 +1,8 @@
 
-import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory } from './testUtils';
 
-export let tests = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
+let tests = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
+export let testsBenBaseUtilsClass = tests
 
 tests.test('abc', () => {
     console.log('cool');

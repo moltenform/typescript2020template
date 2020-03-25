@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains, } from './../util/benBaseUtilsAssert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains } from './../util/benBaseUtilsAssert';
 
 /**
  * assert that an exception is thrown, with a certain message
@@ -61,5 +61,9 @@ export class SimpleSensibleTestCategory {
     tests: [string, Function][] = [];
     public test(s:string, fn:Function) {
         this.tests.push([s, fn])
+        return this
+    }
+    public register(list:[string, Function][]) {
+        this.tests = this.tests.concat(list)
     }
 }

@@ -1,15 +1,15 @@
 
-import * as testBenBaseUtilsClass from './testBenBaseUtilsClass';
-import * as testBenBaseUtilsAssert from './testBenBaseUtilsAssert';
-import { Util512, ValHolder } from '../util/benBaseUtils';
-;import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
+/* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
+/* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
 
 export class SimpleSensibleTests {
     static async runTests(includeSlow:boolean) {
         console.log('Running tests...');
         let categories = [
-            testBenBaseUtilsClass.tests,
-            testBenBaseUtilsAssert.tests
+            testsBenBaseUtilsClass,
+            testsBenBaseUtilsAssert
         ]
 
         let countTotal = categories.map(item => item.tests.length).reduce(Util512.add);
