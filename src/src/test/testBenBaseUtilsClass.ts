@@ -97,6 +97,11 @@ t.test('parseIntStrict', () => {
     assertEq(NaN, Util512.parseIntStrict('1more'), '');
     assertEq(NaN, Util512.parseIntStrict('1 more'), '');
     assertEq(NaN, Util512.parseIntStrict('1.1'), '');
+    assertEq(NaN, Util512.parseIntStrict('12a'), '');
+    assertEq(NaN, Util512.parseIntStrict('a12'), '');
+    assertEq(NaN, Util512.parseIntStrict('abc'), '');
+    assertEq(12, Util512.parseIntStrict('012'), '');
+    assertEq(12, Util512.parseIntStrict('0012'), '');
 });
 t.test('add', () => {
     assertEq(0, Util512.add(0, 0), '');
