@@ -7,34 +7,34 @@ let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
 export let testsBenBaseUtilsAssert = t;
 
 t.test('AssertThrows', () => {
-    t.say('—————————— Get Message From Custom Error');
+    t.say(/*——————————*/ 'Get Message From Custom Error');
     assertThrows('L0|', 'mymessage', () => {
         throw makeUI512Error('1N|1 mymessage 2');
     });
-    t.say('—————————— Get Message From Plain Error');
+    t.say(/*——————————*/ 'Get Message From Plain Error');
     assertThrows('K~|', 'xyz', () => {
         throw new Error('1 xyz 2');
     });
 });
 t.test('CheckThrow', () => {
-    t.say('—————————— Should Not Throw');
+    t.say(/*——————————*/ 'Should Not Throw');
     checkThrowUI512(1, 'K<|should not throw');
     checkThrowUI512(true, 'K;|should not throw');
-    t.say('—————————— False Should Throw');
+    t.say(/*——————————*/ 'False Should Throw');
     assertThrows('K}|', 'mymessage s1 s2', () => {
         checkThrowUI512(false, 'K:|mymessage', 's1', 's2');
     });
-    t.say('—————————— Null Should Throw');
+    t.say(/*——————————*/ 'Null Should Throw');
     assertThrows('K||', 'mymessage s1 s2', () => {
         checkThrowUI512(null, 'K/|mymessage', 's1', 's2');
     });
-    t.say('—————————— Undefined Should Throw');
+    t.say(/*——————————*/ 'Undefined Should Throw');
     assertThrows('K{|', 'mymessage s1 s2', () => {
         checkThrowUI512(undefined, 'K.|mymessage', 's1', 's2');
     });
 });
 t.test('ThrowIfUndefined', () => {
-    t.say('—————————— Truthy Should Not Throw');
+    t.say(/*——————————*/ 'Truthy Should Not Throw');
     let n1 = throwIfUndefined(1, 'Cq|should not throw');
     assertEq(1, n1, 'Cp|');
 
@@ -44,7 +44,7 @@ t.test('ThrowIfUndefined', () => {
     let b1 = throwIfUndefined(true, 'Cm|should not throw');
     assertEq(b1, true, 'Cl|');
 
-    t.say('—————————— Falsy Should Not Throw');
+    t.say(/*——————————*/ 'Falsy Should Not Throw');
     let n0 = throwIfUndefined(0, 'Ck|should not throw');
     assertEq(0, n0, 'Cj|');
 
@@ -54,7 +54,7 @@ t.test('ThrowIfUndefined', () => {
     let b0 = throwIfUndefined(false, 'Cg|should not throw');
     assertEq(b0, false, 'Cf|');
 
-    t.say('—————————— NullAndUndefinedShouldThrow');
+    t.say(/*——————————*/ 'NullAndUndefinedShouldThrow');
     assertThrows('K`|', 'mymessage, s1, s2', () => {
         throwIfUndefined(null, 'Ce|mymessage', 's1', 's2');
     });
@@ -63,11 +63,11 @@ t.test('ThrowIfUndefined', () => {
     });
 });
 t.test('JoinIntoMessage', () => {
-    t.say('—————————— WithoutTags');
+    t.say(/*——————————*/ 'WithoutTags');
     let got = joinIntoMessage('without|tags', 'prefix:');
     assertEq('prefix: without|tags', got, 'Cc|');
 
-    t.say('—————————— ShouldMoveTagsToTheEnd');
+    t.say(/*——————————*/ 'ShouldMoveTagsToTheEnd');
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
     assertEq('prefix: \nc, d, e (ab)', got, 'Cb|');
     got = joinIntoMessage('ab|the message', 'prefix:');
@@ -149,14 +149,14 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     assertEq(['g', 'f'], buf.retrieve(2), 'C9|');
 });
 t.test('scontains', () => {
-    t.say('—————————— typical usage');
+    t.say(/*——————————*/ 'typical usage');
     assertTrue(scontains('a test string', 'e'), '');
     assertTrue(scontains('a test string', 'test'), '');
     assertTrue(scontains('a test string', 'a test'), '');
     assertTrue(scontains('a test string', 'a test string'), '');
     assertTrue(!scontains('a test string', 'a test string '), '');
     assertTrue(!scontains('a test string', 'x'), '');
-    t.say('—————————— edge cases');
+    t.say(/*——————————*/ 'edge cases');
     assertTrue(scontains('test', 'test'), '');
     assertTrue(scontains('test', ''), '');
     assertTrue(!scontains('', 'test'), '');

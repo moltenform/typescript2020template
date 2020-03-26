@@ -42,11 +42,11 @@ t.test('Range.None', () => {
     assertEq([], Util512.range(2, 2, -1), 'E+|');
 });
 t.test('Repeat', () => {
-    t.say('—————————— strings');
+    t.say(/*——————————*/ 'strings');
     assertEq(['a', 'a', 'a'], Util512.repeat(3, 'a'), 'F4|');
     assertEq(['a'], Util512.repeat(1, 'a'), 'F3|');
     assertEq([], Util512.repeat(0, 'a'), 'F2|');
-    t.say('—————————— numbers');
+    t.say(/*——————————*/ 'numbers');
     assertEq([4, 4, 4], Util512.repeat(3, 4), 'F1|');
     assertEq([4], Util512.repeat(1, 4), 'F0|');
     assertEq([], Util512.repeat(0, 4), 'E~|');
@@ -72,15 +72,15 @@ t.test('setarr', () => {
     assertEq([1, 2, undefined, 12], ar, '');
 });
 t.test('extendArray', () => {
-    t.say('—————————— AppendNothing');
+    t.say(/*——————————*/ 'AppendNothing');
     let ar = [1, 2, 3];
     Util512.extendArray(ar, []);
     assertEq([1, 2, 3], ar, 'E}|');
-    t.say('—————————— AppendOneElem');
+    t.say(/*——————————*/ 'AppendOneElem');
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4]);
     assertEq([1, 2, 3, 4], ar, 'E||');
-    t.say('—————————— AppendThreeElems');
+    t.say(/*——————————*/ 'AppendThreeElems');
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4, 5, 6]);
     assertEq([1, 2, 3, 4, 5, 6], ar, 'E{|');
@@ -428,9 +428,22 @@ t.test('stringToByteArray', () => {
     assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'), '');
 });
 t.test('sortDecorated', () => {
+    class MyClass {
+        constructor(public a: string) {}
+    }
+
+    t.say(/*——————————*/ 'typical usage');
     let input: string[] = ['abc', 'dba', 'aab', 'ffd'];
-    let ret = Util512.sortDecorated(input, (s: string) => s.charAt(2));
+    let ret = Util512.sortDecorated(input, s => s.charAt(2));
     assertEq('dba|aab|abc|ffd', ret.join('|'), '');
+    t.say(/*——————————*/ 'with class');
+    let inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('cc')];
+    let retCl = Util512.sortDecorated(inputCl, o => o.a);
+    assertEq('aa|bb|cc', retCl.map(o => o.a).join('|'), '');
+    t.say(/*——————————*/ 'with class and ties');
+    inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('bb')];
+    retCl = Util512.sortDecorated(inputCl, o => o.a);
+    assertEq('aa|bb|bb', retCl.map(o => o.a).join('|'), '');
 });
 t.test('normalizeNewlines', () => {
     assertEq('ab', Util512.normalizeNewlines('ab'), '');

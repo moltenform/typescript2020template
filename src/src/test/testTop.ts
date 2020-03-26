@@ -5,18 +5,19 @@
 /* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
 /* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
 /* auto */ import { testsBenBaseUtils } from './testBenBaseUtils';
-/* auto */ import { assertTrue, scontains } from './../util/benBaseUtilsAssert';
+/* auto */ import { UI512ErrorHandling, assertTrue, scontains, } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
 
 export class SimpleSensibleTests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
+        UI512ErrorHandling.runningTests = true;
         let categories = [
             testExternalLibs,
-            testBenBaseUtilsHigher,
-            testsBenBaseUtilsClass,
-            testsBenBaseUtils,
             testsBenBaseUtilsAssert,
+            testsBenBaseUtils,
+            testsBenBaseUtilsClass,
+            testBenBaseUtilsHigher,
         ];
 
         let mapSeen = new Map<string, boolean>();
@@ -34,6 +35,7 @@ export class SimpleSensibleTests {
             }
         }
 
+        UI512ErrorHandling.runningTests = false;
         console.log(`All tests complete.`);
     }
 

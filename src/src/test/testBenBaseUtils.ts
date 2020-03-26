@@ -424,12 +424,12 @@ t.test('MapKeyToObjectCanSet', () => {
     let o = new MapKeyToObjectCanSet<number>();
     o.add('five', 5);
     o.add('six', 6);
-    t.say('—————————— exists');
+    t.say(/*——————————*/ 'exists');
     assertTrue(o.exists('five'), '');
     assertTrue(o.exists('six'), '');
     assertTrue(!o.exists('seven'), '');
     assertTrue(!o.exists(''), '');
-    t.say('—————————— get');
+    t.say(/*——————————*/ 'get');
     assertEq(5, o.get('five'), '');
     assertEq(6, o.get('six'), '');
     assertThrows('', 'not found', () => {
@@ -438,15 +438,15 @@ t.test('MapKeyToObjectCanSet', () => {
     assertThrows('', 'not found', () => {
         o.get('');
     });
-    t.say('—————————— find');
+    t.say(/*——————————*/ 'find');
     assertEq(5, o.find('five'), '');
     assertEq(6, o.find('six'), '');
     assertEq(undefined, o.find('seven'), '');
     assertEq(undefined, o.find(''), '');
-    t.say('—————————— getKeys');
+    t.say(/*——————————*/ 'getKeys');
     assertEq(['five', 'six'], sorted(o.getKeys()), '');
     assertEq([5, 6], sorted(o.getVals()), '');
-    t.say('—————————— remove');
+    t.say(/*——————————*/ 'remove');
     o.remove('five');
     assertEq(undefined, o.find('five'), '');
 });
