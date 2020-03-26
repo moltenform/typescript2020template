@@ -9,17 +9,6 @@ def getSymbolsFromLine(s):
     for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)''', s):
         yield m.group(2)
 
-def doSomeAutomaticFormatting(lines):
-    if lines[-1] != '':
-        print('adding final blank line')
-        lines.append('')
-    
-    for i in range(len(lines)):
-        stripped = lines[i].rstrip()
-        if lines[i] != stripped:
-            print('removing whitespace on right of line')
-        lines[i] = stripped
-
 def getFileLines(f, tryToStripComments):
     text = files.readall(f, encoding='utf8')
     if tryToStripComments:

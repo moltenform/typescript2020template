@@ -37,9 +37,14 @@ def goPrettier(srcdirectory, f):
             print('placing import {} back all on one line')
             files.writeall(f, alltxtNew, encoding='utf-8')
     
+    # some simple formatting
+    lines = getFileLines(f, False)
+    linesOrig = list(lines)
+    addFinalLineAndRemoveRightWhitespace(lines)
+    if linesOrig != lines:
+        files.writeall(f, '\n'.join(lines), encoding='utf-8')
+    
     # check for disallowed calls
-    text = files.readall(f, encoding='utf-8')
-    lines = text.split('\n')
     check_for_long_lines.checkText(srcdirectory, f, lines)
     check_for_null_coalesce.checkText(f, lines)
     check_for_apply.checkText(f, lines)

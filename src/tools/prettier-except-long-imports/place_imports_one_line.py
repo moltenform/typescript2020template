@@ -5,7 +5,7 @@ import re
 sys.path.append('../typescript-super-auto-import/bn_python_common.zip')
 from bn_python_common import *
 sys.path.append('../typescript-super-auto-import')
-from ts_parsing import assertTrueMsg, simpleStripMultilineComments
+from ts_parsing import assertTrueMsg, simpleStripMultilineComments, getFileLines
 
 def placeImportsOnOneLine(s):
     lines = s.replace('\r\n', '\n').split('\n')
@@ -33,6 +33,16 @@ def placeImportsOnOneLine(s):
         outlines.insert(0, '')
     return '\n'.join(outlines)
 
+def addFinalLineAndRemoveRightWhitespace(lines):
+    if lines[-1] != '':
+        print('adding final blank line')
+        lines.append('')
+    
+    for i in range(len(lines)):
+        stripped = lines[i].rstrip()
+        if lines[i] != stripped:
+            print('removing whitespace on right of line')
+        lines[i] = stripped
 
 testInput = r'''
 not an import

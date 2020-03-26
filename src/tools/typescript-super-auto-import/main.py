@@ -84,7 +84,6 @@ def autoAddImports(srcdirectory, layers):
                 newLinesToAdd.append('')
             linesWithNoAuto[1:1] = newLinesToAdd
             
-            doSomeAutomaticFormatting(linesWithNoAuto)
             alltxtNew = '\n'.join(linesWithNoAuto)
             if alltxtNew != '\n'.join(linesOrigFile):
                 print('Writing')
