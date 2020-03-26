@@ -1,6 +1,6 @@
 
 /* auto */ import { SimpleSensibleTestCategory } from './testUtils';
-/* auto */ import { Util512Higher } from './../util/benBaseUtilsHigher';
+/* auto */ import { Util512Higher, sleep } from './../util/benBaseUtilsHigher';
 /* auto */ import { assertTrue, scontains } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
@@ -43,3 +43,25 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated1)[0], 'D&|');
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
+
+t = new SimpleSensibleTestCategory('testExampleAsyncTests', 'async');
+export let testExampleAsyncTests = t;
+
+t.atest('canDoSimpleSynchronousActions', async () => {
+    t.say('adding numbers');
+    assertEq(4, 2 + 2, '');
+});
+t.atest('canAwaitACall', async () => {
+    t.say('0...');
+    await exampleAsyncFn();
+    t.say('3');
+});
+t.atest('canChainACall', () => {
+    return exampleAsyncFn();
+});
+
+async function exampleAsyncFn() {
+    t.say('1...');
+    await sleep(100);
+    t.say('2...');
+}

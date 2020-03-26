@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
 /* auto */ import { testExternalLibs } from './testExternalLibs';
-/* auto */ import { testBenBaseUtilsHigher } from './testBenBaseUtilsHigher';
+/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
 /* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
 /* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
 /* auto */ import { testsBenBaseUtils } from './testBenBaseUtils';
@@ -14,6 +14,7 @@ export class SimpleSensibleTests {
         UI512ErrorHandling.runningTests = true;
         let categories = [
             testExternalLibs,
+            testExampleAsyncTests,
             testsBenBaseUtilsAssert,
             testsBenBaseUtils,
             testsBenBaseUtilsClass,
