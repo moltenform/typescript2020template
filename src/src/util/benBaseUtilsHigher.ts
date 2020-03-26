@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './benBaseUtilsAssert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, } from './benBaseUtils';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last, } from './benBaseUtils';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -188,7 +188,7 @@ export class Util512Higher {
             let loaded = false;
             script.onerror = () => {
                 let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + urlsplit[urlsplit.length - 1]));
+                reject(new Error('Did not load ' + last(urlsplit)));
             };
 
             script.onload = () => {
