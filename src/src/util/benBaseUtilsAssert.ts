@@ -242,6 +242,7 @@ export function showWarningIfExceptionThrown(fn: () => void) {
  * store logs. user can choose "send err report" to send us error context.
  */
 export class UI512ErrorHandling {
+    static shouldRecordErrors = false;
     static breakOnThrow = true;
     static runningTests = false;
     static readonly maxEntryLength = 512;
@@ -258,14 +259,16 @@ export class UI512ErrorHandling {
     }
 
     static appendErrMsgToLogs(showedDialog: boolean, s: string) {
-        if (
-            !UI512ErrorHandling.runningTests &&
-            !!window.localStorage &&
-            !scontains(s, msgNotification)
-        ) {
-            let severity = showedDialog ? '1' : '2';
-            let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
-            UI512ErrorHandling.store.append(encoded);
+        if (UI512ErrorHandling.shouldRecordErrors) {
+            if (
+                !UI512ErrorHandling.runningTests &&
+                !!window.localStorage &&
+                !scontains(s, msgNotification)
+            ) {
+                let severity = showedDialog ? '1' : '2';
+                let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
+                UI512ErrorHandling.store.append(encoded);
+            }
         }
     }
 
