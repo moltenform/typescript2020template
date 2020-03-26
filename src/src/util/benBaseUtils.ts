@@ -337,14 +337,11 @@ export class Util512 {
      * like Python's sort(key=fn)
      * often more efficient than passing a comparison function.
      */
-    static sortDecorated(ar: unknown[], fn: Function) {
+    static sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
         // 1) decorate
-        let decorated = ar.map(val => [fn(val), val]);
+        let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
         // 2) sort
-        let comparer = function(a: unknown[], b: unknown[]) {
-            return sensibleSort(a[0], b[0]);
-        };
-        decorated.sort(comparer);
+        decorated.sort((a, b) => sensibleSort(a[0], b[0]));
         // 3) undecorate
         return decorated.map(val => val[1]);
     }
