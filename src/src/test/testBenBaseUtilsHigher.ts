@@ -22,17 +22,6 @@ t.test('WeakUuid', () => {
             assertTrue(scontains('0123456789abcdef', c), 'EX|');
         }
     }
-
-    function functionName() {
-        console.log('hi')
-        return 5;
-    }
-
-    /* eslint-disable ban/ban */
-    let f = functionName()
-    console.log('f: ', f);
-
-
 });
 t.test('getRandIntInclusiveWeak.OKIfBoundsEqual', () => {
     assertEq(1, Util512Higher.getRandIntInclusiveWeak(1, 1), 'EW|');

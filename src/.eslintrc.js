@@ -52,12 +52,12 @@ module.exports = {
             forceSuggestionFixer: false,
           },],
         'no-useless-call': 'warn', // don't needlessly have a call() or apply()
-        'prefer-spread': 'warn', // apply() is dangerous because there are max arg limits
+        'prefer-spread': 'warn', // apply is dangerous, there could be max arg limits. won't catch everything, so I added ban/ban
         'prefer-const': 'off',
         'eqeqeq': 'warn',
         "ban/ban": [
             1, // warn
-            {"name": "functionName", "message": "Prefer use functionName2"}
+            {"name": ["*", "apply"], "message": "apply is dangerous, there could be max arg limits."}
         ]
     },
     settings: {

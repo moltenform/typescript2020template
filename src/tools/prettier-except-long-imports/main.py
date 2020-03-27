@@ -2,7 +2,6 @@
 
 from place_imports_one_line import *
 import check_for_null_coalesce
-import check_for_apply
 import check_for_long_lines
 
 doPlaceImportsOnOneLine = True
@@ -47,7 +46,6 @@ def goPrettier(srcdirectory, f):
     # check for disallowed calls
     check_for_long_lines.checkText(srcdirectory, f, lines)
     check_for_null_coalesce.checkText(f, lines)
-    check_for_apply.checkText(f, lines)
 
 if __name__ == '__main__':
     dir = os.path.abspath('../../src')

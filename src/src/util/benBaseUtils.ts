@@ -208,7 +208,7 @@ export class Util512 {
             );
 
             assertTrue(args.length < 100, clsname, s);
-            /* eslint-disable prefer-spread */
+            /* eslint-disable ban/ban */
             return method.apply(me, args);
         } else if (okIfNotExists) {
             return undefined;
