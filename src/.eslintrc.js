@@ -11,6 +11,7 @@ module.exports = {
     parser: '@typescript-eslint/parser', // Specifies the ESLint parser
     plugins: [
         '@typescript-eslint',
+        'ban',
         // 'prettier' commented as we don't want to run performance hog prettier through eslint as it's slow
     ],
     env: {
@@ -54,6 +55,10 @@ module.exports = {
         'prefer-spread': 'warn', // apply() is dangerous because there are max arg limits
         'prefer-const': 'off',
         'eqeqeq': 'warn',
+        "ban/ban": [
+            1, // warn
+            {"name": "functionName", "message": "Prefer use functionName2"}
+        ]
     },
     settings: {
     }
