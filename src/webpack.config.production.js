@@ -12,7 +12,7 @@ const main = [
 ];
 
 module.exports = {
-    context: process.cwd(), // to automatically find tsconfig.json
+    context: path.resolve('./tsconfigprod'),
     entry: {
         main: main
     },
@@ -53,7 +53,10 @@ module.exports = {
             {
                 test: /.tsx?$/,
                 use: [
-                    { loader: 'ts-loader', options: { transpileOnly: true } }
+                    { loader: 'ts-loader', options: { 
+                        transpileOnly: true,
+                        configFile: 'tsconfig.production.json'
+                    }}
                 ],
             }
         ]

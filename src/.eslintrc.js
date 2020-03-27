@@ -45,6 +45,7 @@ module.exports = {
         '@typescript-eslint/triple-slash-reference': 'off',
         '@typescript-eslint/no-inferrable-types': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-unused-vars': 'off', // check locals, not fn params. typescript 6133 takes care of it
         '@typescript-eslint/prefer-nullish-coalescing': ["error", { // still doesn't catch en.attrs['AC'] || ''; for some reason
             ignoreConditionalTests: false,

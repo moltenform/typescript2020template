@@ -18,6 +18,15 @@ function getTestString() {
 }
 
 export function setOutputToTestString() {
+    let bbb = 6;
+    let abc = 456;
+    
+    class myclass {
+        constructor(public h:string) {
+        }
+        foo() { return 5 }
+    }
+
     let el = document.getElementById('output');
     if (el) {
         el.innerHTML = getTestString();
