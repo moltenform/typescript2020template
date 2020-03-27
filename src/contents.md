@@ -69,6 +69,8 @@
     - it seems to not run correctly sometimes... perhaps because it takes a while to load the sourcemaps
 - confirmed that async/await code runs correctly
     - load the page and click the "go async" test button
+- separate tsconfig files for development and production
+    - useful for e.g. ignoring unused local variables until building for production
 
 This project started with the ts-loader example [here](https://github.com/TypeStrong/ts-loader/tree/master/examples/fork-ts-checker-webpack-plugin).
 

@@ -5,8 +5,9 @@
   "license": "MIT",
   "description": "how I start a typescript webapp in 2020",
   "scripts": {
+    "prestart" : "node ./tools/set_tsconfig_flavor.js --development",
     "start": "webpack-dev-server --progress --color --mode development --config webpack.config.development.js",
-    "prebuild": "rimraf ./dist/*",
+    "prebuild": "rimraf ./dist/* && node ./tools/set_tsconfig_flavor.js --production",
     "build": "webpack --color --mode production --config webpack.config.production.js",
     "buildstyle": "npx sass src/style:static/style",
     "buildstylewatch": "npx sass --watch src/style:static/style",
