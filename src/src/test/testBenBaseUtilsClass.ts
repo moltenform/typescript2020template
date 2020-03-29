@@ -53,23 +53,23 @@ t.test('Repeat', () => {
 });
 t.test('setarr', () => {
     let ar1: number[] = [];
-    Util512.setarr(ar1, 0, 12);
+    Util512.setarr(ar1, 0, 12, 0);
     assertEq([12], ar1, '');
     let ar2: number[] = [];
-    Util512.setarr(ar2, 1, 12);
-    assertEq([undefined, 12], ar2, '');
+    Util512.setarr(ar2, 1, 12, 0);
+    assertEq([0, 12], ar2, '');
     let ar3: number[] = [];
-    Util512.setarr(ar3, 3, 12);
-    assertEq([undefined, undefined, undefined, 12], ar3, '');
+    Util512.setarr(ar3, 3, 12, 0);
+    assertEq([0, 0, 0, 12], ar3, '');
     let ar: number[] = [1, 2];
-    Util512.setarr(ar, 0, 12);
+    Util512.setarr(ar, 0, 12, 0);
     assertEq([12, 2], ar, '');
     ar = [1, 2];
-    Util512.setarr(ar, 2, 12);
+    Util512.setarr(ar, 2, 12, 0);
     assertEq([1, 2, 12], ar, '');
     ar = [1, 2];
-    Util512.setarr(ar, 3, 12);
-    assertEq([1, 2, undefined, 12], ar, '');
+    Util512.setarr(ar, 3, 12, 0);
+    assertEq([1, 2, 0, 12], ar, '');
 });
 t.test('extendArray', () => {
     t.say(/*——————————*/ 'AppendNothing');

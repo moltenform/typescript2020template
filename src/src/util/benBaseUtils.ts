@@ -48,11 +48,11 @@ export class Util512 {
     /**
      * sets an element, expands array if necessary
      */
-    static setarr<T>(ar: O<T>[], index: number, val: T) {
+    static setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
         assertTrue(index >= 0, 'must be >= 0');
         if (index >= ar.length) {
             for (let i = 0; i < index - ar.length; i++) {
-                ar.push(undefined);
+                ar.push(fill);
             }
         }
 
@@ -351,6 +351,61 @@ export class Util512 {
      */
     static normalizeNewlines(s: string) {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
+}
+    
+/**
+ * more utils that might be less useful
+ */
+export namespace Util512 {
+    /**
+     * array that can be locked
+     */
+    export class LockableArr<T> {
+        protected vals: T[] = [];
+        protected locked = false;
+        constructor(vals: T[] = []) {
+            this.vals = vals;
+        }
+        lock() {
+            this.locked = true;
+        }
+        push(v: T) {
+            checkThrowEq(false, this.locked, '4A|locked');
+            this.vals.push(v);
+        }
+        set(i: number, v: T) {
+            checkThrowEq(false, this.locked, '4A|locked');
+            this.vals[i] = v;
+        }
+        len() {
+            return this.vals.length;
+        }
+        at(i: number) {
+            return this.vals[i];
+        }
+        getUnlockedCopy() {
+            let other = new LockableArr<T>();
+            other.locked = false;
+            other.vals = this.vals.slice(0);
+            return other;
+        }
+    }
+
+    /**
+    * filter a list, keeping only unique values.
+    */
+    export function keepOnlyUnique(ar: string[]) {
+        let ret: string[] = [];
+        let seen: { [key: string]: boolean } = {};
+        for (let i = 0; i < ar.length; i++) {
+            if (!seen[ar[i]]) {
+                seen[ar[i]] = true;
+                ret.push(ar[i]);
+            }
+        }
+        
+        return ret;
     }
 }
 
