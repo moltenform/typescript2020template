@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
 /* auto */ import { O, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { assertEq, longstr, Util512 } from './../util/benBaseUtils';
+/* auto */ import { Util512, assertEq, longstr } from './../util/benBaseUtils';
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
@@ -102,28 +102,28 @@ t.test('testClassSerializationWithNulls', () => {
 });
 
 t = new SimpleSensibleTestCategory('testsBenBaseLessUsefulLibs');
-export let testsBenBaseLessUsefulLibs = t;
+export let testBenBaseLessUsefulLibs = t;
 
 t.test('LockableArr', () => {
     t.say(/*——————————*/ 'standard use');
-    let ar = new Util512.LockableArr<number>()
-    ar.set(0, 55)
-    ar.set(1, 56)
-    assertEq(55, ar.at(0), '')
-    assertEq(56, ar.at(1), '')
-    assertEq(2, ar.len(), '')
-    ar.lock()
+    let ar = new Util512.LockableArr<number>();
+    ar.set(0, 55);
+    ar.set(1, 56);
+    assertEq(55, ar.at(0), '');
+    assertEq(56, ar.at(1), '');
+    assertEq(2, ar.len(), '');
+    ar.lock();
     assertThrows('', 'locked', () => {
         ar.set(1, 57);
-    })
-    t.say(/*——————————*/ 'changing the copy won\'t change original');
-    let copy = ar.getUnlockedCopy()
-    assertEq(55, copy.at(0), '')
-    assertEq(56, copy.at(1), '')
-    assertEq(2, copy.len(), '')
+    });
+    t.say(/*——————————*/ "changing the copy won't change original");
+    let copy = ar.getUnlockedCopy();
+    assertEq(55, copy.at(0), '');
+    assertEq(56, copy.at(1), '');
+    assertEq(2, copy.len(), '');
     copy.set(1, 57);
-    assertEq(57, copy.at(1), '')
-    assertEq(56, ar.at(1), '')
+    assertEq(57, copy.at(1), '');
+    assertEq(56, ar.at(1), '');
 });
 t.test('keepOnlyUnique', () => {
     assertEq([], Util512.keepOnlyUnique([]), '');

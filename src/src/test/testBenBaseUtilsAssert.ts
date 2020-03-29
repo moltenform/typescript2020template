@@ -4,7 +4,7 @@
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
-export let testsBenBaseUtilsAssert = t;
+export let testBenBaseUtilsAssert = t;
 
 t.test('AssertThrows', () => {
     t.say(/*——————————*/ 'Get Message From Custom Error');
@@ -63,11 +63,11 @@ t.test('ThrowIfUndefined', () => {
     });
 });
 t.test('JoinIntoMessage', () => {
-    t.say(/*——————————*/ 'WithoutTags');
-    let got = joinIntoMessage('without|tags', 'prefix:');
-    assertEq('prefix: without|tags', got, 'Cc|');
+    t.say(/*——————————*/ 'WithoutMarks');
+    let got = joinIntoMessage('without|marks', 'prefix:');
+    assertEq('prefix: without|marks', got, 'Cc|');
 
-    t.say(/*——————————*/ 'ShouldMoveTagsToTheEnd');
+    t.say(/*——————————*/ 'ShouldMoveMarksToTheEnd');
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
     assertEq('prefix: \nc, d, e (ab)', got, 'Cb|');
     got = joinIntoMessage('ab|the message', 'prefix:');

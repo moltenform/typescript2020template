@@ -5,7 +5,7 @@
  * assert that an exception is thrown, with a certain message
  */
 export async function assertThrowsAsync<T>(
-    tagMsg: string,
+    msgWithMark: string,
     expectedErr: string,
     fn: () => Promise<T>,
 ) {
@@ -20,17 +20,17 @@ export async function assertThrowsAsync<T>(
         UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
-    assertTrue(msg !== undefined, `JC|did not throw ${tagMsg}`);
+    assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
     assertTrue(
         msg !== undefined && scontains(msg, expectedErr),
-        `JB|message "${msg}" did not contain "${expectedErr}" ${tagMsg}`,
+        `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
 
 /**
  * assert that an exception is thrown, with a certain message
  */
-export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) {
+export function assertThrows(msgWithMark: string, expectedErr: string, fn: Function) {
     let msg: O<string>;
     let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
     try {
@@ -42,10 +42,10 @@ export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) 
         UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
-    assertTrue(msg !== undefined, `3{|did not throw ${tagMsg}`);
+    assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
     assertTrue(
         msg !== undefined && scontains(msg, expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}" ${tagMsg}`,
+        `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
 

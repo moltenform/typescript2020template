@@ -4,7 +4,7 @@
 /* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
-export let testsBenBaseUtilsClass = t;
+export let testBenBaseUtilsClass = t;
 
 t.test('isValidNumber', () => {
     assertTrue(Util512.isValidNumber(123), '');

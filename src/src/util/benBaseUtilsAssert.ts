@@ -305,7 +305,7 @@ export function cleanExceptionMsg(s: string) {
 }
 
 /**
- * combine strings, and move all 'tags' to the end
+ * combine strings, and move all 'markers' to the end
  */
 export function joinIntoMessage(
     c0: string,
@@ -314,15 +314,15 @@ export function joinIntoMessage(
     s2?: unknown,
     s3?: unknown,
 ) {
-    let tags: string[] = [];
-    c0 = findTags(c0, tags) ?? '';
-    s1 = findTags(s1, tags);
+    let markers: string[] = [];
+    c0 = findMarkers(c0, markers) ?? '';
+    s1 = findMarkers(s1, markers);
     let message = prefix + ' ' + c0;
     message += s1 ? '\n' + s1 : '';
     message += s2 ? ', ' + s2 : '';
     message += s3 ? ', ' + s3 : '';
-    if (tags.length) {
-        message += ' (' + tags.join(',') + ')';
+    if (markers.length) {
+        message += ' (' + markers.join(',') + ')';
     }
 
     return message;
@@ -358,13 +358,13 @@ function recordAndShowErr(firstMsg: string, msg: string) {
 }
 
 /**
- * we add two-digit tags to most asserts, so that if a bug report comes in,
+ * we add two-digit markers to most asserts, so that if a bug report comes in,
  * we have more context about the site of failure.
- * assert tags are in the form xx|; this fn extracts them from a string.
+ * assert markers are in the form xx|; this fn extracts them from a string.
  */
-function findTags(s: unknown, tags: string[]): O<string> {
+function findMarkers(s: unknown, markers: string[]): O<string> {
     if (s && typeof s === 'string' && s[2] === '|') {
-        tags.push(s.slice(0, 2));
+        markers.push(s.slice(0, 2));
         return s.slice(3);
     } else if (!s) {
         return undefined;

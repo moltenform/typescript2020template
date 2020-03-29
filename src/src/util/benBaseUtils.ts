@@ -353,7 +353,7 @@ export class Util512 {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     }
 }
-    
+
 /**
  * more utils that might be less useful
  */
@@ -393,8 +393,8 @@ export namespace Util512 {
     }
 
     /**
-    * filter a list, keeping only unique values.
-    */
+     * filter a list, keeping only unique values.
+     */
     export function keepOnlyUnique(ar: string[]) {
         let ret: string[] = [];
         let seen: { [key: string]: boolean } = {};
@@ -404,7 +404,7 @@ export namespace Util512 {
                 ret.push(ar[i]);
             }
         }
-        
+
         return ret;
     }
 }

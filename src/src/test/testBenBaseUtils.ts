@@ -4,7 +4,7 @@
 /* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, bool, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength, } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtils');
-export let testsBenBaseUtils = t;
+export let testBenBaseUtils = t;
 
 t.test('ValHolder.param', () => {
     function increment(vv: ValHolder<number>) {

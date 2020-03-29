@@ -1,10 +1,10 @@
 
 /* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testExternalLibs } from './testExternalLibs';
-/* auto */ import { testBenBaseUtilsHigher as testsBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
-/* auto */ import { testsBenBaseUtilsClass } from './testBenBaseUtilsClass';
-/* auto */ import { testsBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
-/* auto */ import { testsBenBaseUtils } from './testBenBaseUtils';
+/* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './testExternalLibs';
+/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
+/* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
+/* auto */ import { testBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
+/* auto */ import { testBenBaseUtils } from './testBenBaseUtils';
 /* auto */ import { UI512ErrorHandling, assertTrue, scontains, } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
 
@@ -15,11 +15,11 @@ export class SimpleSensibleTests {
         let categories = [
             testExternalLibs,
             testExampleAsyncTests,
-            testsBenBaseUtilsAssert,
-            testsBenBaseUtils,
-            testsBenBaseUtilsClass,
-            testsBenBaseLessUsefulLibs,
-            testsBenBaseUtilsHigher,
+            testBenBaseUtilsAssert,
+            testBenBaseUtils,
+            testBenBaseUtilsClass,
+            testBenBaseLessUsefulLibs,
+            testBenBaseUtilsHigher,
         ];
 
         let mapSeen = new Map<string, boolean>();
