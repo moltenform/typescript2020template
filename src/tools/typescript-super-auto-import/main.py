@@ -1,4 +1,7 @@
 
+# Ben Fisher, 2018
+# MIT license
+
 from ts_exports_read import *
 from ts_layers_read import *
 from ts_parsing import *

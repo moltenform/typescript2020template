@@ -1,4 +1,7 @@
 
+# Ben Fisher, 2018
+# MIT license
+
 import os
 import sys
 import re

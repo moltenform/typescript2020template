@@ -1,4 +1,7 @@
 
+# Ben Fisher, 2018
+# MIT license
+
 from place_imports_one_line import *
 import re
 

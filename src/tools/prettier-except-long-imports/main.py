@@ -1,4 +1,6 @@
 
+# Ben Fisher, 2018
+# MIT license
 
 from place_imports_one_line import *
 import check_for_null_coalesce

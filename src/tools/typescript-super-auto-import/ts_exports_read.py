@@ -1,6 +1,6 @@
 
-# ts_exports_read.py
-# Ben Fisher, 2017
+# Ben Fisher, 2018
+# MIT license
 
 import os
 import sys
