@@ -49,7 +49,7 @@ export let testExampleAsyncTests = t;
 
 t.atest('canDoSimpleSynchronousActions', async () => {
     t.say('adding numbers');
-    assertEq(4, 2 + 2, '');
+    assertEq(4, 2 + 2, 'OA|');
 });
 t.atest('canAwaitACall', async () => {
     t.say('0...');

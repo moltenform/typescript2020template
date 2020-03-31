@@ -61,7 +61,7 @@ export function assertTrue(
     s3?: unknown,
 ): asserts condition {
     if (!condition) {
-        throw makeUI512Error('assertion failed in assertTrue.', s1, s2, s3);
+        throw makeUI512Error('O#|assertion failed in assertTrue.', s1, s2, s3);
     }
 }
 
@@ -76,7 +76,7 @@ export function assertTrueWarn(
 ) {
     if (!condition) {
         let er = makeUI512Error(
-            'warning, assertion failed in assertTrueWarn.',
+            'O!|warning, assertion failed in assertTrueWarn.',
             s1,
             s2,
             s3,
@@ -97,7 +97,7 @@ export function checkThrowUI512(
     s2: unknown = '',
 ): asserts condition {
     if (!condition) {
-        throw makeUI512Error(`${msg} ${s1} ${s2}`);
+        throw makeUI512Error(`O |${msg} ${s1} ${s2}`);
     }
 }
 
@@ -234,7 +234,7 @@ export function showWarningIfExceptionThrown(fn: () => void) {
     try {
         fn();
     } catch (e) {
-        assertTrueWarn(false, e.toString(), '');
+        assertTrueWarn(false, e.toString(), 'Oz|');
     }
 }
 

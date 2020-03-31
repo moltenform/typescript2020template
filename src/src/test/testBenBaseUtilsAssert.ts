@@ -150,17 +150,17 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
 });
 t.test('scontains', () => {
     t.say(/*——————————*/ 'typical usage');
-    assertTrue(scontains('a test string', 'e'), '');
-    assertTrue(scontains('a test string', 'test'), '');
-    assertTrue(scontains('a test string', 'a test'), '');
-    assertTrue(scontains('a test string', 'a test string'), '');
-    assertTrue(!scontains('a test string', 'a test string '), '');
-    assertTrue(!scontains('a test string', 'x'), '');
+    assertTrue(scontains('a test string', 'e'), 'Nh|');
+    assertTrue(scontains('a test string', 'test'), 'Ng|');
+    assertTrue(scontains('a test string', 'a test'), 'Nf|');
+    assertTrue(scontains('a test string', 'a test string'), 'Ne|');
+    assertTrue(!scontains('a test string', 'a test string '), 'Nd|');
+    assertTrue(!scontains('a test string', 'x'), 'Nc|');
     t.say(/*——————————*/ 'edge cases');
-    assertTrue(scontains('test', 'test'), '');
-    assertTrue(scontains('test', ''), '');
-    assertTrue(!scontains('', 'test'), '');
-    assertTrue(scontains('', ''), '');
+    assertTrue(scontains('test', 'test'), 'Nb|');
+    assertTrue(scontains('test', ''), 'Na|');
+    assertTrue(!scontains('', 'test'), 'NZ|');
+    assertTrue(scontains('', ''), 'NY|');
 });
 t.test('unknownToString', () => {
     class CustomToString {
@@ -175,12 +175,12 @@ t.test('unknownToString', () => {
     let d: unknown = undefined;
     let e: unknown = null;
     let f: unknown = false;
-    assertEq('abc', '' + a, '');
-    assertEq('a string', '' + b, '');
-    assertEq('123', '' + c, '');
-    assertEq('undefined', '' + d, '');
-    assertEq('null', '' + e, '');
-    assertEq('false', '' + f, '');
+    assertEq('abc', '' + a, 'NX|');
+    assertEq('a string', '' + b, 'NW|');
+    assertEq('123', '' + c, 'NV|');
+    assertEq('undefined', '' + d, 'NU|');
+    assertEq('null', '' + e, 'NT|');
+    assertEq('false', '' + f, 'NS|');
 });
 
 /**

@@ -38,13 +38,13 @@ export class Util512Higher {
      * random number between min and max, inclusive
      */
     static getRandIntInclusiveStrong(min: number, max: number) {
-        assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
+        assertTrue(min >= 1 && max >= 1, 'O)|getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,
-            'getRandIntInclusiveStrong too wide range',
+            'O(|getRandIntInclusiveStrong too wide range',
         );
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
@@ -56,7 +56,7 @@ export class Util512Higher {
         while (true) {
             window.crypto.getRandomValues(buf);
             for (let i = 0; i < buf.length; i++) {
-                assertTrue(buf[i] >= 0 && buf[i] < 256, 'out of range');
+                assertTrue(buf[i] >= 0 && buf[i] < 256, 'O&|out of range');
                 let v = buf[i] % nextPowerOf2;
                 if (v <= nRange) {
                     return min + v;
@@ -78,7 +78,7 @@ export class Util512Higher {
      * generate random string, first byte is specified
      */
     static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
-        assertEq(1, charPrefix.length, 'expected one char');
+        assertEq(1, charPrefix.length, 'O%|expected one char');
         let buf = new Uint8Array(nBytes + 1);
         window.crypto.getRandomValues(buf);
         buf[0] = charPrefix.charCodeAt(0);

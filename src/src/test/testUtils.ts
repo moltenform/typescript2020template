@@ -78,12 +78,12 @@ export class SimpleSensibleTestCategory {
     tests: [string, VoidFn | AVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!scontains(this.type, 'async'), '');
+        assertTrue(!scontains(this.type, 'async'), 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AVoidFn) {
-        assertTrue(scontains(this.type, 'async'), '');
+        assertTrue(scontains(this.type, 'async'), 'Os|');
         this.tests.push([s, fn]);
         return this;
     }

@@ -51,7 +51,7 @@ export class SimpleSensibleTests {
         for (let i = 0; i < category.tests.length; i++) {
             let [tstname, tstfn] = category.tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
-                assertTrue(false, 'duplicate test name', tstname);
+                assertTrue(false, 'Or|duplicate test name', tstname);
             }
 
             mapSeen.set(tstname, true);

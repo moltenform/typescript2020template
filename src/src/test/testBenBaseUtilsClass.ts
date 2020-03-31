@@ -7,16 +7,16 @@ let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
 export let testBenBaseUtilsClass = t;
 
 t.test('isValidNumber', () => {
-    assertTrue(Util512.isValidNumber(123), '');
-    assertTrue(Util512.isValidNumber(0), '');
-    assertTrue(!Util512.isValidNumber(null), '');
-    assertTrue(!Util512.isValidNumber(undefined), '');
-    assertTrue(!Util512.isValidNumber(NaN), '');
-    assertTrue(!Util512.isValidNumber(Infinity), '');
-    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY), '');
-    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY), '');
-    assertTrue(!Util512.isValidNumber('12'), '');
-    assertTrue(!Util512.isValidNumber(''), '');
+    assertTrue(Util512.isValidNumber(123), 'O9|');
+    assertTrue(Util512.isValidNumber(0), 'O8|');
+    assertTrue(!Util512.isValidNumber(null), 'O7|');
+    assertTrue(!Util512.isValidNumber(undefined), 'O6|');
+    assertTrue(!Util512.isValidNumber(NaN), 'O5|');
+    assertTrue(!Util512.isValidNumber(Infinity), 'O4|');
+    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY), 'O3|');
+    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY), 'O2|');
+    assertTrue(!Util512.isValidNumber('12'), 'O1|');
+    assertTrue(!Util512.isValidNumber(''), 'O0|');
 });
 t.test('Range.Upwards', () => {
     assertEq([0], Util512.range(0, 1), 'E`|');
@@ -54,22 +54,22 @@ t.test('Repeat', () => {
 t.test('setarr', () => {
     let ar1: number[] = [];
     Util512.setarr(ar1, 0, 12, 0);
-    assertEq([12], ar1, '');
+    assertEq([12], ar1, 'N~|');
     let ar2: number[] = [];
     Util512.setarr(ar2, 1, 12, 0);
-    assertEq([0, 12], ar2, '');
+    assertEq([0, 12], ar2, 'N}|');
     let ar3: number[] = [];
     Util512.setarr(ar3, 3, 12, 0);
-    assertEq([0, 0, 0, 12], ar3, '');
+    assertEq([0, 0, 0, 12], ar3, 'N||');
     let ar: number[] = [1, 2];
     Util512.setarr(ar, 0, 12, 0);
-    assertEq([12, 2], ar, '');
+    assertEq([12, 2], ar, 'N{|');
     ar = [1, 2];
     Util512.setarr(ar, 2, 12, 0);
-    assertEq([1, 2, 12], ar, '');
+    assertEq([1, 2, 12], ar, 'N_|');
     ar = [1, 2];
     Util512.setarr(ar, 3, 12, 0);
-    assertEq([1, 2, 0, 12], ar, '');
+    assertEq([1, 2, 0, 12], ar, 'N^|');
 });
 t.test('extendArray', () => {
     t.say(/*——————————*/ 'AppendNothing');
@@ -86,47 +86,47 @@ t.test('extendArray', () => {
     assertEq([1, 2, 3, 4, 5, 6], ar, 'E{|');
 });
 t.test('parseIntStrict', () => {
-    assertEq(0, Util512.parseIntStrict('0'), '');
-    assertEq(9, Util512.parseIntStrict('9'), '');
-    assertEq(12, Util512.parseIntStrict('12'), '');
-    assertEq(12, Util512.parseIntStrict(' 12'), '');
-    assertEq(12, Util512.parseIntStrict('12 '), '');
-    assertEq(12, Util512.parseIntStrict(' 12 '), '');
-    assertEq(NaN, Util512.parseIntStrict(''), '');
-    assertEq(NaN, Util512.parseIntStrict(undefined), '');
-    assertEq(NaN, Util512.parseIntStrict('1more'), '');
-    assertEq(NaN, Util512.parseIntStrict('1 more'), '');
-    assertEq(NaN, Util512.parseIntStrict('1.1'), '');
-    assertEq(NaN, Util512.parseIntStrict('12a'), '');
-    assertEq(NaN, Util512.parseIntStrict('a12'), '');
-    assertEq(NaN, Util512.parseIntStrict('abc'), '');
-    assertEq(12, Util512.parseIntStrict('012'), '');
-    assertEq(12, Util512.parseIntStrict('0012'), '');
+    assertEq(0, Util512.parseIntStrict('0'), 'N]|');
+    assertEq(9, Util512.parseIntStrict('9'), 'N[|');
+    assertEq(12, Util512.parseIntStrict('12'), 'N@|');
+    assertEq(12, Util512.parseIntStrict(' 12'), 'N?|');
+    assertEq(12, Util512.parseIntStrict('12 '), 'N>|');
+    assertEq(12, Util512.parseIntStrict(' 12 '), 'N=|');
+    assertEq(NaN, Util512.parseIntStrict(''), 'N<|');
+    assertEq(NaN, Util512.parseIntStrict(undefined), 'N;|');
+    assertEq(NaN, Util512.parseIntStrict('1more'), 'N:|');
+    assertEq(NaN, Util512.parseIntStrict('1 more'), 'N/|');
+    assertEq(NaN, Util512.parseIntStrict('1.1'), 'N.|');
+    assertEq(NaN, Util512.parseIntStrict('12a'), 'N-|');
+    assertEq(NaN, Util512.parseIntStrict('a12'), 'N,|');
+    assertEq(NaN, Util512.parseIntStrict('abc'), 'N+|');
+    assertEq(12, Util512.parseIntStrict('012'), 'N*|');
+    assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
 t.test('add', () => {
-    assertEq(0, Util512.add(0, 0), '');
-    assertEq(9, Util512.add(4, 5), '');
-    assertEq(6, [1, 2, 3].reduce(Util512.add), '');
-    assertEq(9, [1, 2, 3].reduce(Util512.add, 3), '');
-    assertEq(0, [].reduce(Util512.add, 0), '');
+    assertEq(0, Util512.add(0, 0), 'N(|');
+    assertEq(9, Util512.add(4, 5), 'N&|');
+    assertEq(6, [1, 2, 3].reduce(Util512.add), 'N%|');
+    assertEq(9, [1, 2, 3].reduce(Util512.add, 3), 'N#|');
+    assertEq(0, [].reduce(Util512.add, 0), 'N!|');
 });
 t.test('getBrowserOS', () => {
     let s = longstr(`Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X)
         AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a
         Safari/604.1`);
-    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), '');
+    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), 'N |');
     s = longstr(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
         (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246`);
-    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), '');
+    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), 'Nz|');
     s = longstr(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9
         (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9`);
-    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), '');
+    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), 'Ny|');
     s = longstr(`Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML,
         like Gecko) Chrome/47.0.2526.111 Safari/537.36`);
-    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), '');
+    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), 'Nx|');
     s = longstr(`Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101
         Firefox/15.0.1`);
-    assertEq(BrowserOSInfo.Linux, Util512.getBrowserOS(s), '');
+    assertEq(BrowserOSInfo.Linux, Util512.getBrowserOS(s), 'Nw|');
 });
 t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
@@ -418,14 +418,14 @@ t.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
     roundTrip('\x01\x05\xf8\xffXYZ<>', 'AQX4_1hZWjw-');
 });
 t.test('stringToCharArray', () => {
-    assertEq([], Util512.stringToCharArray(''), '');
-    assertEq(['a'], Util512.stringToCharArray('a'), '');
-    assertEq(['a', 'b', ' ', 'c', 'd'], Util512.stringToCharArray('ab cd'), '');
+    assertEq([], Util512.stringToCharArray(''), 'Nv|');
+    assertEq(['a'], Util512.stringToCharArray('a'), 'Nu|');
+    assertEq(['a', 'b', ' ', 'c', 'd'], Util512.stringToCharArray('ab cd'), 'Nt|');
 });
 t.test('stringToByteArray', () => {
-    assertEq([], Util512.stringToByteArray(''), '');
-    assertEq([97], Util512.stringToByteArray('a'), '');
-    assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'), '');
+    assertEq([], Util512.stringToByteArray(''), 'Ns|');
+    assertEq([97], Util512.stringToByteArray('a'), 'Nr|');
+    assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'), 'Nq|');
 });
 t.test('sortDecorated', () => {
     class MyClass {
@@ -435,23 +435,23 @@ t.test('sortDecorated', () => {
     t.say(/*——————————*/ 'typical usage');
     let input: string[] = ['abc', 'dba', 'aab', 'ffd'];
     let ret = Util512.sortDecorated(input, s => s.charAt(2));
-    assertEq('dba|aab|abc|ffd', ret.join('|'), '');
+    assertEq('dba;aab;abc;ffd', ret.join(';'), 'Np|');
     t.say(/*——————————*/ 'with class');
     let inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('cc')];
     let retCl = Util512.sortDecorated(inputCl, o => o.a);
-    assertEq('aa|bb|cc', retCl.map(o => o.a).join('|'), '');
+    assertEq('aa;bb;cc', retCl.map(o => o.a).join(';'), 'O+|');
     t.say(/*——————————*/ 'with class and ties');
     inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('bb')];
     retCl = Util512.sortDecorated(inputCl, o => o.a);
-    assertEq('aa|bb|bb', retCl.map(o => o.a).join('|'), '');
+    assertEq('aa;bb;bb', retCl.map(o => o.a).join(';'), 'O*|');
 });
 t.test('normalizeNewlines', () => {
-    assertEq('ab', Util512.normalizeNewlines('ab'), '');
-    assertEq('a\nb\n', Util512.normalizeNewlines('a\nb\n'), '');
-    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\r\n'), '');
-    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r'), '');
-    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r\n'), '');
-    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\n'), '');
+    assertEq('ab', Util512.normalizeNewlines('ab'), 'Nn|');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\nb\n'), 'Nm|');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\r\n'), 'Nl|');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r'), 'Nk|');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r\n'), 'Nj|');
+    assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\n'), 'Ni|');
 });
 
 /**

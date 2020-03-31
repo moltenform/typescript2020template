@@ -49,7 +49,7 @@ export class Util512 {
      * sets an element, expands array if necessary
      */
     static setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
-        assertTrue(index >= 0, 'must be >= 0');
+        assertTrue(index >= 0, 'Oy|must be >= 0');
         if (index >= ar.length) {
             for (let i = ar.length; i <= index; i++) {
                 ar.push(fill);
@@ -207,7 +207,7 @@ export class Util512 {
                 s,
             );
 
-            assertTrue(args.length < 100, 'too many args', clsname, s);
+            assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
 
             /* eslint-disable ban/ban */
             return method.apply(me, args);
@@ -372,7 +372,7 @@ export namespace Util512 {
             this.locked = true;
         }
         push(v: T) {
-            checkThrowEq(false, this.locked, '4A|locked');
+            checkThrowEq(false, this.locked, 'Ow|locked');
             this.vals.push(v);
         }
         set(i: number, v: T) {
@@ -802,7 +802,7 @@ export function checkThrowEq<T>(
 ): asserts got is T {
     if (sensibleSort(expected, got) !== 0) {
         throw makeUI512Error(
-            `${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
+            `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
         );
     }
 }
@@ -850,7 +850,7 @@ export function assertEqWarn(
 get last of an array
 */
 export function last<T>(ar: T[]): T {
-    assertTrue(ar.length >= 1, 'empty array');
+    assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];
 }
 

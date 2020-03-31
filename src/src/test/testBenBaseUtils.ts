@@ -13,7 +13,7 @@ t.test('ValHolder.param', () => {
 
     let v = new ValHolder(0);
     increment(v);
-    assertEq(1, v.val, '');
+    assertEq(1, v.val, 'NR|');
 });
 t.test('ValHolder.closure', () => {
     function increment() {
@@ -22,7 +22,7 @@ t.test('ValHolder.closure', () => {
 
     let v = new ValHolder(0);
     increment();
-    assertEq(1, v.val, '');
+    assertEq(1, v.val, 'NQ|');
 });
 t.test('findStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dz|');
@@ -40,17 +40,17 @@ t.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
     assertEq(undefined, findStrToEnum(TestEnum, '__foo'), 'Dr|');
 });
 t.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'Dp|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'Do|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'), 'Dq|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'), 'Dp|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'), 'Do|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'NP|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'NO|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'NN|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'), 'NM|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'), 'NL|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'), 'NK|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'), 'NJ|');
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Scnd'), 'Dp|');
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Foo'), 'Do|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'), 'Dq|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'), 'NI|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'), 'NH|');
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'), 'Dq|');
 });
 t.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
@@ -126,10 +126,10 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
 t.test('slength', () => {
-    assertEq(0, slength(null), '');
-    assertEq(0, slength(undefined), '');
-    assertEq(0, slength(''), '');
-    assertEq(3, slength('abc'), '');
+    assertEq(0, slength(null), 'NG|');
+    assertEq(0, slength(undefined), 'NF|');
+    assertEq(0, slength(''), 'NE|');
+    assertEq(3, slength('abc'), 'ND|');
 });
 t.test('cast', () => {
     class Parent {
@@ -149,23 +149,23 @@ t.test('cast', () => {
     }
 
     let o1: unknown = new Parent();
-    assertEq('parent', cast(o1, Parent).a(), '');
+    assertEq('parent', cast(o1, Parent).a(), 'NC|');
     o1 = new Child();
-    assertEq('child', cast(o1, Parent).a(), '');
+    assertEq('child', cast(o1, Parent).a(), 'NB|');
     o1 = new Other();
-    assertThrows('', 'type cast exception', () => {
+    assertThrows('NA|', 'type cast exception', () => {
         cast(o1, Parent);
     });
 });
 t.test('isString', () => {
-    assertTrue(isString(''), '');
-    assertTrue(isString('abc'), '');
-    assertTrue(isString(String('abc')), '');
-    assertTrue(isString(new String('abc')), '');
-    assertTrue(!isString(123), '');
-    assertTrue(!isString(null), '');
-    assertTrue(!isString(undefined), '');
-    assertTrue(!isString(['a']), '');
+    assertTrue(isString(''), 'N9|');
+    assertTrue(isString('abc'), 'N8|');
+    assertTrue(isString(String('abc')), 'N7|');
+    assertTrue(isString(new String('abc')), 'N6|');
+    assertTrue(!isString(123), 'N5|');
+    assertTrue(!isString(null), 'N4|');
+    assertTrue(!isString(undefined), 'N3|');
+    assertTrue(!isString(['a']), 'N2|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
@@ -222,10 +222,10 @@ t.test('sensibleSort.Number', () => {
     assertEq(-1, sensibleSort(Number.NEGATIVE_INFINITY, -12345), '0||');
 });
 t.test('sensibleSort.Nullish', () => {
-    assertEq(0, sensibleSort(undefined, undefined), '');
-    assertEq(0, sensibleSort(null, null), '');
-    assertThrows('', 'not compare', () => sensibleSort(null, undefined));
-    assertThrows('', 'not compare', () => sensibleSort(undefined, null));
+    assertEq(0, sensibleSort(undefined, undefined), 'N1|');
+    assertEq(0, sensibleSort(null, null), 'N0|');
+    assertThrows('M~|', 'not compare', () => sensibleSort(null, undefined));
+    assertThrows('M}|', 'not compare', () => sensibleSort(undefined, null));
 });
 t.test('sensibleSort.DiffTypesShouldThrow', () => {
     assertThrows('Le|', 'not compare', () => sensibleSort('a', 1));
@@ -425,70 +425,70 @@ t.test('MapKeyToObjectCanSet', () => {
     o.add('five', 5);
     o.add('six', 6);
     t.say(/*——————————*/ 'exists');
-    assertTrue(o.exists('five'), '');
-    assertTrue(o.exists('six'), '');
-    assertTrue(!o.exists('seven'), '');
-    assertTrue(!o.exists(''), '');
+    assertTrue(o.exists('five'), 'M||');
+    assertTrue(o.exists('six'), 'M{|');
+    assertTrue(!o.exists('seven'), 'M_|');
+    assertTrue(!o.exists(''), 'M^|');
     t.say(/*——————————*/ 'get');
-    assertEq(5, o.get('five'), '');
-    assertEq(6, o.get('six'), '');
-    assertThrows('', 'not found', () => {
+    assertEq(5, o.get('five'), 'M]|');
+    assertEq(6, o.get('six'), 'M[|');
+    assertThrows('M@|', 'not found', () => {
         o.get('seven');
     });
-    assertThrows('', 'not found', () => {
+    assertThrows('M?|', 'not found', () => {
         o.get('');
     });
     t.say(/*——————————*/ 'find');
-    assertEq(5, o.find('five'), '');
-    assertEq(6, o.find('six'), '');
-    assertEq(undefined, o.find('seven'), '');
-    assertEq(undefined, o.find(''), '');
+    assertEq(5, o.find('five'), 'M>|');
+    assertEq(6, o.find('six'), 'M=|');
+    assertEq(undefined, o.find('seven'), 'M<|');
+    assertEq(undefined, o.find(''), 'M;|');
     t.say(/*——————————*/ 'getKeys');
-    assertEq(['five', 'six'], sorted(o.getKeys()), '');
-    assertEq([5, 6], sorted(o.getVals()), '');
+    assertEq(['five', 'six'], sorted(o.getKeys()), 'M:|');
+    assertEq([5, 6], sorted(o.getVals()), 'M/|');
     t.say(/*——————————*/ 'remove');
     o.remove('five');
-    assertEq(undefined, o.find('five'), '');
+    assertEq(undefined, o.find('five'), 'M.|');
 });
 t.test('checkThrowEq', () => {
-    checkThrowEq(1, 1, '');
-    checkThrowEq('abc', 'abc', '');
-    assertThrows('', 'but got', () => {
-        checkThrowEq(1, 2, '');
+    checkThrowEq(1, 1, 'M-|');
+    checkThrowEq('abc', 'abc', 'M,|');
+    assertThrows('M+|', 'but got', () => {
+        checkThrowEq(1, 2, 'M*|');
     });
-    assertThrows('', 'but got', () => {
-        checkThrowEq('abc', 'ABC', '');
+    assertThrows('M)|', 'but got', () => {
+        checkThrowEq('abc', 'ABC', 'M(|');
     });
 });
 t.test('last', () => {
-    assertEq(3, last([1, 2, 3]), '');
-    assertEq(1, last([1]), '');
+    assertEq(3, last([1, 2, 3]), 'M&|');
+    assertEq(1, last([1]), 'M%|');
 });
 t.test('bool', () => {
-    assertEq(true, bool(true), '');
-    assertEq(true, bool(['abc']), '');
-    assertEq(true, bool('abc'), '');
-    assertEq(true, bool(123), '');
-    assertEq(false, bool(false), '');
-    assertEq(false, bool(''), '');
-    assertEq(false, bool(0), '');
-    assertEq(true, bool([]), '');
-    assertEq(false, bool(null), '');
-    assertEq(false, bool(undefined), '');
-    assertEq(false, bool(NaN), '');
+    assertEq(true, bool(true), 'M#|');
+    assertEq(true, bool(['abc']), 'M!|');
+    assertEq(true, bool('abc'), 'M |');
+    assertEq(true, bool(123), 'Mz|');
+    assertEq(false, bool(false), 'My|');
+    assertEq(false, bool(''), 'Mx|');
+    assertEq(false, bool(0), 'Mw|');
+    assertEq(true, bool([]), 'Mv|');
+    assertEq(false, bool(null), 'Mu|');
+    assertEq(false, bool(undefined), 'Mt|');
+    assertEq(false, bool(NaN), 'Ms|');
 });
 t.test('longstr', () => {
     let s = longstr(`a long
         string across
         a few lines`);
-    assertEq('a long string across a few lines', s, '');
+    assertEq('a long string across a few lines', s, 'Mr|');
     s = `a long
     string across
     a few lines`;
     let sUnix = Util512.normalizeNewlines(s);
-    assertEq('a long string across a few lines', longstr(sUnix), '');
+    assertEq('a long string across a few lines', longstr(sUnix), 'Mq|');
     let sWindows = Util512.normalizeNewlines(s).replace(/\n/g, '\r\n');
-    assertEq('a long string across a few lines', longstr(sWindows), '');
+    assertEq('a long string across a few lines', longstr(sWindows), 'Mp|');
 });
 
 /**
