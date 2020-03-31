@@ -78,3 +78,15 @@ This project started with the ts-loader example [here](https://github.com/TypeSt
 
 For more scripts, see the "scripts" section of `package.json`.
 
+### libraries
+
+* bowser, MIT license
+* lz-string, wtfpl license
+* serializer.ts, Apache-2.0 license
+
+### libraries used solely as an example
+
+* csv.js, BSD-3-Clause license
+* number-to-words, MIT license
+* whatwg-fetch, MIT license
+
