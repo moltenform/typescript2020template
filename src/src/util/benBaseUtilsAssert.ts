@@ -111,20 +111,20 @@ export function throwIfUndefined<T>(
     s3: unknown = '',
 ): T {
     if (v === undefined || v === null) {
-        let msg = 'not defined';
+        let msgInThrowIfUndefined = 'not defined';
         if (s1 !== '') {
-            msg += ', ' + s1;
+            msgInThrowIfUndefined += ', ' + s1;
         }
 
         if (s2 !== '') {
-            msg += ', ' + s2;
+            msgInThrowIfUndefined += ', ' + s2;
         }
 
         if (s3 !== '') {
-            msg += ', ' + s3;
+            msgInThrowIfUndefined += ', ' + s3;
         }
 
-        throw makeUI512Error(msg);
+        throw makeUI512Error(msgInThrowIfUndefined);
     } else {
         return v;
     }
@@ -234,7 +234,7 @@ export function showWarningIfExceptionThrown(fn: () => void) {
     try {
         fn();
     } catch (e) {
-        assertTrueWarn(false, e.toString());
+        assertTrueWarn(false, e.toString(), '');
     }
 }
 

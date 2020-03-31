@@ -134,6 +134,11 @@ t.test('keepOnlyUnique', () => {
     assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']), '');
     assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']), '');
     assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']), '');
+    assertEq(
+        ['11', '12', '13', '14', '15'],
+        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
+        '',
+    );
 });
 
 declare namespace csv {

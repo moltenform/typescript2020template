@@ -207,7 +207,8 @@ export class Util512 {
                 s,
             );
 
-            assertTrue(args.length < 100, clsname, s);
+            assertTrue(args.length < 100, 'too many args', clsname, s);
+
             /* eslint-disable ban/ban */
             return method.apply(me, args);
         } else if (okIfNotExists) {
@@ -818,9 +819,9 @@ export function assertEq(
     c3?: unknown,
 ) {
     if (sensibleSort(expected, received) !== 0) {
-        let msg = longstr(`assertion failed in assertEq,
+        let msgAssertEq = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
-        throw makeUI512Error(msg, c1, c2, c3);
+        throw makeUI512Error(msgAssertEq, c1, c2, c3);
     }
 }
 
@@ -836,9 +837,9 @@ export function assertEqWarn(
     c3?: unknown,
 ) {
     if (sensibleSort(expected, received) !== 0) {
-        let msg = longstr(`warning, assertion failed in assertEqWarn,
+        let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,
             expected '${expected}' but got '${received}'.`);
-        let er = makeUI512Error(msg, c1, c2, c3);
+        let er = makeUI512Error(msgInAssertEqWarn, c1, c2, c3);
         if (!window.confirm('continue?')) {
             throw er;
         }
