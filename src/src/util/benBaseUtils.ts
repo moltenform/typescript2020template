@@ -51,7 +51,7 @@ export class Util512 {
     static setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
         assertTrue(index >= 0, 'must be >= 0');
         if (index >= ar.length) {
-            for (let i = 0; i < index - ar.length; i++) {
+            for (let i = ar.length; i <= index; i++) {
                 ar.push(fill);
             }
         }

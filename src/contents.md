@@ -71,6 +71,8 @@
     - load the page and click the "go async" test button
 - separate tsconfig files for development and production
     - useful for e.g. ignoring unused local variables until building for production
+- you can optionally run a script to add assert markers
+    - if a user says they are getting an error message, you can know the origin of the error message.
 
 This project started with the ts-loader example [here](https://github.com/TypeStrong/ts-loader/tree/master/examples/fork-ts-checker-webpack-plugin).
 
