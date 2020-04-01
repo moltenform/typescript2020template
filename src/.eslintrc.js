@@ -4,7 +4,7 @@
 // https://medium.com/@dors718/linting-your-react-typescript-project-with-eslint-and-prettier-2423170c3d42
 
 // to run it from a shell
-// node ..\node_modules\eslint\bin\eslint.js -c ..\.eslintrc.js *.ts
+// npm run lint
 
 const path = require('path');
 module.exports = {
@@ -36,8 +36,28 @@ module.exports = {
         }
     },
     rules: {
-        // Place to specify ESLint rules.
-        // Can be used to overwrite rules specified from the extended configs
+        // let's alter rules from the recommendations above
+        // turn off ones that typescript does a better job at
+        'no-undef': 'off',
+        'no-redeclare': 'off',
+
+        // won't let you do myList.reduce(Util512.add)
+        '@typescript-eslint/unbound-method': 'off',
+
+        // don't needlessly have a call() or apply()
+        'no-useless-call': 'warn', 
+
+        // apply is dangerous, there could be max arg limits. see also the ban/ban
+        'prefer-spread': 'warn', 
+
+        // personal preference, ones that I think are fine
+        'no-inner-declarations': 'off',
+        'no-prototype-builtins': 'off',
+        'no-debugger': 'off',
+        'no-constant-condition': 'off',
+        'prefer-const': 'off',
+
+        // typescript, ones that I think are fine
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/class-name-casing': 'off',
         '@typescript-eslint/camelcase': 'off',
@@ -48,19 +68,81 @@ module.exports = {
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-namespace': 'off',
-        '@typescript-eslint/no-unused-vars': 'off', // check locals, not fn params. typescript 6133 takes care of it
-        '@typescript-eslint/prefer-nullish-coalescing': ["error", { // still doesn't catch en.attrs['AC'] || ''; for some reason
+        '@typescript-eslint/prefer-regexp-exec': 'off',
+
+        // we want let s1 || 'default' to be an error, s1 ?? 'default' is better
+        // should I enable strict-boolean-expressions to detect this? 
+        // no, causes false positives for code like if (str1) {...} which I think is ok.
+        // so I've written my own || check, which runs when you run `npm run prettierexceptlongimports`
+        '@typescript-eslint/prefer-nullish-coalescing': ["error", { 
             ignoreConditionalTests: false,
             ignoreMixedLogicalExpressions: false,
             forceSuggestionFixer: false,
           },],
-        'no-useless-call': 'warn', // don't needlessly have a call() or apply()
-        'prefer-spread': 'warn', // apply is dangerous, there could be max arg limits. won't catch everything, so I added ban/ban
-        'prefer-const': 'off',
+
+        // went through all non-default ones, chose to turn these on
+        'curly': 'warn',
         'eqeqeq': 'warn',
+        'no-template-curly-in-string': 'warn',
+        'block-scoped-var': 'warn',
+        'default-case': 'warn',
+        'default-param-last': 'warn',
+        'guard-for-in': 'warn',
+        'no-caller': 'warn',
+        'no-constructor-return': 'warn',
+        'no-eval': 'warn',
+        'no-extend-native': 'warn',
+        'no-extra-bind': 'warn',
+        'no-extra-label': 'warn',
+        'no-floating-decimal': 'warn',
+        'no-implicit-coercion': 'warn',
+        'no-implied-eval': 'warn',
+        'no-invalid-this': 'warn',
+        'no-labels': 'warn',
+        'no-loop-func': 'warn',
+        'no-new-func': 'warn',
+        'no-new-wrappers': 'warn',
+        'no-octal-escape': 'warn',
+        'no-return-assign': 'warn',
+        'no-return-await': 'warn',
+        'no-self-compare': 'warn',
+        'no-sequences': 'warn',
+        'no-throw-literal': 'warn',
+        'no-unused-expressions': 'warn',
+        'wrap-iife': 'warn',
+        'no-array-constructor': 'warn',
+        'no-mixed-operators': 'warn',
+        'no-multi-assign': 'warn',
+        'no-tabs': 'warn',
+        'no-var': 'warn',
+        'prefer-destructuring': 'warn',
+        'prefer-rest-params': 'warn',
+
+        // went through all non-default ts ones, chose to turn these on
+        '@typescript-eslint/no-extra-non-null-assertion': 'warn',
+        '@typescript-eslint/no-floating-promises': 'warn',
+        '@typescript-eslint/no-implied-eval': 'warn',
+        '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
+        '@typescript-eslint/no-throw-literal': 'warn',
+        '@typescript-eslint/prefer-regexp-exec': 'warn',
+        '@typescript-eslint/promise-function-async': 'warn',
+        '@typescript-eslint/require-array-sort-compare': 'warn',
+
+        // checks locals, not fn params.
+        // annoying to leave this on while editing, so we'll use typescript 6133 instead
+        // and leave typescript warning 6133 on only when building for production
+        '@typescript-eslint/no-unused-vars': 'off', 
+
+        // don't need `radix` due to ban below
+        // don't need `prefer-for-of`, in some cases I want the slightly-faster for in
+        // don't need `no-duplicate-super`, no longer seen
+        // no-param-reassign might be useful one day
+        // id-blacklist might be useful one day
+
         "ban/ban": [
             1, // warn
-            {"name": ["*", "apply"], "message": "apply is dangerous, there could be max arg limits."}
+            {"name": ["*", "apply"], "message": "apply is dangerous, there could be max arg limits."},
+            {"name": "parseInt", "message": "prefer my parseint in utils, don't need to remember to specify base10."},
         ]
     },
     settings: {
