@@ -14,8 +14,8 @@
     "autoimportmodules": "cd tools/typescript-super-auto-import && main.py",
     "prettierexceptlongimports": "cd tools/prettier-except-long-imports && main.py",
     "addassertmarkers": "cd tools/add-assert-markers && main.py",
-    "lint": "eslint ./",
-    "lint-rule-timings": "cross-env TIMING=1 yarn lint"
+    "lint": "node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js src/**/*.ts",
+    "lint-rule-timings": "cross-env TIMING=1 node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js src/**/*.ts"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",

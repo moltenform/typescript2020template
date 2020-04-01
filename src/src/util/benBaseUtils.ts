@@ -79,7 +79,20 @@ export class Util512 {
 
         s = s.trim();
         if (s.match(/^\d+$/)) {
-            return parseInt(s, base10);
+            return Util512.parseInt(s);
+        } else {
+            return NaN;
+        }
+    }
+
+    /*
+     * use this, not parseInt where you might forget to specify base 10
+     */
+    static parseInt(s: O<string>) {
+        if (s) {
+            /* ok to use here, we remembered to say base 10 */
+            /* eslint-disable ban/ban */
+            return parseInt(s, 10);
         } else {
             return NaN;
         }
@@ -161,7 +174,7 @@ export class Util512 {
      * like Python's re.escape.
      */
     static escapeForRegex(s: string) {
-        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
     /**
@@ -293,7 +306,7 @@ export class Util512 {
         return btoa(s)
             .replace(/\//g, '_')
             .replace(/\+/g, '-')
-            .replace(/\=+$/, '');
+            .replace(/=+$/, '');
     }
 
     /**
@@ -727,11 +740,6 @@ export enum BrowserOSInfo {
     Linux,
     Mac,
 }
-
-/**
- * just to avoid magic number in parseInt(x, 10)
- */
-export const base10 = 10;
 
 /**
  * map a key to object, does not allow setting a value twice.

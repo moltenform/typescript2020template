@@ -148,7 +148,7 @@ declare let LZString: any;
 export class UI512Compress {
     protected static stringEscapeNewline = '##Newline##';
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
-    protected static reNewline = new RegExp('\n', 'g');
+    protected static reNewline = /\n/g;
     static compressString(s: string): string {
         let compressed = LZString.compressToUTF16(s);
         return compressed;
@@ -218,7 +218,11 @@ class RingBufferLocalStorage extends RingBuffer {
     }
 
     getLatestIndex() {
-        let ptrLatest = parseInt(window.localStorage['ui512LogPtr'] ?? '0', 10);
+        let sLatest = window.localStorage['ui512LogPtr'] ?? '0'
+        
+        /* ok to use here, we remembered to say base 10 */
+        /* eslint-disable ban/ban */
+        let ptrLatest = parseInt(sLatest, 10);
         return Number.isFinite(ptrLatest) ? ptrLatest : 0;
     }
 
