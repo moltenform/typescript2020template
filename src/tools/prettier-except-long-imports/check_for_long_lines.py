@@ -54,12 +54,15 @@ def checkText(srcdirectory, f, lines):
     if not hasattr(currentPrintWidth, 'val'):
         currentPrintWidth.val =  getCurrentPrintWidth(srcdirectory)
     if currentPrintWidth.val:
-        for i, line in enumerate(lines):
+        # iterate backwards, so that as you fix the problems, the line numbers are still valid
+        linesRev = list(reversed(lines))
+        for irev, line in enumerate(linesRev):
+            i = len(lines) - irev
             if '/* check_long_lines_silence_subsequent */' in line:
                 return
             if len(line) > currentPrintWidth.val:
                 if not 'import { ' in line:
-                    trace(f'in file "{f}" on line {i+1}:')
+                    trace(f'in file "{f}"\non line {i}:')
                     trace(f'length of line is {len(line)}')
                     trace(f'which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
                     trace(f'silence by putting /* check_long_lines_silence_subsequent */ earlier in the file')
