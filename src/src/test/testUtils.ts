@@ -1,4 +1,5 @@
 
+/* auto */ import { AsyncVoidFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/util512Assert';
 /* auto */ import { util512Sort } from './../util/util512';
 
@@ -71,20 +72,20 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
     });
 }
 
-export type VoidFn = () => void;
-export type AVoidFn = () => Promise<void>;
-
+/**
+ * a collection of tests
+ */
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public async = false, public slow = false) {}
     tests: [string, VoidFn][] = [];
-    atests: [string, AVoidFn][] = [];
+    atests: [string, AsyncVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
         assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
-    public atest(s: string, fn: AVoidFn) {
+    public atest(s: string, fn: AsyncVoidFn) {
         assertTrue(this.async, 'Os|');
         this.atests.push([s, fn]);
         return this;

@@ -388,6 +388,9 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
 
 declare const WEBPACK_PRODUCTION: boolean;
 
+/**
+ * check if we are in a production build.
+ */
 export function checkIsRelease(): boolean {
     let ret = false;
     try {

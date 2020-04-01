@@ -1,6 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './util512Assert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last, } from './util512';
+/* auto */ import { assertTrue, makeUI512Error } from './util512Assert';
+/* auto */ import { AnyJson, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -231,41 +231,10 @@ export class Util512Higher {
 }
 
 /**
- * root (top-level) object
+ * easier-to-read type aliases
  */
-export interface UI512IsDrawTextInterface {}
-export interface UI512IsDrawIconInterface {}
-export interface UI512IsSessionInterface {}
-export interface UI512IsPresenterInterface {}
-export interface UI512IsEventInterface {}
-export interface Root {
-    invalidateAll(): void;
-    getDrawText(): UI512IsDrawTextInterface;
-    getDrawIcon(): UI512IsDrawIconInterface;
-    getSession(): O<UI512IsSessionInterface>;
-    setSession(session: O<UI512IsSessionInterface>): void;
-    getBrowserInfo(): BrowserOSInfo;
-    setTimerRate(s: string): void;
-    sendEvent(evt: UI512IsEventInterface): void;
-    replaceCurrentPresenter(pr: O<UI512IsPresenterInterface>): void;
-    runTests(all: boolean): void;
-}
-
-/**
- * get top-level object
- */
-let rootHolder: Root[] = [];
-export function getRoot(): Root {
-    checkThrowUI512(rootHolder[0], 'J6|root not yet set.');
-    return rootHolder[0];
-}
-
-/**
- * set top-level object
- */
-export function setRoot(r: Root) {
-    rootHolder[0] = r;
-}
+export type VoidFn = () => void;
+export type AsyncVoidFn = () => Promise<void>;
 
 /**
  * can be used to build a periodic timer.
