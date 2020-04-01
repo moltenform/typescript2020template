@@ -1,8 +1,8 @@
 
+/* auto */ import { sleep } from './../util/util512Higher';
+/* auto */ import { checkIsRelease } from './../util/util512Assert';
+/* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
-/* auto */ import { sleep } from './../util/benBaseUtilsHigher';
-/* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512 } from './../util/benBaseUtils';
 
 import { toWords } from 'number-to-words';
 import type { Bowser } from '../../external/bowser/bowser';

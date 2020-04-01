@@ -1,10 +1,10 @@
 
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/util512Assert';
+/* auto */ import { assertEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/benBaseUtilsAssert';
-/* auto */ import { assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleUtil512TestCategory('testBenBaseUtilsAssert');
-export let testBenBaseUtilsAssert = t;
+let t = new SimpleUtil512TestCategory('testCollectionUtil512Assert');
+export let testCollectionUtil512Assert = t;
 
 t.test('AssertThrows', () => {
     t.say(/*——————————*/ 'Get Message From Custom Error');

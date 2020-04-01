@@ -1,6 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/benBaseUtilsAssert';
-/* auto */ import { util512Sort } from './../util/benBaseUtils';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/util512Assert';
+/* auto */ import { util512Sort } from './../util/util512';
 
 /**
  * assert that an exception is thrown, with a certain message

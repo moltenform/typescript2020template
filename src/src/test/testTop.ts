@@ -1,25 +1,25 @@
 
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
+/* auto */ import { Util512, ValHolder } from './../util/util512';
 /* auto */ import { AVoidFn, SimpleUtil512TestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './testExternalLibs';
-/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
-/* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
-/* auto */ import { testBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
-/* auto */ import { testBenBaseUtils } from './testBenBaseUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher, } from './testUtil512Higher';
+/* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
+/* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
+/* auto */ import { testCollectionUtil512 } from './testUtil512';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs, } from './testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
         UI512ErrorHandling.runningTests = true;
         let categories = [
-            testExternalLibs,
-            testExampleAsyncTests,
-            testBenBaseUtilsAssert,
-            testBenBaseUtils,
-            testBenBaseUtilsClass,
-            testBenBaseLessUsefulLibs,
-            testBenBaseUtilsHigher,
+            testCollectionExternalLibs,
+            testCollectionExampleAsyncTests,
+            testCollectionUtil512Assert,
+            testCollectionUtil512,
+            testCollectionUtil512Class,
+            testCollectionUtil512LessUsefulLibs,
+            testCollectionUtil512Higher,
         ];
 
         let mapSeen = new Map<string, boolean>();
