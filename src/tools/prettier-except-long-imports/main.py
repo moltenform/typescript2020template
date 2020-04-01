@@ -5,6 +5,7 @@
 from place_imports_one_line import *
 import check_for_null_coalesce
 import check_for_long_lines
+import check_tests_referenced
 
 doPlaceImportsOnOneLine = True
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
@@ -20,6 +21,8 @@ def goPrettierAll(srcdirectory):
         if short.endswith('.ts') and not short.endswith('.d.ts'):
             trace(f)
             goPrettier(srcdirectory, f)
+    
+    check_tests_referenced.checkTestsReferenced()
 
 def goPrettier(srcdirectory, f):
     # first, run prettier
@@ -42,6 +45,7 @@ def goPrettier(srcdirectory, f):
     lines = getFileLines(f, False)
     linesOrig = list(lines)
     addFinalLineAndRemoveRightWhitespace(lines)
+    check_tests_referenced.checkText(f, lines)
     if linesOrig != lines:
         files.writeall(f, '\n'.join(lines), encoding='utf-8')
     
