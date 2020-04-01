@@ -9,7 +9,8 @@ sys.path.append('bn_python_common.zip')
 from bn_python_common import *
 
 def getSymbolsFromLine(s):
-    for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)''', s):
+    # negative lookahead so that we don't include abc| or abc"
+    for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)(?!['"`|])''', s):
         yield m.group(2)
 
 def getFileLines(f, tryToStripComments):
