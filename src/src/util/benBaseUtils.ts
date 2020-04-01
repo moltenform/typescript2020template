@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, throwIfUndefined, } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring, } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -271,7 +271,7 @@ export class Util512 {
      * from 1 to 001.
      */
     static padStart(sIn: string | number, targetLength: number, padString: string) {
-        let s = '' + sIn;
+        let s = tostring(sIn);
         padString = typeof padString !== 'undefined' ? padString : ' ';
         if (s.length > targetLength) {
             return s;
@@ -425,6 +425,7 @@ export namespace Util512 {
  * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
  */
 if (!String.prototype.includes) {
+    /* eslint-disable no-extend-native */
     String.prototype.includes = function (search: string | RegExp, start?: number) {
         if (search instanceof RegExp) {
             throw TypeError('first argument must not be a RegExp');
@@ -875,13 +876,6 @@ get last of an array
 export function last<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];
-}
-
-/**
- * is it truthy? anything except false, 0, "", null, undefined, and NaN
- */
-export function bool(x: unknown): boolean {
-    return !!x;
 }
 
 /**

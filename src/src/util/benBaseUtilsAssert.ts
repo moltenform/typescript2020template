@@ -266,7 +266,7 @@ export class UI512ErrorHandling {
         if (UI512ErrorHandling.shouldRecordErrors) {
             if (
                 !UI512ErrorHandling.runningTests &&
-                !!window.localStorage &&
+                bool(window.localStorage) &&
                 !s.includes(msgNotification)
             ) {
                 let severity = showedDialog ? '1' : '2';
@@ -279,6 +279,22 @@ export class UI512ErrorHandling {
     static getLatestErrLogs(amount: number): string[] {
         return UI512ErrorHandling.store.retrieve(amount);
     }
+}
+
+/**
+ * is it truthy? anything except false, 0, "", null, undefined, and NaN
+ */
+export function bool(x: unknown): boolean {
+    /* eslint-disable no-implicit-coercion */
+    return !!x;
+}
+
+/**
+ * cast to string.
+ */
+export function tostring(s: unknown): string {
+    /* eslint-disable no-implicit-coercion */
+    return '' + s;
 }
 
 /**
@@ -366,7 +382,7 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
     } else if (!s) {
         return undefined;
     } else {
-        return '' + s;
+        return tostring(s);
     }
 }
 

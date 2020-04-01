@@ -1,6 +1,6 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, } from './../util/benBaseUtilsAssert';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
@@ -175,12 +175,12 @@ t.test('unknownToString', () => {
     let d: unknown = undefined;
     let e: unknown = null;
     let f: unknown = false;
-    assertEq('abc', '' + a, 'NX|');
-    assertEq('a string', '' + b, 'NW|');
-    assertEq('123', '' + c, 'NV|');
-    assertEq('undefined', '' + d, 'NU|');
-    assertEq('null', '' + e, 'NT|');
-    assertEq('false', '' + f, 'NS|');
+    assertEq('abc', tostring(a), 'NX|');
+    assertEq('a string', tostring(b), 'NW|');
+    assertEq('123', tostring(c), 'NV|');
+    assertEq('undefined', tostring(d), 'NU|');
+    assertEq('null', tostring(e), 'NT|');
+    assertEq('false', tostring(f), 'NS|');
 });
 
 /**

@@ -17,6 +17,7 @@ function getTestString() {
 }
 
 export function setOutputToTestString() {
+    let a = 4;
     let el = document.getElementById('output');
     if (el) {
         el.innerHTML = getTestString();
@@ -55,13 +56,19 @@ export function runOnLoad() {
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
         elBtnGoAsync.addEventListener('click', () => {
-            onBtnGoAsync();
+            onBtnGoAsync().then(
+                () => {},
+                () => {},
+            );
         });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            SimpleSensibleTests.runTests(true);
+            SimpleSensibleTests.runTests(true).then(
+                () => {},
+                () => {},
+            );
         }
     });
 

@@ -1,5 +1,6 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/benBaseUtilsAssert';
+/* auto */ import { sensibleSort } from './../util/benBaseUtils';
 
 /**
  * assert that an exception is thrown, with a certain message
@@ -22,7 +23,7 @@ export async function assertThrowsAsync<T>(
 
     assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
     assertTrue(
-        msg !== undefined && scontains(msg, expectedErr),
+        msg !== undefined && msg.includes(expectedErr),
         `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
@@ -44,7 +45,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
 
     assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
     assertTrue(
-        msg !== undefined && scontains(msg, expectedErr),
+        msg !== undefined && msg.includes(expectedErr),
         `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
@@ -54,7 +55,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
  */
 export function sorted(ar: any[]) {
     let arCopy = ar.slice();
-    arCopy.sort();
+    arCopy.sort(sensibleSort);
     return arCopy;
 }
 
@@ -78,12 +79,12 @@ export class SimpleSensibleTestCategory {
     tests: [string, VoidFn | AVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!scontains(this.type, 'async'), 'Ot|');
+        assertTrue(!this.type.includes('async'), 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AVoidFn) {
-        assertTrue(scontains(this.type, 'async'), 'Os|');
+        assertTrue(this.type.includes('async'), 'Os|');
         this.tests.push([s, fn]);
         return this;
     }

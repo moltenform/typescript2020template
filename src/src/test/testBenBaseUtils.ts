@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows, sorted } from './testUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, bool, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength, } from './../util/benBaseUtils';
+/* auto */ import { UI512ErrorHandling, assertTrue, bool, } from './../util/benBaseUtilsAssert';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength, } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtils');
 export let testBenBaseUtils = t;
@@ -119,7 +119,7 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     }
 
     let pts = excMessage.split(',');
-    pts.sort();
+    pts.sort(sensibleSort);
     assertEq(pts[0], ` first`, 'DP|');
     assertEq(pts[1], ` second`, 'DO|');
     assertEq(pts[2], ` third (4E)`, 'DN|');
@@ -161,11 +161,13 @@ t.test('isString', () => {
     assertTrue(isString(''), 'N9|');
     assertTrue(isString('abc'), 'N8|');
     assertTrue(isString(String('abc')), 'N7|');
-    assertTrue(isString(new String('abc')), 'N6|');
     assertTrue(!isString(123), 'N5|');
     assertTrue(!isString(null), 'N4|');
     assertTrue(!isString(undefined), 'N3|');
     assertTrue(!isString(['a']), 'N2|');
+    /* ok to disable the warning, intentionally making a Object-style-string */
+    /* eslint-disable no-new-wrappers */
+    assertTrue(isString(new String('abc')), 'N6|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');

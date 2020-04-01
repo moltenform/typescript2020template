@@ -124,7 +124,6 @@ module.exports = {
         '@typescript-eslint/no-implied-eval': 'warn',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         '@typescript-eslint/no-throw-literal': 'warn',
-        '@typescript-eslint/prefer-regexp-exec': 'warn',
         '@typescript-eslint/promise-function-async': 'warn',
         '@typescript-eslint/require-array-sort-compare': 'warn',
 

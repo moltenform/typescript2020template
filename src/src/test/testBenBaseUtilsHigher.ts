@@ -58,6 +58,8 @@ t.atest('canAwaitACall', async () => {
     await exampleAsyncFn();
     t.say('3');
 });
+/* ok to disable warning, we're intentionally returning a promise */
+/* eslint-disable @typescript-eslint/promise-function-async */
 t.atest('canChainACall', () => {
     return exampleAsyncFn();
 });
