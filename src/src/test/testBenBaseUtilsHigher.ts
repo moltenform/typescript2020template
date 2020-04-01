@@ -44,7 +44,7 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleSensibleTestCategory('testExampleAsyncTests', 'async');
+t = new SimpleSensibleTestCategory('testExampleAsyncTests', true);
 export let testExampleAsyncTests = t;
 
 /* ok to disable warning, we're intentionally only synchronous here */

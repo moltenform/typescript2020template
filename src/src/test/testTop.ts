@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
+/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, AVoidFn, VoidFn, } from './testUtils';
 /* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './testExternalLibs';
 /* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
 /* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
@@ -24,10 +24,11 @@ export class SimpleSensibleTests {
 
         let mapSeen = new Map<string, boolean>();
         let countTotal = categories.map(item => item.tests.length).reduce(Util512.add);
+        countTotal += categories.map(item => item.atests.length).reduce(Util512.add);
         let counter = new ValHolder(1);
         for (let category of categories) {
             console.log(`Category: ${category.name}`);
-            if (includeSlow || !category.type.includes('slow')) {
+            if (includeSlow || !category.slow) {
                 await SimpleSensibleTests.runCategory(
                     category,
                     countTotal,
@@ -48,9 +49,10 @@ export class SimpleSensibleTests {
         mapSeen: Map<string, boolean>,
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
-        assertTrue(category.tests.length > 0, 'no tests in category');
-        for (let i = 0; i < category.tests.length; i++) {
-            let [tstname, tstfn] = category.tests[i];
+        let tests = category.async ? category.atests : category.tests;
+        assertTrue(tests.length > 0, 'no tests in category');
+        for (let i = 0; i < tests.length; i++) {
+            let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
                 assertTrue(false, 'Or|duplicate test name', tstname);
             }
@@ -58,8 +60,8 @@ export class SimpleSensibleTests {
             mapSeen.set(tstname, true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
-            if (category.type.includes('async')) {
-                await tstfn();
+            if (category.async) {
+                await (tstfn as AVoidFn)();
             } else {
                 tstfn();
             }

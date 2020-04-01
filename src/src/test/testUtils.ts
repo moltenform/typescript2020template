@@ -71,21 +71,22 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
     });
 }
 
-type VoidFn = () => void;
-type AVoidFn = () => Promise<void>;
+export type VoidFn = () => void;
+export type AVoidFn = () => Promise<void>;
 
 export class SimpleSensibleTestCategory {
-    constructor(public name: string, public type: '' | 'async' | 'slow+async' = '') {}
-    tests: [string, VoidFn | AVoidFn][] = [];
+    constructor(public name: string, public async=false, public slow=false) {}
+    tests: [string, VoidFn][] = [];
+    atests: [string, AVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!this.type.includes('async'), 'Ot|');
+        assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AVoidFn) {
-        assertTrue(this.type.includes('async'), 'Os|');
-        this.tests.push([s, fn]);
+        assertTrue(this.async, 'Os|');
+        this.atests.push([s, fn]);
         return this;
     }
     public say(context: string) {
