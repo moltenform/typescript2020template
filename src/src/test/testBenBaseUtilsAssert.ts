@@ -1,6 +1,6 @@
 
 /* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, scontains, throwIfUndefined, } from './../util/benBaseUtilsAssert';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
@@ -148,19 +148,19 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     buf.append('g');
     assertEq(['g', 'f'], buf.retrieve(2), 'C9|');
 });
-t.test('scontains', () => {
+t.test('built-in includes', () => {
     t.say(/*——————————*/ 'typical usage');
-    assertTrue(scontains('a test string', 'e'), 'Nh|');
-    assertTrue(scontains('a test string', 'test'), 'Ng|');
-    assertTrue(scontains('a test string', 'a test'), 'Nf|');
-    assertTrue(scontains('a test string', 'a test string'), 'Ne|');
-    assertTrue(!scontains('a test string', 'a test string '), 'Nd|');
-    assertTrue(!scontains('a test string', 'x'), 'Nc|');
+    assertTrue('a test string'.includes('e'), 'Nh|');
+    assertTrue('a test string'.includes('test'), 'Ng|');
+    assertTrue('a test string'.includes('a test'), 'Nf|');
+    assertTrue('a test string'.includes('a test string'), 'Ne|');
+    assertTrue(!'a test string'.includes('a test string '), 'Nd|');
+    assertTrue(!'a test string'.includes('x'), 'Nc|');
     t.say(/*——————————*/ 'edge cases');
-    assertTrue(scontains('test', 'test'), 'Nb|');
-    assertTrue(scontains('test', ''), 'Na|');
-    assertTrue(!scontains('', 'test'), 'NZ|');
-    assertTrue(scontains('', ''), 'NY|');
+    assertTrue('test'.includes('test'), 'Nb|');
+    assertTrue('test'.includes(''), 'Na|');
+    assertTrue(!''.includes('test'), 'NZ|');
+    assertTrue(''.includes(''), 'NY|');
 });
 t.test('unknownToString', () => {
     class CustomToString {

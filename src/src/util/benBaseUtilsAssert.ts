@@ -218,8 +218,8 @@ class RingBufferLocalStorage extends RingBuffer {
     }
 
     getLatestIndex() {
-        let sLatest = window.localStorage['ui512LogPtr'] ?? '0'
-        
+        let sLatest = window.localStorage['ui512LogPtr'] ?? '0';
+
         /* ok to use here, we remembered to say base 10 */
         /* eslint-disable ban/ban */
         let ptrLatest = parseInt(sLatest, 10);
@@ -267,7 +267,7 @@ export class UI512ErrorHandling {
             if (
                 !UI512ErrorHandling.runningTests &&
                 !!window.localStorage &&
-                !scontains(s, msgNotification)
+                !s.includes(msgNotification)
             ) {
                 let severity = showedDialog ? '1' : '2';
                 let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
@@ -279,13 +279,6 @@ export class UI512ErrorHandling {
     static getLatestErrLogs(amount: number): string[] {
         return UI512ErrorHandling.store.retrieve(amount);
     }
-}
-
-/**
- * string-contains
- */
-export function scontains(haystack: string, needle: string) {
-    return haystack.indexOf(needle) !== -1;
 }
 
 /**
@@ -351,7 +344,7 @@ function breakIntoDebugger() {
  * record and show an unhandled exception
  */
 function recordAndShowErr(firstMsg: string, msg: string) {
-    if (UI512ErrorHandling.breakOnThrow || scontains(firstMsg, 'assertion failed')) {
+    if (UI512ErrorHandling.breakOnThrow || firstMsg.includes('assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
         console.error(msg);
         breakIntoDebugger();

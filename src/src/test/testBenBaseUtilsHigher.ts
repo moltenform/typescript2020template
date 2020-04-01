@@ -1,7 +1,7 @@
 
 /* auto */ import { SimpleSensibleTestCategory } from './testUtils';
 /* auto */ import { Util512Higher, sleep } from './../util/benBaseUtilsHigher';
-/* auto */ import { assertTrue, scontains } from './../util/benBaseUtilsAssert';
+/* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
 let t = new SimpleSensibleTestCategory('testBenBaseUtilsHigher');
@@ -19,7 +19,7 @@ t.test('WeakUuid', () => {
         if (i === 23 || i === 18 || i === 13 || i === 8) {
             assertEq('-', c, 'EY|');
         } else {
-            assertTrue(scontains('0123456789abcdef', c), 'EX|');
+            assertTrue('0123456789abcdef'.includes(c), 'EX|');
         }
     }
 });
@@ -47,6 +47,8 @@ t.test('generateUniqueBase64UrlSafe', () => {
 t = new SimpleSensibleTestCategory('testExampleAsyncTests', 'async');
 export let testExampleAsyncTests = t;
 
+/* ok to disable warning, we're intentionally only synchronous here */
+/* eslint-disable @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
     t.say('adding numbers');
     assertEq(4, 2 + 2, 'OA|');

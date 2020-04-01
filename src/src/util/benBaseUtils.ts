@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, throwIfUndefined, } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -109,11 +109,11 @@ export class Util512 {
      * guess OS based on navstring.
      */
     static getBrowserOS(navString: string): BrowserOSInfo {
-        if (scontains(navString, 'Windows')) {
+        if (navString.includes('Windows')) {
             return BrowserOSInfo.Windows;
         } else if (
             /(iPhone|iPad|iPod)/.test(navString) ||
-            /Mac OS X/.test(navString) ||
+            navString.includes('Mac OS X') ||
             /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/.test(navString)
         ) {
             return BrowserOSInfo.Mac;
@@ -303,10 +303,7 @@ export class Util512 {
      * note: strips off final = padding
      */
     static toBase64UrlSafe(s: string) {
-        return btoa(s)
-            .replace(/\//g, '_')
-            .replace(/\+/g, '-')
-            .replace(/=+$/, '');
+        return btoa(s).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '');
     }
 
     /**
@@ -424,6 +421,24 @@ export namespace Util512 {
 }
 
 /**
+ * polyfill for String.includes, from http://developer.mozilla.org
+ * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+ */
+if (!String.prototype.includes) {
+    String.prototype.includes = function (search: string | RegExp, start?: number) {
+        if (search instanceof RegExp) {
+            throw TypeError('first argument must not be a RegExp');
+        }
+        if (start === undefined) {
+            start = 0;
+        }
+
+        /* eslint-disable @typescript-eslint/prefer-includes */
+        return this.indexOf(search, start) !== -1;
+    };
+}
+
+/**
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
@@ -466,7 +481,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
             isString(enumMember) &&
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__') &&
-            !scontains('0123456789', enumMember[0].toString())
+            !'0123456789'.includes(enumMember[0].toString())
         ) {
             s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
         }

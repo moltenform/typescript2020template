@@ -5,7 +5,7 @@
 /* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
 /* auto */ import { testBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
 /* auto */ import { testBenBaseUtils } from './testBenBaseUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue, scontains, } from './../util/benBaseUtilsAssert';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
 
 export class SimpleSensibleTests {
@@ -27,7 +27,7 @@ export class SimpleSensibleTests {
         let counter = new ValHolder(1);
         for (let category of categories) {
             console.log(`Category: ${category.name}`);
-            if (includeSlow || !scontains(category.type, 'slow')) {
+            if (includeSlow || !category.type.includes('slow')) {
                 await SimpleSensibleTests.runCategory(
                     category,
                     countTotal,
@@ -58,7 +58,7 @@ export class SimpleSensibleTests {
             mapSeen.set(tstname, true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
-            if (scontains(category.type, 'async')) {
+            if (category.type.includes('async')) {
                 await tstfn();
             } else {
                 tstfn();

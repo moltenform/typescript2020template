@@ -5,7 +5,7 @@
 /* auto */ import { Util512 } from './../util/benBaseUtils';
 
 import { toWords } from 'number-to-words';
-import type {Bowser} from '../../external/bowser/bowser';
+import type { Bowser } from '../../external/bowser/bowser';
 declare const bowser: typeof Bowser;
 
 function getTestString() {
@@ -54,7 +54,9 @@ export function runOnLoad() {
 
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
-        elBtnGoAsync.addEventListener('click', onBtnGoAsync);
+        elBtnGoAsync.addEventListener('click', () => {
+            onBtnGoAsync();
+        });
     }
 
     document.body.addEventListener('keydown', evt => {
