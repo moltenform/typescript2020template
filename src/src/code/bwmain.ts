@@ -4,10 +4,9 @@
 /* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512 } from './../util/benBaseUtils';
 
-///<reference path="./bowser.d.ts"/>
-declare const bowser: typeof Bowser;
-
 import { toWords } from 'number-to-words';
+import type {Bowser} from '../../external/bowser/bowser';
+declare const bowser: typeof Bowser;
 
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
