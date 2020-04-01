@@ -386,6 +386,9 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
     }
 }
 
+/**
+ * this will not exist at runtime, the string is rewritten
+ */
 declare const WEBPACK_PRODUCTION: boolean;
 
 /**
@@ -394,7 +397,7 @@ declare const WEBPACK_PRODUCTION: boolean;
 export function checkIsProductionBuild(): boolean {
     let ret = false;
     try {
-        // when webpack builds this file it will replace the symbol
+        // when webpack builds this file it will replace the string
         // with `true` or `false`
         ret = WEBPACK_PRODUCTION;
     } catch {

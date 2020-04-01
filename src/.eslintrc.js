@@ -69,6 +69,7 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/prefer-regexp-exec': 'off',
+        '@typescript-eslint/promise-function-async': 'off',
 
         // we want let s1 || 'default' to be an error, s1 ?? 'default' is better
         // should I enable strict-boolean-expressions to detect this? 
@@ -124,7 +125,6 @@ module.exports = {
         '@typescript-eslint/no-implied-eval': 'warn',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         '@typescript-eslint/no-throw-literal': 'warn',
-        '@typescript-eslint/promise-function-async': 'warn',
         '@typescript-eslint/require-array-sort-compare': 'warn',
 
         // checks locals, not fn params.

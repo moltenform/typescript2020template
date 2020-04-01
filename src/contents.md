@@ -54,7 +54,7 @@
     - make sure `layers.cfg` up to date, then
     - run `npm run autoimportmodules`
 - code knows if built as release or not
-    - use `checkIsRelease()`
+    - use `checkIsProductionBuild()`
 - code coverage
     - build development, open the site in chrome
     - press F12 for devtools, Sources tab
