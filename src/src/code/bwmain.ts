@@ -57,7 +57,7 @@ export function runOnLoad() {
         elBtnGoAsync.addEventListener('click', () => {
             onBtnGoAsync().then(
                 () => {},
-                () => {},
+                () => {}
             );
         });
     }
@@ -66,7 +66,7 @@ export function runOnLoad() {
         if (evt.code === 'KeyT' && evt.altKey) {
             SimpleUtil512Tests.runTests(true).then(
                 () => {},
-                () => {},
+                () => {}
             );
         }
     });

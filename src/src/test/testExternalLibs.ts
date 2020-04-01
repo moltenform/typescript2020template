@@ -12,7 +12,7 @@ export let testCollectionExternalLibs = t;
 t.test('testCsvLib', () => {
     let encoded = csv.encode([
         { prop1: 'v1', prop2: 'v2' },
-        { prop1: 'v1b', prop2: 'v2b' },
+        { prop1: 'v1b', prop2: 'v2b' }
     ]);
     let lines = encoded.split('\n');
     assertEq(3, lines.length, 'Oq|');
@@ -28,7 +28,7 @@ t.test('testSimpleSerialize', () => {
     let gotJson = JSON.parse(oAsString);
     let oFromString = deserialize<ClassTestSimpleSerialization>(
         ClassTestSimpleSerialization,
-        gotJson,
+        gotJson
     );
     assertTrue(oFromString instanceof ClassTestSimpleSerialization, 'Om|');
     assertEq('id1001', oFromString.id, 'Ol|');
@@ -49,7 +49,7 @@ t.test('testClassSerialization', () => {
         `p=jim,h=[hid=1,hnm=left,hol=a|b,o=dn,f=[id=1nm=[fl1],
         id=2nm=[fl2],id=3nm=[fl3]],hid=1,hnm=right,hol=,o=up,f=[id=11nm=[fr1],
         id=12nm=[fr2],id=13nm=[fr3]]]`,
-        '',
+        ''
     );
     assertEq(expectedS, person.asString(), 'Oi|');
 
@@ -137,7 +137,7 @@ t.test('keepOnlyUnique', () => {
     assertEq(
         ['11', '12', '13', '14', '15'],
         Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
-        'OB|',
+        'OB|'
     );
 });
 

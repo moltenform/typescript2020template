@@ -2,12 +2,12 @@
 /* auto */ import { AsyncVoidFn } from './../util/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher, } from './testUtil512Higher';
+/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs, } from './testExternalLibs';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
@@ -20,7 +20,7 @@ export class SimpleUtil512Tests {
             testCollectionUtil512,
             testCollectionUtil512Class,
             testCollectionUtil512LessUsefulLibs,
-            testCollectionUtil512Higher,
+            testCollectionUtil512Higher
         ];
 
         let mapSeen = new Map<string, boolean>();
@@ -34,7 +34,7 @@ export class SimpleUtil512Tests {
                     coll,
                     countTotal,
                     counter,
-                    mapSeen,
+                    mapSeen
                 );
             }
         }
@@ -47,7 +47,7 @@ export class SimpleUtil512Tests {
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
-        mapSeen: Map<string, boolean>,
+        mapSeen: Map<string, boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         let tests = coll.async ? coll.atests : coll.tests;

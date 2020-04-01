@@ -44,7 +44,7 @@ export class Util512Higher {
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,
-            'O(|getRandIntInclusiveStrong too wide range',
+            'O(|getRandIntInclusiveStrong too wide range'
         );
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
@@ -118,7 +118,7 @@ export class Util512Higher {
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
-        callbackOnErr?: () => void,
+        callbackOnErr?: () => void
     ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
@@ -166,7 +166,7 @@ export class Util512Higher {
 
                     resolve(parsed);
                 },
-                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`)),
+                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`))
             );
         });
     }
@@ -300,7 +300,7 @@ export enum CharClass {
     Space,
     NewLine,
     Word,
-    Punctuation,
+    Punctuation
 }
 
 /**
@@ -366,7 +366,7 @@ export class GetCharClass {
         n: number,
         isLeft: boolean,
         isUntilWord: boolean,
-        includeTrailingSpace: boolean,
+        includeTrailingSpace: boolean
     ) {
         if (len === 0) {
             return n;

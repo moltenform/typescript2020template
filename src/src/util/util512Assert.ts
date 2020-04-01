@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './util512Productname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -13,7 +13,7 @@ function makeUI512ErrorGeneric(
     prefix: string,
     s1?: unknown,
     s2?: unknown,
-    s3?: unknown,
+    s3?: unknown
 ) {
     let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
@@ -58,7 +58,7 @@ export function assertTrue(
     condition: unknown,
     s1: string,
     s2?: unknown,
-    s3?: unknown,
+    s3?: unknown
 ): asserts condition {
     if (!condition) {
         throw makeUI512Error('O#|assertion failed in assertTrue.', s1, s2, s3);
@@ -72,14 +72,14 @@ export function assertTrueWarn(
     condition: unknown,
     s1: string,
     s2?: unknown,
-    s3?: unknown,
+    s3?: unknown
 ) {
     if (!condition) {
         let er = makeUI512Error(
             'O!|warning, assertion failed in assertTrueWarn.',
             s1,
             s2,
-            s3,
+            s3
         );
         if (!window.confirm('continue?')) {
             throw er;
@@ -94,7 +94,7 @@ export function checkThrowUI512(
     condition: unknown,
     msg: string,
     s1: unknown = '',
-    s2: unknown = '',
+    s2: unknown = ''
 ): asserts condition {
     if (!condition) {
         throw makeUI512Error(`O |${msg} ${s1} ${s2}`);
@@ -108,7 +108,7 @@ export function throwIfUndefined<T>(
     v: O<T>,
     s1: string,
     s2: unknown = '',
-    s3: unknown = '',
+    s3: unknown = ''
 ): T {
     if (v === undefined || v === null) {
         let msgInThrowIfUndefined = 'not defined';
@@ -325,7 +325,7 @@ export function joinIntoMessage(
     prefix: string,
     s1?: unknown,
     s2?: unknown,
-    s3?: unknown,
+    s3?: unknown
 ) {
     let markers: string[] = [];
     c0 = findMarkers(c0, markers) ?? '';
