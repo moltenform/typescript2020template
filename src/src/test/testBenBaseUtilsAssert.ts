@@ -1,9 +1,9 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
 /* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
+let t = new SimpleUtil512TestCategory('testBenBaseUtilsAssert');
 export let testBenBaseUtilsAssert = t;
 
 t.test('AssertThrows', () => {

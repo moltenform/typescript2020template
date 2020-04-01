@@ -1,10 +1,10 @@
 
-/* auto */ import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { SimpleUtil512TestCategory } from './testUtils';
 /* auto */ import { Util512Higher, sleep } from './../util/benBaseUtilsHigher';
 /* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtilsHigher');
+let t = new SimpleUtil512TestCategory('testBenBaseUtilsHigher');
 export let testBenBaseUtilsHigher = t;
 
 t.test('WeakUuid', () => {
@@ -44,7 +44,7 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleSensibleTestCategory('testExampleAsyncTests', true);
+t = new SimpleUtil512TestCategory('testExampleAsyncTests', true);
 export let testExampleAsyncTests = t;
 
 /* ok to disable warning, we're intentionally only synchronous here */

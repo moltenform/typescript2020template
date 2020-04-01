@@ -352,7 +352,7 @@ export class Util512 {
         // 1) decorate
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
         // 2) sort
-        decorated.sort((a, b) => sensibleSort(a[0], b[0]));
+        decorated.sort((a, b) => util512Sort(a[0], b[0]));
         // 3) undecorate
         return decorated.map(val => val[1]);
     }
@@ -628,7 +628,7 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * works on arbitrarily nested array structures.
  * can be used in .sort() or just to compare values.
  */
-export function sensibleSort(a: unknown, b: unknown): number {
+export function util512Sort(a: unknown, b: unknown): number {
     if (a === undefined && b === undefined) {
         return 0;
     } else if (a === null && b === null) {
@@ -648,7 +648,7 @@ export function sensibleSort(a: unknown, b: unknown): number {
         }
         let howManyElementsToSort = a.length;
         for (let i = 0; i < howManyElementsToSort; i++) {
-            let cmp = sensibleSort(a[i], b[i]);
+            let cmp = util512Sort(a[i], b[i]);
             if (cmp !== 0) {
                 return cmp;
             }
@@ -824,7 +824,7 @@ export function checkThrowEq<T>(
     c1: unknown = '',
     c2: unknown = '',
 ): asserts got is T {
-    if (sensibleSort(expected, got) !== 0) {
+    if (util512Sort(expected, got) !== 0) {
         throw makeUI512Error(
             `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
         );
@@ -842,7 +842,7 @@ export function assertEq(
     c2?: unknown,
     c3?: unknown,
 ) {
-    if (sensibleSort(expected, received) !== 0) {
+    if (util512Sort(expected, received) !== 0) {
         let msgAssertEq = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
         throw makeUI512Error(msgAssertEq, c1, c2, c3);
@@ -860,7 +860,7 @@ export function assertEqWarn(
     c2?: unknown,
     c3?: unknown,
 ) {
-    if (sensibleSort(expected, received) !== 0) {
+    if (util512Sort(expected, received) !== 0) {
         let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,
             expected '${expected}' but got '${received}'.`);
         let er = makeUI512Error(msgInAssertEqWarn, c1, c2, c3);

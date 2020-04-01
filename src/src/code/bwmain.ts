@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTests } from './../test/testTop';
+/* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 /* auto */ import { sleep } from './../util/benBaseUtilsHigher';
 /* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512 } from './../util/benBaseUtils';
@@ -17,7 +17,6 @@ function getTestString() {
 }
 
 export function setOutputToTestString() {
-    let a = 4;
     let el = document.getElementById('output');
     if (el) {
         el.innerHTML = getTestString();
@@ -65,7 +64,7 @@ export function runOnLoad() {
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            SimpleSensibleTests.runTests(true).then(
+            SimpleUtil512Tests.runTests(true).then(
                 () => {},
                 () => {},
             );

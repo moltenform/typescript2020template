@@ -1,5 +1,5 @@
 
-/* auto */ import { SimpleSensibleTestCategory, notifyUserIfDebuggerIsSetToAllExceptions, AVoidFn, VoidFn, } from './testUtils';
+/* auto */ import { AVoidFn, SimpleUtil512TestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
 /* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './testExternalLibs';
 /* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
 /* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
@@ -8,7 +8,7 @@
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
 
-export class SimpleSensibleTests {
+export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
         UI512ErrorHandling.runningTests = true;
@@ -29,7 +29,7 @@ export class SimpleSensibleTests {
         for (let category of categories) {
             console.log(`Category: ${category.name}`);
             if (includeSlow || !category.slow) {
-                await SimpleSensibleTests.runCategory(
+                await SimpleUtil512Tests.runCategory(
                     category,
                     countTotal,
                     counter,
@@ -43,7 +43,7 @@ export class SimpleSensibleTests {
     }
 
     static async runCategory(
-        category: SimpleSensibleTestCategory,
+        category: SimpleUtil512TestCategory,
         countTotal: number,
         counter: ValHolder<number>,
         mapSeen: Map<string, boolean>,

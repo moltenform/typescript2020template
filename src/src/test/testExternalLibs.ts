@@ -1,12 +1,12 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
 /* auto */ import { O, assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq, longstr } from './../util/benBaseUtils';
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
 
-let t = new SimpleSensibleTestCategory('testExternalLibs');
+let t = new SimpleUtil512TestCategory('testExternalLibs');
 export let testExternalLibs = t;
 
 t.test('testCsvLib', () => {
@@ -101,7 +101,7 @@ t.test('testClassSerializationWithNulls', () => {
     assertTrue(got.holding[2] === 'c', 'OT|');
 });
 
-t = new SimpleSensibleTestCategory('testsBenBaseLessUsefulLibs');
+t = new SimpleUtil512TestCategory('testsBenBaseLessUsefulLibs');
 export let testBenBaseLessUsefulLibs = t;
 
 t.test('LockableArr', () => {

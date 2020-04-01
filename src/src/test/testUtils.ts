@@ -1,6 +1,6 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/benBaseUtilsAssert';
-/* auto */ import { sensibleSort } from './../util/benBaseUtils';
+/* auto */ import { util512Sort } from './../util/benBaseUtils';
 
 /**
  * assert that an exception is thrown, with a certain message
@@ -55,7 +55,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
  */
 export function sorted(ar: any[]) {
     let arCopy = ar.slice();
-    arCopy.sort(sensibleSort);
+    arCopy.sort(util512Sort);
     return arCopy;
 }
 
@@ -74,8 +74,8 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export type VoidFn = () => void;
 export type AVoidFn = () => Promise<void>;
 
-export class SimpleSensibleTestCategory {
-    constructor(public name: string, public async=false, public slow=false) {}
+export class SimpleUtil512TestCategory {
+    constructor(public name: string, public async = false, public slow = false) {}
     tests: [string, VoidFn][] = [];
     atests: [string, AVoidFn][] = [];
     _context = '';
