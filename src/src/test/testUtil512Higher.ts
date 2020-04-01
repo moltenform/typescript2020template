@@ -2,9 +2,9 @@
 /* auto */ import { Util512Higher, sleep } from './../util/util512Higher';
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCategory } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection } from './testUtils';
 
-let t = new SimpleUtil512TestCategory('testCollectionUtil512Higher');
+let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
 export let testCollectionUtil512Higher = t;
 
 t.test('WeakUuid', () => {
@@ -44,7 +44,7 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleUtil512TestCategory('testCollectionExampleAsyncTests', true);
+t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests', true);
 export let testCollectionExampleAsyncTests = t;
 
 /* ok to disable warning, we're intentionally only synchronous here */

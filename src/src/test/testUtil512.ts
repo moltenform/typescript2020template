@@ -1,9 +1,9 @@
 
 /* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../util/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort, } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, } from './testUtils';
 
-let t = new SimpleUtil512TestCategory('testCollectionUtil512');
+let t = new SimpleUtil512TestCollection('testCollectionUtil512');
 export let testCollectionUtil512 = t;
 
 t.test('ValHolder.param', () => {

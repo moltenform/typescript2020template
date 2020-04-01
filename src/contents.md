@@ -37,7 +37,7 @@
         - better warnings about using `||` instead of `??`, and long lines in strings/comments 
         - to run it, `npm run prettierexceptlongimports`
 - my utilities classes are included
-    - `benBaseUtils`, along with full unit tests
+    - `util512 utils`, along with full unit tests
     - and a simple unit test framework
 - `sass`
     - decided to run sass separately, not with webpack's sass-loader

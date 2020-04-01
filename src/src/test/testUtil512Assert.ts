@@ -1,9 +1,9 @@
 
 /* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/util512Assert';
 /* auto */ import { assertEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
 
-let t = new SimpleUtil512TestCategory('testCollectionUtil512Assert');
+let t = new SimpleUtil512TestCollection('testCollectionUtil512Assert');
 export let testCollectionUtil512Assert = t;
 
 t.test('AssertThrows', () => {

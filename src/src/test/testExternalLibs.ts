@@ -1,12 +1,12 @@
 
 /* auto */ import { O, assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq, longstr } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
 
-let t = new SimpleUtil512TestCategory('testCollectionExternalLibs');
+let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 
 t.test('testCsvLib', () => {
@@ -101,7 +101,7 @@ t.test('testClassSerializationWithNulls', () => {
     assertTrue(got.holding[2] === 'c', 'OT|');
 });
 
-t = new SimpleUtil512TestCategory('testCollectionUtil512LessUsefulLibs');
+t = new SimpleUtil512TestCollection('testCollectionUtil512LessUsefulLibs');
 export let testCollectionUtil512LessUsefulLibs = t;
 
 t.test('LockableArr', () => {

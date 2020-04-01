@@ -1,9 +1,9 @@
 
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, } from './testUtils';
 
-let t = new SimpleUtil512TestCategory('testCollectionUtil512Class');
+let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;
 
 t.test('isValidNumber', () => {
