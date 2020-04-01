@@ -12,18 +12,19 @@ module.exports = {
     plugins: [
         '@typescript-eslint',
         'ban',
-        // 'prettier' commented as we don't want to run performance hog prettier through eslint as it's slow
+        // not 'prettier', we don't run prettier through eslint as it's slow
+        // to run prettier, instead run `npm run prettierexceptlongimports`
     ],
     env: {
         browser: true,
         jest: true
     },
     extends: [
+        'eslint:recommended',
         'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-        'prettier/@typescript-eslint', // Uses eslint-config-prettier to disable ESLint rules from 
-        // the @typescript-eslint/eslint-plugin that would conflict with prettier
-        // 'plugin:prettier/recommended' // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. 
-        // Make sure this is always the last configuration in the extends array.
+        'plugin:@typescript-eslint/recommended-requiring-type-checking', // You need both to actually get the defaults
+        'prettier/@typescript-eslint', // Disable ESLint rules if their redundant with a prettier error 
+        // 'plugin:prettier/recommended' // Displays prettier errors as ESLint errors. (must be last)
     ],
     parserOptions: {
         project: path.resolve(__dirname, './tsconfig.json'),
