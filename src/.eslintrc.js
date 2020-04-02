@@ -56,6 +56,7 @@ module.exports = {
         'no-debugger': 'off',
         'no-constant-condition': 'off',
         'prefer-const': 'off',
+        'prefer-destructuring': 'off',
 
         // typescript, ones that I think are fine
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -112,12 +113,13 @@ module.exports = {
         'no-unused-expressions': 'warn',
         'wrap-iife': 'warn',
         'no-array-constructor': 'warn',
-        'no-mixed-operators': 'warn',
         'no-multi-assign': 'warn',
         'no-tabs': 'warn',
         'no-var': 'warn',
-        'prefer-destructuring': 'warn',
         'prefer-rest-params': 'warn',
+
+        // unfortunately incompatible with prettier, see .prettier.js for more
+        'no-mixed-operators': 'off',
 
         // went through all non-default ts ones, chose to turn these on
         '@typescript-eslint/no-extra-non-null-assertion': 'warn',
