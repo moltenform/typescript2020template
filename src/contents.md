@@ -23,8 +23,9 @@
         - automatically removes unused imports
         - to run it, `npm run autoimportmodules`.  
 - integration with vscode
-    - hit Ctrl-Shift-B to run commands like lint, prettier, or autoimportmodules
+    - hit Ctrl-Shift-B to run commands like lint, prettier, and autoimportmodules
     - line numbers in the output are clickable links
+    - there's also integration with the SciTE code editor; edit a .ts file and press F5
 - development builds with `npm start` will watch+auto recompiles when source changes
 - es-lint is included and working
 - no need for grunt/gulp, just use the scripts referenced in `package.json`
