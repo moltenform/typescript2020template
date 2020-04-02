@@ -149,7 +149,7 @@ export class Util512Higher {
      * download json asynchronously, and return parsed js object.
      * chose to use an old-style Promise rather than async
      */
-    /* eslint-disable @typescript-eslint/promise-function-async */
+    /* eslint-disable-next-line @typescript-eslint/promise-function-async */
     static asyncBeginLoadJson(url: string): Promise<AnyJson> {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();

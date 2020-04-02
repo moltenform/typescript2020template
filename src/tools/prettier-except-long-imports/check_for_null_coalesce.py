@@ -48,13 +48,13 @@ def shouldWarnArraysThisLine(line):
 def checkText(f, lines):
     for i, line in enumerate(lines):
         if shouldWarnThisLine(line):
-            # for example, /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+            # for example, /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */
             if i > 0 and 'prefer-nullish-coalescing' in lines[i-1]:
                 pass # ok, ignored
             else:
                 trace(f'in file "{f}"\non line {i+1}:')
                 trace(f'saw a || in a context that looks like nullish-coalescing')
-                trace(f'please use ?? instead or put /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */')
+                trace(f'please use ?? instead or put /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */')
                 trace(f'on the prior line to silence this warning')
                 warn('')
         if shouldWarnArraysThisLine(line):
