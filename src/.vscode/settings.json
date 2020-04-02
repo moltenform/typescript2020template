@@ -7,8 +7,8 @@
         "**/.git": true,         
         "**/.DS_Store": true,    
         "**/node_modules": true, 
-        "**/dist": true, 
-        "**/external": true, 
+        "dist": true, 
+        "external": true, 
         "**/nocpy*": true,
     }
 }

@@ -1,43 +1,58 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
     // for the documentation about the tasks.json format
-    // hit ctrl-shift-b to show these
-    // nevermind the problem matcher, just ctrl-click the error message to be taken there
+
+    // Note: to get the $gcc problem matcher you should install the
+    // c/c++ vscode extension
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "autoimportmodules",
-            "type": "shell",
-            "command": "npm run autoimportmodules",
-            "windows": {
-                "command": "C:\\data\\e5\\unzipped\\software\\Coding\\node-v12.16.1-win-x64\\npm run autoimportmodules"
-            },
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "options": {
-                "cwd": "${workspaceRoot}"
-            },
-            "problemMatcher": []
+            "type": "npm",
+            "script": "build",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
         },
         {
-            "label": "prettierexceptlongimports",
-            "type": "shell",
-            "command": "npm run prettierexceptlongimports",
-            "windows": {
-                "command": "C:\\data\\e5\\unzipped\\software\\Coding\\node-v12.16.1-win-x64\\npm run prettierexceptlongimports"
-            },
-            "group": "build",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "options": {
-                "cwd": "${workspaceRoot}"
-            },
-            "problemMatcher": []
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "problemMatcher": [
+                "$eslint-stylish"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "autoimportmodules",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "prettierexceptlongimports",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "addassertmarkers",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         },
     ]
-  }
+}

@@ -6,16 +6,14 @@ import os
 import sys
 import re
 from collections import OrderedDict
-
-sys.path.append('bn_python_common.zip')
-from bn_python_common import *
+from ts_parsing import *
 
 def readLayersFile(dir):
     ret = None
     for f, short in files.recursefiles(dir):
         if short == 'layers.cfg':
             if ret:
-                trace('warning: more than one layers.cfg seen.')
+                assertTrueMsg(False, 'more than one layers.cfg seen.', file=f)
             ret = parseLayersFile(f, dir)
     if not ret:
         warn('no layers.cfg file seen.')
@@ -33,9 +31,11 @@ def parseLayersFile(f, root):
     def processLineFile(short):
         fullpath = files.join(root, state.currentDir, short)
         if not files.exists(fullpath):
+            showWarningGccStyle(f, 1, 'file not found')
             warn('file not found:', fullpath, short)
         
         if short.lower() in filenamesReferencedInLayers:
+            showWarningGccStyle(f, 1, 'filename seen twice')
             warn('filename seen twice:', short)
         filenamesReferencedInLayers[short.lower()] = 1
         
@@ -52,10 +52,11 @@ def parseLayersFile(f, root):
                 elif line.startswith('/'):
                     processLineDir(line)
                 else:
+                    showWarningGccStyle(f, 1, 'wrong line syntax')
                     warn('in layers.cfg, each line should start with / (a dir) or end with .ts (a file)', line)
     
     layers.sort(key=lambda o:o[1], reverse=True)
-    return layers, filesReferencedInLayers, filenamesReferencedInLayers
+    return layers, filesReferencedInLayers, filenamesReferencedInLayers, f
 
 def confirmNoDuplicateFilenames(dir):
     filenamesSeen = {}
@@ -65,10 +66,11 @@ def confirmNoDuplicateFilenames(dir):
                 warn('duplicate filename:', f, filenamesSeen[short.lower()])
             filenamesSeen[short.lower()] = f
 
-def confirmLayersIncludesFiles(dir, filenamesReferencedInLayers):
+def confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers):
     for f, short in files.recursefiles(dir, allowedexts=['ts']):
         if not short.endswith('.d.ts'):
             if short.lower() not in filenamesReferencedInLayers:
+                showWarningGccStyle(layersCfg, 1, 'not seen in layers.cfg')
                 warn('exists on disk but not in layers.cfg?', f)
 
 def removeListDuplicates(lst):

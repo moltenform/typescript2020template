@@ -37,11 +37,19 @@ def simpleStripMultilineComments(text, open, close):
         cls += fnd + len(close)
         text = text[0: fnd] + text[cls:]
 
-def assertTrueMsg(condition, *messageArgs):
+def assertTrueMsg(condition, *messageArgs, file=None, linenum=1):
     if not condition:
+        if file:
+            showWarningGccStyle(file, linenum, *messageArgs)
         s = ' '.join(map(getPrintable, messageArgs)) if messageArgs else ''
         alert('Could not continue. ' + s)
         raise AssertionError(s)
+
+def showWarningGccStyle(file, linenum, *messageArgs):
+    # trace a gcc-style warning,
+    # this way SciTE or vscode will make a clickable link.
+    s = ' '.join(map(getPrintable, messageArgs)) if messageArgs else 'unknown warning'
+    trace(f'{file}:{linenum}:1 warning: {s}')
 
 def tests():
     testinput = '''abc, def, ghi, v1'''

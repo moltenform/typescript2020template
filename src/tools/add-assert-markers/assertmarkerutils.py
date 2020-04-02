@@ -1,7 +1,7 @@
 
 from base90 import *
 
-def parseArguments(s, begin):
+def parseArguments(s, begin, f=None):
     # ` until `, ' until ', " until "
     lvl = 0
     arlvl = 0
@@ -49,8 +49,8 @@ def parseArguments(s, begin):
     
     args = [arg.replace('$$$tmp_escaped_backslash_dblquote$$$', '\\"' ).replace('$$$tmp_escaped_backslash_singlequote$$$', "\\'").replace('$$$tmp_backslash_backslash$$$', "\\\\")
         for arg in args]
-    assertTrue('(' in args[0])
-    assertTrue(args[-1].endswith(')'))
+    assertTrueMsg('(' in args[0], file=f)
+    assertTrueMsg(args[-1].endswith(')'), file=f)
     prefix = args[0].split('(', 1)[0] + '('
     suffix = args[-1][-1]
     args[0] = args[0].split('(', 1)[1]

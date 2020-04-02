@@ -21,7 +21,10 @@
         - doesn't rely on vscode
         - makes all the changes at once so it's very useful after moving code from one file to another
         - automatically removes unused imports
-        - to run it, `npm run autoimportmodules` or hit Ctrl-Shift-B in vscode.  
+        - to run it, `npm run autoimportmodules`.  
+- integration with vscode
+    - hit Ctrl-Shift-B to run commands like lint, prettier, or autoimportmodules
+    - line numbers in the output are clickable links
 - development builds with `npm start` will watch+auto recompiles when source changes
 - es-lint is included and working
 - no need for grunt/gulp, just use the scripts referenced in `package.json`

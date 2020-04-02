@@ -2,6 +2,11 @@
 from base90 import *
 from assertmarkerutils import *
 
+# Ben Fisher, 2018
+# this script adds markers to asserts
+# it even works if there is a complex condition to be tested
+# and it works across multiple lines
+
 desiredArgIndex = {
     'makeUI512Error': 0,
     'assertTrue': 1,
@@ -77,19 +82,19 @@ def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
     # iterate the matches backwards so we can alter the string without altering indexes in the document
     matches.reverse()
     for posStart, which in matches:
-        prefix, args, suffix, totalLength = parseArguments(content, posStart)
+        prefix, args, suffix, totalLength = parseArguments(content, posStart, f)
         looksLike = prefix+','.join(args)+suffix
-        assertTrue(prefix.startswith(which + '('), 'wrong offset? ', looksLike)
-        needRepl = processOneCall(state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength)
+        assertTrueMsg(prefix.startswith(which + '('), 'wrong offset? ', looksLike, file=f)
+        needRepl = processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength)
         if needRepl:
             replWith = prefix+','.join(args)+suffix
             trace(f'\t{looksLike}\n\t{replWith}\n')
-            assertTrue(len(replWith) >= totalLength, 'making it shorter?')
+            assertTrueMsg(len(replWith) >= totalLength, 'making it shorter?', file=f)
             content = splice(content, posStart, totalLength, replWith)
     
     return content
 
-def processOneCall(state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength):
+def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength):
     reFindMarker = r'''^\s*("[^"][^"]|'[^'][^']|`[^`][^`])\|'''
     reFindQuote = r'''^\s*(["'`])'''
 
@@ -113,7 +118,7 @@ def processOneCall(state, content, looksLike, marksAleadySeen, posStart, which, 
                 else:
                     # duplicate or invalid marker
                     newmarker = genNewMarker(state)
-                    assertEq(2, len(newmarker))
+                    assertTrueMsg(2 == len(newmarker), len(newmarker), file=f)
                     marksAleadySeen[newmarker] = True
                     args[narg] = splice(args[narg], fndMarker.start(1)+1, 2, newmarker)
                     return True
@@ -122,12 +127,12 @@ def processOneCall(state, content, looksLike, marksAleadySeen, posStart, which, 
                 if narg >= wantIndex:
                     ind = fndQuote.start(1) + 1
                     newmarker = genNewMarker(state)
-                    assertEq(2, len(newmarker))
+                    assertTrueMsg(2 == len(newmarker), len(newmarker), file=f)
                     marksAleadySeen[newmarker] = True
                     args[narg] = splice(args[narg], ind, 0, newmarker + '|' )
                     return True
     # no string literals found at all
-    assertTrue(False, 'no string literals found', looksLike)
+    assertTrueMsg(False, 'no string literals found', looksLike, file=f)
 
 def genNewMarker(state):
     state.latestMarker += 1

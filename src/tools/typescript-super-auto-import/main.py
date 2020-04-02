@@ -13,8 +13,8 @@ useSingleQuotes = True
 def go(dir):
     assertTrueMsg(files.isdir(dir), 'directory not found', dir)
     confirmNoDuplicateFilenames(dir)
-    layers, filesReferencedInLayers, filenamesReferencedInLayers = readLayersFile(dir)
-    confirmLayersIncludesFiles(dir, filenamesReferencedInLayers)
+    layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(dir)
+    confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers)
     autoAddImports(dir, layers)
     enforceLayering(dir)
 
@@ -31,7 +31,7 @@ def autoAddImports(srcdirectory, layers):
             if symbol:
                 if symbol in mapSymbolNameToLayer:
                     prevFound = mapSymbolNameToLayer[symbol]
-                    assertTrueMsg(symbol == 'runTestsImpl', f'dupe symbol in both {prevFound[0]} and {layer[0]}', symbol)
+                    assertTrueMsg(symbol == 'runTestsImpl', f'dupe symbol in both {prevFound[0]} and {layer[0]}', symbol, file=layer[0])
                 mapSymbolNameToLayer[symbol] = layer
     
     # add the imports
@@ -81,7 +81,7 @@ def autoAddImports(srcdirectory, layers):
         if newLinesToAdd:
             linesOrigFile = getFileLines(layerfullpath, False)
             linesWithNoAuto = [line for line in linesOrigFile if not (line.startswith('/* auto */ import') and '{' in line )]
-            assertTrueMsg(linesWithNoAuto[0]=='', 'expected file to start with an empty line '+layer[0])
+            assertTrueMsg(linesWithNoAuto[0]=='', 'expected file to start with an empty line ', layer[0], file=layer[0])
             addNewLine = linesWithNoAuto[1]!=''
             if addNewLine:
                 newLinesToAdd.append('')
@@ -104,7 +104,7 @@ def countDirDepth(s):
 
 def enforceLayering(srcdirectory):
     print('running enforceLayering...')
-    layers, filesReferencedInLayers, filenamesReferencedInLayers = readLayersFile(srcdirectory)
+    layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(srcdirectory)
     for layer in layers:
         # read file
         basefilecontents = '\n'.join(getFileLines(layer[0], tryToStripComments))
@@ -115,13 +115,15 @@ def enforceLayering(srcdirectory):
             if jlayer[2] < disallowImportsFromGreaterThan:
                 # check that the current layer didn't import from this greaterthan one
                 disallowedfilename = re.escape(jlayer[1])
-                assertTrue(not disallowedfilename.endswith('.js') and not disallowedfilename.endswith('.ts'))
+                assertTrueMsg(not disallowedfilename.endswith('.js') and not disallowedfilename.endswith('.ts'), disallowedfilename)
                 
                 # disallow "example.js", allow "_example.js_"
                 if re.search(r'\b' + disallowedfilename + r'\.(ts|js)\b', basefilecontents) or \
                  re.search(r'\bfrom "[^"]*?' + disallowedfilename + r'"', basefilecontents) or \
                  re.search(r"\bfrom '[^']*?" + disallowedfilename + r"'", basefilecontents):
-                    warn(f'file {layer[0]} referred to a layer above it "{disallowedfilename}" ({jlayer[0]})')
+                    sErr = f'file {layer[0]} referred to a layer above it "{disallowedfilename}" ({jlayer[0]})'
+                    showWarningGccStyle(layer[0], 1, sErr)
+                    warn(sErr)
     print('layer check complete')
 
 

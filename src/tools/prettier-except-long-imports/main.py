@@ -26,8 +26,8 @@ def goPrettierAll(srcdirectory):
 
 def goPrettier(srcdirectory, f):
     # first, run prettier
-    assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath)
-    assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg)
+    assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath, file=f)
+    assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg, file=f)
     args = ['node', prettierPath, '--config', prettierCfg, '--write', f]
     files.run(args)
 

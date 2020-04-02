@@ -62,10 +62,8 @@ def checkText(srcdirectory, f, lines):
                 return
             if len(line) > currentPrintWidth.val:
                 if not 'import { ' in line:
-                    trace(f'in file "{f}"\non line {i}:')
-                    trace(f'length of line is {len(line)}')
-                    trace(f'which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
                     trace(f'silence by putting /* check_long_lines_silence_subsequent */ earlier in the file')
+                    showWarningGccStyle(f, i, f'length of line is {len(line)} which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
                     warn('')
 
 def tests():
