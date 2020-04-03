@@ -65,9 +65,12 @@ def checkTestsReferenced():
     
     assertTrueMsg(len(state.needToReference), "new SimpleUtil512TestCollection(' never seen?")
     assertTrueMsg(len(state.wereReferenced), "testTop.ts not seen?")
-    expected = ',\n'.join(sorted(state.needToReference.keys()))
-    got = ',\n'.join(sorted(state.wereReferenced.keys()))
-    assertTrueMsg(expected == got, f'expected \n\n{expected}\n\n but got \n\n{got}\n\n', file=state.pathTop)
+    setExpected = set(state.needToReference.keys())
+    setGot = set(state.wereReferenced.keys())
+    gotAndNotExpected = '\n'.join(setGot - setExpected)
+    expectedAndNotGot = '\n'.join(setExpected - setGot)
+    assertTrueMsg(not gotAndNotExpected, f'not sure where these collections originated: {gotAndNotExpected}', file=state.pathTop)
+    assertTrueMsg(not expectedAndNotGot, f'please add these collections to the list: {expectedAndNotGot}', file=state.pathTop)
 
 def tests():
     assertEq('testCollectionMyFile', getCollNameFromPath('./src/abc/testMyFile.ts'))

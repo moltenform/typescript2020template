@@ -8,17 +8,17 @@ from ts_parsing import *
 
 # extensionInImportStatement = '.ts'
 extensionInImportStatement = ''
-useSingleQuotes = True
 
 def go(dir):
     assertTrueMsg(files.isdir(dir), 'directory not found', dir)
+    useSingleQuotes = checkSingleQuotes(dir)
     confirmNoDuplicateFilenames(dir)
     layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(dir)
     confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers)
-    autoAddImports(dir, layers)
+    autoAddImports(dir, layers, useSingleQuotes)
     enforceLayering(dir)
 
-def autoAddImports(srcdirectory, layers):
+def autoAddImports(srcdirectory, layers, useSingleQuotes):
     mapSymbolNameToLayer = {}
     
     # get a map of symbol to filename where exported from
@@ -101,6 +101,27 @@ def getImportFromFile(srcdirectory, layerfullpath, srcfilename):
     
 def countDirDepth(s):
     return len(s.replace('\\', '/').split('/')) - 1
+
+def checkSingleQuotes(dir):
+    cfg = files.join(dir, '.prettierrc.js')
+    if not files.exists(cfg):
+        cfg = files.join(dir, '..', '.prettierrc.js')
+    if not files.exists(cfg):
+        cfg = files.join(dir, '..', '..', '.prettierrc.js')
+    if not files.exists(cfg):
+        warn('could not find .prettierrc.js, assuming single quotes')
+        return True
+    
+    content = ''.join(getFileLines(cfg, True))
+    if 'singleQuote:true' in content.replace(' ', ''):
+        return True
+    elif 'singleQuote:false' in content.replace(' ', ''):
+        trace('super-auto-import supports single quotes, but most other scripts here do not.')
+        trace("it'd be a good idea to audit all the scripts here and then remove this warning")
+        warn('')
+        return False
+    else:
+        assertTrueMsg(False, 'could not find singleQuote:true in cfg', file=cfg)
 
 def enforceLayering(srcdirectory):
     print('running enforceLayering...')

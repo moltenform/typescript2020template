@@ -46,11 +46,12 @@ def goPrettier(srcdirectory, f):
     linesOrig = list(lines)
     addFinalLineAndRemoveRightWhitespace(lines)
     check_tests_referenced.checkText(f, lines)
+    check_for_long_lines.checkTestNamesTooLong(srcdirectory, f, lines)
+    check_for_long_lines.checkText(srcdirectory, f, lines)
     if linesOrig != lines:
         files.writeall(f, '\n'.join(lines), encoding='utf-8')
     
     # check for disallowed calls
-    check_for_long_lines.checkText(srcdirectory, f, lines)
     check_for_null_coalesce.checkText(f, lines)
 
 if __name__ == '__main__':
