@@ -49,7 +49,7 @@ def getNeedToReference(f, lines):
             nextLine = lines[i+1]
             assertTrueMsg(nextLine.startswith(expected), f'did not start with {expected}', file=f, linenum=i+1)
 
-def autoHelpSetTestName(f, lines):
+def autoHelpSetTestCollectionName(f, lines):
     assertTrue(isinstance(f, str))
     assertTrue(isinstance(lines, list))
     for i in range(len(lines)):
@@ -65,9 +65,9 @@ def autoHelpSetTestName(f, lines):
 
 def getCollNameFromPath(f):
     nameWithNoExt = files.splitext(files.getname(f))[0]
-    return 'testCollection' + nameWithNoExt.replace('test', '')
+    return 'testCollection' + nameWithNoExt.replace('test', '').replace('Test', '')
 
-def checkTestsReferenced():
+def checkTestCollectionsReferenced():
     if state.alteredFile:
         alert('skipping tests check because we modified a file, please run the script again')
         return

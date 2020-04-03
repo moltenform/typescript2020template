@@ -27,13 +27,25 @@ def go(srcdirectory):
     goPrettierAll(srcdirectory, prettierPath, prettierCfg)
 
 def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
+    # we used to run prettier individually for each file,
+    # but it is a lot faster to run prettier in batch for all files at once.
+    # if you need to skip prettier, add a comment in the file or make a .prettierignore file.
+    trace('running prettier...')
+    assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath)
+    assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg)
+    assertTrueMsg(not srcdirectory.endswith('/'))
+    assertTrueMsg(not srcdirectory.endswith('\\'))
+    args = ['node', prettierPath, '--config', prettierCfg, '--write', srcdirectory.replace('\\', '/') + '/**/*.ts']
+    files.run(args)
+    
+    # do other checks per file
     for f, short in files.recursefiles(srcdirectory):
         f = f.replace('\\', '/')
-        if short.endswith('.ts') and not short.endswith('.d.ts'):
+        if short.endswith('.ts'):
             trace(f)
             goPerFile(srcdirectory, f, prettierPath, prettierCfg)
     
-    check_tests_referenced.checkTestsReferenced()
+    check_tests_referenced.checkTestCollectionsReferenced()
 
 def goPerFile(srcdirectory, f, prettierPath, prettierCfg):
     # first do operations that potentially change file contents
@@ -44,13 +56,7 @@ def goPerFile(srcdirectory, f, prettierPath, prettierCfg):
     doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierCfg)
 
 def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
-    # run prettier
-    assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath, file=f)
-    assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg, file=f)
-    args = ['node', prettierPath, '--config', prettierCfg, '--write', f]
-    files.run(args)
-
-    # then, put long import statements on one line
+    # put long import statements on one line
     # we don't want the import to spill across multiple lines.
     # could maybe do this by passing a range-start to prettier, but let's write it ourselves.
     if doPlaceImportsOnOneLine:
@@ -65,9 +71,9 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
     linesOrig = list(lines)
     addFinalLineAndRemoveRightWhitespace(lines)
     
-    help_fix_long_lines.autoHelpNamesTooLong(f, lines)
+    help_fix_long_lines.autoHelpIfTestNamesTooLong(f, lines)
     help_fix_long_lines.autoHelpLongLines(f, lines, prettierCfg)
-    check_tests_referenced.autoHelpSetTestName(f, lines)
+    check_tests_referenced.autoHelpSetTestCollectionName(f, lines)
     if linesOrig != lines:
         files.writeall(f, '\n'.join(lines), encoding='utf-8')
     return lines

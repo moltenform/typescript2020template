@@ -27,7 +27,7 @@ def isNameTooLongHelpRepair(s):
         return f"t.{found.group(1)}('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`{found.group(2)}`)),"
     return None
     
-def autoHelpNamesTooLong(f, lines):
+def autoHelpIfTestNamesTooLong(f, lines):
     assertTrue(isinstance(f, str))
     assertTrue(isinstance(lines, list))
     def getLineOrEmpty(i):
@@ -57,8 +57,9 @@ def autoHelpLongLines(f, lines, prettierCfg):
             if '/* check_long_lines_silence_subsequent */' in line:
                 return
             elif isLineTooLong(lines, i):
+                prevLine = lines[i-1] if i>0 else ''
                 helpRepaired = isOneLongStringHelpRepair(line)
-                if helpRepaired:
+                if helpRepaired and 'longstr(' not in line and 'longstr(' not in prevLine:
                     trace('automatically inserting a longstr to help you.')
                     lines[i] = helpRepaired
 
