@@ -37,7 +37,8 @@ def shouldWarnThisLine(line):
         # negative lookahead
         if re.search(r'\|\| (?!bool)' , withoutComments):
             if not withoutComments.startswith('assert'):
-                return True
+                if not withoutComments.startswith('checkThrow'):
+                    return True
 
 def shouldWarnArraysThisLine(line):
     # let ar = []; silently gives you an array of type any!
