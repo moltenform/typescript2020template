@@ -7,7 +7,7 @@ import re
 
 def isOneLongString(s):
     # is it all one long string?
-    r = r"""^(\s+(?:let|const|var) \w+ = |\s+)[`"'](.+?)[`"']([,;]?)\s*$"""
+    r = r"""^(\s+(?:let|const|var) \w+ = |\s+)[`"'](.+?)[`"']((?:[,;]| \+)?)\s*$"""
     return re.match(r, s)
 
 def isNameTooLong(s):
@@ -84,6 +84,7 @@ def tests():
     assertTrue(isOneLongString(""" 'one string' """))
     assertTrue(isOneLongString(""" 'one string', """))
     assertTrue(isOneLongString(""" 'one string'; """))
+    assertTrue(isOneLongString(""" 'one string' + """))
     assertTrue(isOneLongString(""" let a = 'one string' """))
     assertTrue(isOneLongString(""" let a = 'one string', """))
     assertTrue(isOneLongString(""" let a = 'one string'; """))
@@ -91,6 +92,7 @@ def tests():
     assertTrue(isOneLongString(""" "one string" """))
     assertTrue(isOneLongString(""" "one string", """))
     assertTrue(isOneLongString(""" "one string"; """))
+    assertTrue(isOneLongString(""" "one string" + """))
     assertTrue(isOneLongString(""" let a = "one string" """))
     assertTrue(isOneLongString(""" let a = "one string", """))
     assertTrue(isOneLongString(""" let a = "one string"; """))
