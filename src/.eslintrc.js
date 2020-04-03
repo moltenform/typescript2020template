@@ -72,6 +72,9 @@ module.exports = {
         '@typescript-eslint/prefer-regexp-exec': 'off',
         '@typescript-eslint/promise-function-async': 'off',
 
+        // leaving disabled, since default vals in classes seem to work fine
+        'no-invalid-this': 'off',
+
         // we want let s1 || 'default' to be an error, s1 ?? 'default' is better
         // should I enable strict-boolean-expressions to detect this? 
         // no, causes false positives for code like if (str1) {...} which I think is ok.
@@ -99,7 +102,6 @@ module.exports = {
         'no-floating-decimal': 'warn',
         'no-implicit-coercion': 'warn',
         'no-implied-eval': 'warn',
-        'no-invalid-this': 'warn',
         'no-labels': 'warn',
         'no-loop-func': 'warn',
         'no-new-func': 'warn',
