@@ -55,18 +55,21 @@ def checkText(f, lines, prettierCfg):
     if not hasattr(currentPrintWidth, 'val'):
         currentPrintWidth.val =  getCurrentPrintWidth(prettierCfg)
     if currentPrintWidth.val:
-        # iterate backwards, so that as you fix the problems, the line numbers are still valid
-        walkBackwards = reversed(list(range(len(lines))))
-        for i in walkBackwards:
-            line = lines[i]
+        problemLines = []
+        for i, line in enumerate(lines):
             if '/* check_long_lines_silence_subsequent */' in line:
                 return
             elif isLineTooLong(lines, i):
-                trace(f'silence by putting /* check_long_lines_silence_subsequent */ earlier in the file')
-                trace(f'or /* prettier-ignore */ on the prior line')
-                showWarningGccStyle(f, i+1, f'length of line is {len(line)} which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
-                warn('')
-            
+                problemLines.append((lines, i))
+        
+        # iterate backwards, so that as you fix the problems, the line numbers are still valid
+        problemLines.reverse()
+        for lines, i in problemLines:
+            trace(f'silence by putting /* check_long_lines_silence_subsequent */ earlier in the file')
+            trace(f'or /* prettier-ignore */ on the prior line')
+            showWarningGccStyle(f, i+1, f'length of line is {len(line)} which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
+            warn('')
+
 def tests():
     assertEq(20, getWidthFromPrettierRcText('abc printWidth:20'))
     assertEq(20, getWidthFromPrettierRcText('abc printWidth:20}'))
