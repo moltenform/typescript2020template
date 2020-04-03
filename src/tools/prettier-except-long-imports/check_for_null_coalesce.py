@@ -47,6 +47,8 @@ def shouldWarnArraysThisLine(line):
         return True
 
 def checkText(f, lines):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
     for i, line in enumerate(lines):
         if shouldWarnThisLine(line):
             # for example, /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */

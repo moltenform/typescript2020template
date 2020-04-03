@@ -27,7 +27,9 @@ def isNameTooLongHelpRepair(s):
         return f"t.{found.group(1)}('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`{found.group(2)}`)),"
     return None
     
-def autoHelpNamesTooLong(srcdirectory, f, lines):
+def autoHelpNamesTooLong(f, lines):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
     def getLineOrEmpty(i):
         if i >= 0 and i < len(lines):
             return lines[i]
@@ -43,9 +45,12 @@ def autoHelpNamesTooLong(srcdirectory, f, lines):
             lines[i] = found
             lines[i+1] = ''
 
-def autoHelpLongLines(srcdirectory, f, lines):
+def autoHelpLongLines(f, lines, prettierCfg):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
+    assertTrue(isinstance(prettierCfg, str))
     if not hasattr(currentPrintWidth, 'val'):
-        currentPrintWidth.val =  getCurrentPrintWidth(srcdirectory)
+        currentPrintWidth.val =  getCurrentPrintWidth(prettierCfg)
     if currentPrintWidth.val:
         for i in range(len(lines)):
             line = lines[i]

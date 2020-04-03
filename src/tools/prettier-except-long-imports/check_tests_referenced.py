@@ -16,6 +16,8 @@ def checkText(f, lines):
         getNeedToReference(f, lines)
 
 def getWereReferenced(f, lines):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
     assertTrueMsg(not state.pathTop, 'saw two testtop?', file=f)
     state.pathTop = f
     text = '\n'.join(lines)
@@ -30,17 +32,10 @@ def getWereReferenced(f, lines):
         state.wereReferenced[s] = True
     
 def getNeedToReference(f, lines):
-    for i in range(len(lines)):
-        line = lines[i]
-        if "new SimpleUtil512TestCollection('testCollectionMMMMMM')" in line:
-            trace('automatically setting collection name')
-            lines[i] = f"let t = new SimpleUtil512TestCollection('{getCollNameFromPath(f)}');"
-            state.alteredFile = True
-        elif "export let testCollectionMMMMMM = t" in line:
-            trace('automatically setting collection name')
-            lines[i] = f"export let {getCollNameFromPath(f)} = t;"
-            state.alteredFile = True
-        elif 'new SimpleUtil512TestCollection' in line:
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
+    for i, line in enumerate(lines):
+        if 'new SimpleUtil512TestCollection' in line:
             startWith1 = "let t = new SimpleUtil512TestCollection('"
             startWith2 = "t = new SimpleUtil512TestCollection('"
             assertTrueMsg(line.startswith(startWith1) or line.startswith(startWith2), 
@@ -54,13 +49,27 @@ def getNeedToReference(f, lines):
             nextLine = lines[i+1]
             assertTrueMsg(nextLine.startswith(expected), f'did not start with {expected}', file=f, linenum=i+1)
 
+def autoHelpSetTestName(f, lines):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
+    for i in range(len(lines)):
+        line = lines[i]
+        if "new SimpleUtil512TestCollection('testCollectionMMMMMM')" in line:
+            trace('automatically setting collection name')
+            lines[i] = f"let t = new SimpleUtil512TestCollection('{getCollNameFromPath(f)}');"
+            state.alteredFile = True
+        elif "export let testCollectionMMMMMM = t" in line:
+            trace('automatically setting collection name')
+            lines[i] = f"export let {getCollNameFromPath(f)} = t;"
+            state.alteredFile = True
+
 def getCollNameFromPath(f):
     nameWithNoExt = files.splitext(files.getname(f))[0]
     return 'testCollection' + nameWithNoExt.replace('test', '')
 
 def checkTestsReferenced():
     if state.alteredFile:
-        trace('skipping because we modified a file, please run the script again')
+        alert('skipping tests check because we modified a file, please run the script again')
         return
     
     assertTrueMsg(len(state.needToReference), "new SimpleUtil512TestCollection(' never seen?")

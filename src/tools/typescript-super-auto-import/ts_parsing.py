@@ -22,21 +22,21 @@ def getFileLines(f, tryToStripComments):
         lines = [line.split('//')[0] for line in lines]
     return lines
 
-def searchPrettierRc(srcdirectory):
-    if files.isfile(files.join(srcdirectory, '.prettierrc.js')):
-        return files.join(srcdirectory, '.prettierrc.js')
-    if files.isfile(files.join(srcdirectory, 'src/.prettierrc.js')):
-        return files.join(srcdirectory, 'src/.prettierrc.js')
-    if files.isfile(files.join(srcdirectory, '../.prettierrc.js')):
-        return files.join(srcdirectory, '../.prettierrc.js')
-    if files.isfile(files.join(srcdirectory, '../src/.prettierrc.js')):
-        return files.join(srcdirectory, '../src/.prettierrc.js')
-    if files.isfile(files.join(srcdirectory, '../../.prettierrc.js')):
-        return files.join(srcdirectory, '../../.prettierrc.js')
+def searchForNearbyFile(srcdirectory, name):
+    if files.isfile(files.join(srcdirectory, f'{name}')):
+        return files.join(srcdirectory, f'{name}')
+    if files.isfile(files.join(srcdirectory, f'src/{name}')):
+        return files.join(srcdirectory, f'src/{name}')
+    if files.isfile(files.join(srcdirectory, f'../{name}')):
+        return files.join(srcdirectory, f'../{name}')
+    if files.isfile(files.join(srcdirectory, f'../src/{name}')):
+        return files.join(srcdirectory, f'../src/{name}')
+    if files.isfile(files.join(srcdirectory, f'../../{name}')):
+        return files.join(srcdirectory, f'../../{name}')
     return None
 
 def readPrettierRcContents(dir):
-    cfg = searchPrettierRc(dir)
+    cfg = searchForNearbyFile(dir, '.prettierrc.js')
     if cfg:
         return '\n'.join(getFileLines(cfg, tryToStripComments=True))
     else:

@@ -11,7 +11,7 @@ import re
 allowSlightlyLonger = 10
 currentPrintWidth = Bucket()
     
-def getFromPrettierRcText(text):
+def getWidthFromPrettierRcText(text):
     parts = text.split('printWidth:')
     if len(parts) <= 1:
         return None
@@ -26,13 +26,13 @@ def getFromPrettierRcText(text):
     except ValueError:
         return None
 
-def getCurrentPrintWidth(srcdirectory):
-    content = readPrettierRcContents(dir)
+def getCurrentPrintWidth(prettierCfg):
+    content = '\n'.join(getFileLines(prettierCfg, tryToStripComments=True))
     if not content:
         alert('skipping test for long lines, could not find .prettierrc.js')
         return None
     
-    width = getFromPrettierRcText(content)
+    width = getWidthFromPrettierRcText(content)
     if not width:
         alert('skipping test for long lines, could not find "printWidth:" in .prettierrc.js')
         return None
@@ -48,9 +48,12 @@ def isLineTooLong(lines, i):
                 return True
     return False
 
-def checkText(srcdirectory, f, lines):
+def checkText(f, lines, prettierCfg):
+    assertTrue(isinstance(f, str))
+    assertTrue(isinstance(lines, list))
+    assertTrue(isinstance(prettierCfg, str))
     if not hasattr(currentPrintWidth, 'val'):
-        currentPrintWidth.val =  getCurrentPrintWidth(srcdirectory)
+        currentPrintWidth.val =  getCurrentPrintWidth(prettierCfg)
     if currentPrintWidth.val:
         # iterate backwards, so that as you fix the problems, the line numbers are still valid
         walkBackwards = reversed(list(range(len(lines))))
@@ -65,16 +68,15 @@ def checkText(srcdirectory, f, lines):
                 warn('')
             
 def tests():
-    assertEq(20, getFromPrettierRcText('abc printWidth:20'))
-    assertEq(20, getFromPrettierRcText('abc printWidth:20}'))
-    assertEq(20, getFromPrettierRcText('abc printWidth:20 }'))
-    assertEq(20, getFromPrettierRcText('abc printWidth:20, some other text'))
-    assertEq(20, getFromPrettierRcText('abc printWidth:20 , some other text'))
-    assertEq(12, getFromPrettierRcText('abc printWidth: 12'))
-    assertEq(12, getFromPrettierRcText('abc printWidth: 12}'))
-    assertEq(12, getFromPrettierRcText('abc printWidth: 12 }'))
-    assertEq(12, getFromPrettierRcText('abc printWidth: 12, some other text'))
-    assertEq(12, getFromPrettierRcText('abc printWidth: 12 , some other text'))
-
+    assertEq(20, getWidthFromPrettierRcText('abc printWidth:20'))
+    assertEq(20, getWidthFromPrettierRcText('abc printWidth:20}'))
+    assertEq(20, getWidthFromPrettierRcText('abc printWidth:20 }'))
+    assertEq(20, getWidthFromPrettierRcText('abc printWidth:20, some other text'))
+    assertEq(20, getWidthFromPrettierRcText('abc printWidth:20 , some other text'))
+    assertEq(12, getWidthFromPrettierRcText('abc printWidth: 12'))
+    assertEq(12, getWidthFromPrettierRcText('abc printWidth: 12}'))
+    assertEq(12, getWidthFromPrettierRcText('abc printWidth: 12 }'))
+    assertEq(12, getWidthFromPrettierRcText('abc printWidth: 12, some other text'))
+    assertEq(12, getWidthFromPrettierRcText('abc printWidth: 12 , some other text'))
 
 tests()
