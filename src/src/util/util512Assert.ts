@@ -290,6 +290,13 @@ export function bool(x: unknown): boolean {
 }
 
 /**
+ * use as a type assertion
+ */
+export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
+    return bool(x);
+}
+
+/**
  * cast to string.
  */
 export function tostring(s: unknown): string {

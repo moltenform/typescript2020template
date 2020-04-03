@@ -440,6 +440,20 @@ if (!String.prototype.includes) {
 }
 
 /**
+ * polyfill for String.startsWith, from http://developer.mozilla.org
+ * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+ */
+if (!String.prototype.startsWith) {
+    /* eslint-disable-next-line no-extend-native */
+    Object.defineProperty(String.prototype, 'startsWith', {
+        value: function (search: string, rawPos: number) {
+            let pos = rawPos > 0 ? rawPos | 0 : 0;
+            return this.substring(pos, pos + search.length) === search;
+        }
+    });
+}
+
+/**
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
@@ -495,7 +509,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
  * string to enum.
  * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
  */
-export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
+export function findStrToEnum<T>(Enm: any, s: string): O<T> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
         '4F|must provide an enum type with __isUI512Enum defined.'
@@ -523,12 +537,8 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
 /**
  * same as findStrToEnum, but throws if not found, showing possible values.
  */
-export function getStrToEnum<E>(
-    Enm: TypeLikeAnEnum<E>,
-    msgContext: string,
-    s: string
-): E {
-    let found = findStrToEnum(Enm, s);
+export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
+    let found = findStrToEnum<T>(Enm, s);
     if (found !== undefined) {
         return found;
     } else {
@@ -604,6 +614,35 @@ export function cast<T>(
     }
 
     throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function castVerifyIsNum(instance: unknown, context?: string): number {
+    if (typeof instance === 'number') {
+        return instance;
+    }
+
+    throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function castVerifyIsStr(instance: unknown, context?: string): string {
+    if (isString(instance)) {
+        return instance;
+    }
+
+    throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T): T {
+    return instance ? instance : defaultval;
 }
 
 /**
@@ -882,5 +921,6 @@ export function last<T>(ar: T[]): T {
  * conveniently write a long string
  */
 export function longstr(s: string, newlinesBecome = ' ') {
-    return s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
+    s = s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
+    return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
 }
