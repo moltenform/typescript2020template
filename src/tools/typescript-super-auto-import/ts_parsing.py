@@ -22,6 +22,26 @@ def getFileLines(f, tryToStripComments):
         lines = [line.split('//')[0] for line in lines]
     return lines
 
+def searchPrettierRc(srcdirectory):
+    if files.isfile(files.join(srcdirectory, '.prettierrc.js')):
+        return files.join(srcdirectory, '.prettierrc.js')
+    if files.isfile(files.join(srcdirectory, 'src/.prettierrc.js')):
+        return files.join(srcdirectory, 'src/.prettierrc.js')
+    if files.isfile(files.join(srcdirectory, '../.prettierrc.js')):
+        return files.join(srcdirectory, '../.prettierrc.js')
+    if files.isfile(files.join(srcdirectory, '../src/.prettierrc.js')):
+        return files.join(srcdirectory, '../src/.prettierrc.js')
+    if files.isfile(files.join(srcdirectory, '../../.prettierrc.js')):
+        return files.join(srcdirectory, '../../.prettierrc.js')
+    return None
+
+def readPrettierRcContents(dir):
+    cfg = searchPrettierRc(dir)
+    if cfg:
+        return '\n'.join(getFileLines(cfg, tryToStripComments=True))
+    else:
+        return None
+
 def simpleStripMultilineComments(text, open, close):
     # still fails on strings, but handles complicated/nested cases better
     # tests in check_for_null_coalesce.py

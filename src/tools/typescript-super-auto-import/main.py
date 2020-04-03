@@ -103,17 +103,11 @@ def countDirDepth(s):
     return len(s.replace('\\', '/').split('/')) - 1
 
 def checkSingleQuotes(dir):
-    cfg = files.join(dir, '.prettierrc.js')
-    if not files.exists(cfg):
-        cfg = files.join(dir, '..', '.prettierrc.js')
-    if not files.exists(cfg):
-        cfg = files.join(dir, '..', '..', '.prettierrc.js')
-    if not files.exists(cfg):
-        warn('could not find .prettierrc.js, assuming single quotes')
+    content = readPrettierRcContents(dir)
+    if not content:
+        alert('could not find .prettierrc.js, assuming single quotes')
         return True
-    
-    content = ''.join(getFileLines(cfg, True))
-    if 'singleQuote:true' in content.replace(' ', ''):
+    elif 'singleQuote:true' in content.replace(' ', ''):
         return True
     elif 'singleQuote:false' in content.replace(' ', ''):
         trace('super-auto-import supports single quotes, but most other scripts here do not.')
@@ -121,7 +115,7 @@ def checkSingleQuotes(dir):
         warn('')
         return False
     else:
-        assertTrueMsg(False, 'could not find singleQuote:true in cfg', file=cfg)
+        assertTrueMsg(False, 'could not find singleQuote:true in prettierrc')
 
 def enforceLayering(srcdirectory):
     print('running enforceLayering...')
