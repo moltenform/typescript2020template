@@ -1,6 +1,6 @@
 
-/* auto */ import { AsyncVoidFn } from './../util/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
+/* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testCollectionUtil512Higher } from './testUtil512Higher';
@@ -25,11 +25,9 @@ export class SimpleUtil512Tests {
         /* order tests from high to low */
         let colls = [
             testCollectionExternalLibs,
-            testCollectionExampleAsyncTests,
             testCollectionUtil512Assert,
             testCollectionUtil512,
             testCollectionUtil512Class,
-            testCollectionUtil512LessUsefulLibs,
             testCollectionUtil512Higher
         ];
 

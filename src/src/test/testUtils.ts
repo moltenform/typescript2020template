@@ -1,8 +1,8 @@
 
-/* auto */ import { AsyncVoidFn, VoidFn } from './../util/util512Higher';
+/* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, make512Error } from './../util/util512Assert';
-/* auto */ import { util512Sort } from './../util/util512';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
+/* auto */ import { Util512, util512Sort } from './../util/util512';
 
 /**
  * assert that an exception is thrown, with a certain message

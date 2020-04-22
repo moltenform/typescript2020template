@@ -2,7 +2,7 @@
 /* auto */ import { RingBuffer, UI512Compress, tostring } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 /* auto */ import { assertEq, assertWarnEq, checkThrowEq512 } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Assert');
 export let testCollectionUtil512Assert = t;
@@ -55,10 +55,6 @@ t.test('AssertAsserts', () => {
 t.test('GetAssertMessages', () => {
     checkThrow512(1, '');
     checkThrowEq512('a', 'a', '');
-    checkThrow(1, '');
-    checkThrowEq('a', 'a', '');
-    checkThrowInternal(1, '');
-    checkThrowNotifyMsg(1, '');
     assertThrows('', 'ui512: a (;0)', () => {
         checkThrow512(false, ';0|a');
     });
@@ -76,42 +72,6 @@ t.test('GetAssertMessages', () => {
     });
     assertThrows('', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
         checkThrowEq512('a', 'b', ';5|a', 'c1', 'c2');
-    });
-    assertThrows('', 'vpc: a (;6)', () => {
-        checkThrow(false, ';6|a');
-    });
-    assertThrows('', 'vpc: a\nb (;7)', () => {
-        checkThrow(false, ';7|a', 'b');
-    });
-    assertThrows('', 'vpc: a\nb, c (;8)', () => {
-        checkThrow(false, ';8|a', 'b', 'c');
-    });
-    assertThrows('', "vpc: a expected 'a' but got 'b'. (;9)", () => {
-        checkThrowEq('a', 'b', ';9|a');
-    });
-    assertThrows('', "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
-        checkThrowEq('a', 'b', ';a|a', 'c1');
-    });
-    assertThrows('', "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
-        checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
-    });
-    assertThrows('', 'vpcinternal: a (;c)', () => {
-        checkThrowInternal(false, ';c|a');
-    });
-    assertThrows('', 'vpcinternal: a\nb (;d)', () => {
-        checkThrowInternal(false, ';d|a', 'b');
-    });
-    assertThrows('', 'vpcinternal: a\nb, c (;e)', () => {
-        checkThrowInternal(false, ';e|a', 'b', 'c');
-    });
-    assertThrows('', 'vpcmessage: a (;f)', () => {
-        checkThrowNotifyMsg(false, ';f|a');
-    });
-    assertThrows('', 'vpcmessage: a\nb (;g)', () => {
-        checkThrowNotifyMsg(false, ';g|a', 'b');
-    });
-    assertThrows('', 'vpcmessage: a\nb, c (;h)', () => {
-        checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
     });
 });
 t.test('ThrowIfUndefined', () => {

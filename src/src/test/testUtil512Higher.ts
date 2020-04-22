@@ -1,4 +1,5 @@
 
+/* auto */ import { IsUtil512Serializable, Util512SerializableHelpers } from './../util/util512Serialize';
 /* auto */ import { Util512Higher } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
 /* auto */ import { assertTrue } from './../util/util512Assert';

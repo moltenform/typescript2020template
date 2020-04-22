@@ -84,11 +84,12 @@ export class Util512BaseErr {
      * it has the same shape, it works fine)
      */
     static createErrorImpl<T extends Util512BaseErr>(
-        fnCtor: (...args: unknown[]) => T,
-        ...params: unknown[]
+        fnCtor: (a:string, b:string) => T,
+        a:string,
+        b:string
     ): T {
         let e = new Error();
-        let err = fnCtor(...params);
+        let err = fnCtor(a, b);
         Object.assign(e, err);
         let cls = (e as any) as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
@@ -110,8 +111,8 @@ export class Util512BaseErr {
     /**
      * create a Util512BaseErr (or at least something that acts like one)
      */
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
+    static createError(message: string, level: string) {
+        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, message, level);
     }
 }
 
@@ -125,8 +126,8 @@ export class Util512Warn extends Util512BaseErr {
     protected static gen(message: string, level: string) {
         return new Util512Warn(message, level);
     }
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params);
+    static createError(message: string, level: string) {
+        return Util512BaseErr.createErrorImpl(Util512Warn.gen, message, level);
     }
 }
 
@@ -139,8 +140,8 @@ export class Util512Message extends Util512BaseErr {
     protected static gen(message: string, level: string) {
         return new Util512Message(message, level);
     }
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params);
+    static createError(message: string, level: string) {
+        return Util512BaseErr.createErrorImpl(Util512Message.gen, message, level);
     }
 }
 
