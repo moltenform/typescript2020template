@@ -1,5 +1,6 @@
 
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring } from './../util/util512Assert';
+/* auto */ import { RingBuffer, UI512Compress, tostring } from './../util/util512Base';
+/* auto */ import { assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined } from './../util/util512Assert';
 /* auto */ import { assertEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
 

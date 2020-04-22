@@ -1,5 +1,6 @@
 
-/* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../util/util512Assert';
+/* auto */ import { bool } from './../util/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, last, longstr, slength, util512Sort } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 

@@ -1,5 +1,6 @@
 
-/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring } from './util512Assert';
+/* auto */ import { O, tostring } from './util512Base';
+/* auto */ import { assertTrue, checkThrowUI512, makeUI512Error, throwIfUndefined } from './util512Assert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -636,13 +637,6 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
     }
 
     throw makeUI512Error('J7|type cast exception', context);
-}
-
-/**
- * safe cast, throws if cast would fail.
- */
-export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T): T {
-    return instance ? instance : defaultval;
 }
 
 /**

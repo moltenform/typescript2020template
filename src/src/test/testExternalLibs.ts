@@ -1,5 +1,6 @@
 
-/* auto */ import { O, assertTrue } from './../util/util512Assert';
+/* auto */ import { O } from './../util/util512Base';
+/* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq, longstr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
 

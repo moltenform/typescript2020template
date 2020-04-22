@@ -1,5 +1,6 @@
 
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
+/* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -45,7 +46,7 @@ export function respondUI512Error(e: Error, context: string) {
     } else {
         console.error(e.message);
         console.error(e.stack);
-        breakIntoDebugger();
+        callDebuggerIfNotInProduction();
         window.alert(e.message);
     }
 }
@@ -131,107 +132,6 @@ export function throwIfUndefined<T>(
 }
 
 /**
- * a short way to say optional<T>.
- * prefer O<string> over ?string, I find it easier to read and reason about.
- */
-export type O<T> = T | undefined;
-
-/**
- * external LZString compression
- */
-declare let LZString: any;
-
-/**
- * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.
- * I use compressToUTF16() instead of compress() to use only valid utf sequences.
- */
-export class UI512Compress {
-    protected static stringEscapeNewline = '##Newline##';
-    protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
-    protected static reNewline = /\n/g;
-    static compressString(s: string): string {
-        let compressed = LZString.compressToUTF16(s);
-        return compressed;
-    }
-
-    static decompressString(s: string): string {
-        return LZString.decompressFromUTF16(s);
-    }
-}
-
-/**
- * store the last <size> log entries, without needing to
- * move contents or allocate more memory.
- */
-export abstract class RingBuffer {
-    constructor(protected size: number) {}
-
-    /**
-     * add log to buffer.
-     */
-    append(s: string) {
-        let ptrLatest = this.getLatestIndex();
-        ptrLatest = this.mod(ptrLatest + 1, this.size);
-        this.setAt(ptrLatest, s);
-        this.setLatestIndex(ptrLatest);
-    }
-
-    /**
-     * retrieve the latest entries.
-     */
-    retrieve(howMany: number) {
-        howMany = Math.min(howMany, this.size - 1);
-        let ptrLatest = this.getLatestIndex();
-        let ret: string[] = [];
-        for (let i = 0; i < howMany; i++) {
-            let index = this.mod(ptrLatest - i, this.size);
-            ret.push(this.getAt(index));
-        }
-
-        return ret;
-    }
-
-    /**
-     * more intuitive with negative numbers than the % operator
-     */
-    mod(a: number, n: number) {
-        return ((a % n) + n) % n;
-    }
-
-    abstract getAt(index: number): string;
-    abstract setAt(index: number, s: string): void;
-    abstract getLatestIndex(): number;
-    abstract setLatestIndex(index: number): void;
-}
-
-/**
- * use localstorage to store, so that logs persist when page is refreshed.
- * ui512LogPtr should be in local storage, we could be running in 2 browser windows.
- */
-class RingBufferLocalStorage extends RingBuffer {
-    getAt(index: number): string {
-        return window.localStorage['ui512Log_' + index] ?? '';
-    }
-
-    setAt(index: number, s: string) {
-        window.localStorage['ui512Log_' + index] = s;
-    }
-
-    getLatestIndex() {
-        let sLatest = window.localStorage['ui512LogPtr'] ?? '0';
-
-        /* ok to use here, we remembered to say base 10 */
-        /* eslint-disable-next-line ban/ban */
-        let ptrLatest = parseInt(sLatest, 10);
-        return Number.isFinite(ptrLatest) ? ptrLatest : 0;
-    }
-
-    setLatestIndex(index: number) {
-        window.localStorage['ui512LogPtr'] = index.toString();
-    }
-}
-
-/**
  * if an error is thrown, show a warning message and swallow the error
  */
 export function showWarningIfExceptionThrown(fn: () => void) {
@@ -279,29 +179,6 @@ export class UI512ErrorHandling {
     static getLatestErrLogs(amount: number): string[] {
         return UI512ErrorHandling.store.retrieve(amount);
     }
-}
-
-/**
- * is it truthy? anything except false, 0, "", null, undefined, and NaN
- */
-export function bool(x: unknown): boolean {
-    /* eslint-disable-next-line no-implicit-coercion */
-    return !!x;
-}
-
-/**
- * use as a type assertion
- */
-export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
-    return bool(x);
-}
-
-/**
- * cast to string.
- */
-export function tostring(s: unknown): string {
-    /* eslint-disable-next-line no-implicit-coercion */
-    return '' + s;
 }
 
 /**
@@ -354,23 +231,13 @@ export function joinIntoMessage(
 export interface UI512AttachableErr {}
 
 /**
- * break into debugger. V8 js perf sometimes hurt if seeing a debugger
- * statement, so separate it here.
- */
-function breakIntoDebugger() {
-    if (!checkIsProductionBuild()) {
-        debugger;
-    }
-}
-
-/**
  * record and show an unhandled exception
  */
 function recordAndShowErr(firstMsg: string, msg: string) {
     if (UI512ErrorHandling.breakOnThrow || firstMsg.includes('assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
         console.error(msg);
-        breakIntoDebugger();
+        callDebuggerIfNotInProduction();
         window.alert(msg);
     } else {
         UI512ErrorHandling.appendErrMsgToLogs(false, msg);
@@ -393,36 +260,3 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
     }
 }
 
-/**
- * at build time, the string below
- * might be replaced with "debugger".
- * V8's perf can be affected if there's a debugger statement around,
- * so this makes sure it's not even there.
- */
-export function callDebuggerIfNotInProduction(context?: string) {
-    window['DBG' + 'PLACEHOLDER'] = true;
-    /* eslint-disable-next-line no-unused-expressions */
-    DBGPLACEHOLDER;
-}
-
-/**
- * this will not exist at runtime, the string is rewritten
- */
-declare const WEBPACK_PRODUCTION: boolean;
-declare const DBGPLACEHOLDER: boolean;
-
-/**
- * check if we are in a production build.
- */
-export function checkIsProductionBuild(): boolean {
-    let ret = false;
-    try {
-        // when webpack builds this file it will replace the string
-        // with `true` or `false`
-        ret = WEBPACK_PRODUCTION;
-    } catch {
-        ret = false;
-    }
-
-    return ret;
-}
