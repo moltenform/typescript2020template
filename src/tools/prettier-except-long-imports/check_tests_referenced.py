@@ -15,21 +15,27 @@ def checkText(f, lines):
     else:
         getNeedToReference(f, lines)
 
-def getWereReferenced(f, lines):
+def getWereReferenced(f, origLines):
     assertTrue(isinstance(f, str))
-    assertTrue(isinstance(lines, list))
+    assertTrue(isinstance(origLines, list))
     assertTrueMsg(not state.pathTop, 'saw two testtop?', file=f)
     state.pathTop = f
+    
+    # get the file without comments
+    # but let's allow single-line comments so that you can temporarily disable a test.
+    lines = getFileLines(f, tryToStripComments='multilineonly')
     text = '\n'.join(lines)
     pts = text.split('let colls = [')
     assertTrueMsg(len(pts) == 2, f"did not see 'let colls = ['", file=f)
     assertTrueMsg(']' in pts[1], f"did not see ']' after let colls", file=f)
     listColls = pts[1].split(']')[0]
-    listColls = [s.strip() for s in listColls.split(',')]
+    listColls = [s.strip() for s in re.split(',|\n', listColls)]
     for s in listColls:
-        assertTrueMsg(re.match('^[a-zA-Z0-9_]+$', s), f'weird collection name {s}', file=f)
-        assertTrueMsg(not s in state.wereReferenced, 'dupe entry', s, file=f)
-        state.wereReferenced[s] = True
+        s = s.replace('//~', '').replace('//', '').strip()
+        if s:
+            assertTrueMsg(re.match('^[a-zA-Z0-9_]+$', s), f'weird collection name "{s}"', file=f)
+            assertTrueMsg(not s in state.wereReferenced, 'dupe entry', s, file=f)
+            state.wereReferenced[s] = True
     
 def getNeedToReference(f, lines):
     assertTrue(isinstance(f, str))
@@ -78,8 +84,14 @@ def checkTestCollectionsReferenced():
     setGot = set(state.wereReferenced.keys())
     gotAndNotExpected = '\n'.join(setGot - setExpected)
     expectedAndNotGot = '\n'.join(setExpected - setGot)
-    assertTrueMsg(not gotAndNotExpected, f'not sure where these collections originated: {gotAndNotExpected}', file=state.pathTop)
-    assertTrueMsg(not expectedAndNotGot, f'please add these collections to the list: {expectedAndNotGot}', file=state.pathTop)
+    if gotAndNotExpected:
+        showWarningGccStyle(state.pathTop, 1, '')
+        alert(f'not sure where these collections originated: {gotAndNotExpected}')
+    if expectedAndNotGot:
+        showWarningGccStyle(state.pathTop, 1, '')
+        alert(f'please add these collections to the list: {expectedAndNotGot}')
+    else:
+        trace('confirmed all tests referenced.')
 
 def tests():
     assertEq('testCollectionMyFile', getCollNameFromPath('./src/abc/testMyFile.ts'))
