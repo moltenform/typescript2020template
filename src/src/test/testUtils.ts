@@ -13,14 +13,10 @@ export async function assertThrowsAsync<T>(
     fn: () => Promise<T>
 ) {
     let msg: O<string>;
-    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-    UI512ErrorHandling.breakOnThrow = false;
     try {
         await fn();
     } catch (e) {
         msg = e.message ? e.message : '';
-    } finally {
-        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
     assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
@@ -33,22 +29,48 @@ export async function assertThrowsAsync<T>(
 /**
  * assert that an exception is thrown, with a certain message
  */
-export function assertThrows(msgWithMark: string, expectedErr: string, fn: Function) {
+export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidFn) {
     let msg: O<string>;
-    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
+
     try {
-        UI512ErrorHandling.breakOnThrow = false;
         fn();
     } catch (e) {
-        msg = e.message ? e.message : '';
-    } finally {
-        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
+        msg = e.message ?? '';
     }
 
-    assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
+    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
+        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        msgWithMark
+    );
+}
+
+/**
+ * assert that an assertion is thrown
+ */
+export function assertAsserts(msgWithMark: string, expectedErr: string, fn: VoidFn) {
+    let msg: O<string>;
+    let svd = UI512ErrorHandling.silenceAssertMsgs;
+    UI512ErrorHandling.silenceAssertMsgs = true;
+    try {
+        fn();
+    } catch (e) {
+        msg = e.message ?? '';
+    } finally {
+        UI512ErrorHandling.silenceAssertMsgs = svd;
+    }
+
+    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
+    assertTrue(
+        msg.toLowerCase().includes('assert:'),
+        `not an assertion exception`,
+        msgWithMark
+    );
+    assertTrue(
+        msg !== undefined && msg.includes(expectedErr),
+        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        msgWithMark
     );
 }
 
@@ -62,14 +84,23 @@ export function sorted(ar: any[]) {
 }
 
 /**
+ * test-only code, to avoid type casts
+ */
+export function YetToBeDefinedTestHelper<T>(): T {
+    return (undefined as any) as T;
+}
+
+/**
  * if the debugger is set to All Exceptions,
  * you will see a lot of false positives
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        throw make512Error(`1!|It looks like the debugger is set to break
+        throw new Error(
+            `1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
-            many tests intentionally throw exceptions.`);
+            many tests intentionally throw exceptions.`
+        );
     });
 }
 
@@ -77,22 +108,33 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
  * a collection of tests
  */
 export class SimpleUtil512TestCollection {
-    constructor(public name: string, public async = false, public slow = false) {}
+    constructor(public name: string, public slow = false) {}
     tests: [string, VoidFn][] = [];
-    atests: [string, AsyncVoidFn][] = [];
+    atests: [string, AsyncFn][] = [];
     _context = '';
+
+    /**
+     * add a non-async test to the collection
+     */
     public test(s: string, fn: VoidFn) {
-        assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
-    public atest(s: string, fn: AsyncVoidFn) {
-        assertTrue(this.async, 'Os|');
+
+    /**
+     * add an async test to the collection
+     */
+    public atest(s: string, fn: AsyncFn) {
         this.atests.push([s, fn]);
         return this;
     }
+
+    /**
+     * writes a string to the console,
+     * often used to indicate that a test is divided into subtests.
+     */
     public say(context: string) {
         this._context = context;
-        console.log('                      ' + this._context);
+        console.log(Util512.repeat(25, ' ').join('') + this._context);
     }
 }
