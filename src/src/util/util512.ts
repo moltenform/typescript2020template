@@ -5,6 +5,9 @@
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
+/**
+ * typescript utilities
+ */
 export class Util512 {
     /**
      * checks for NaN and Infinity

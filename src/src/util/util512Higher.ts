@@ -5,6 +5,10 @@
 // moltenform.com(Ben Fisher), 2020
 // MIT license
 
+/**
+ * typescript utilities
+ * contains utilities like RNG that aren't as straightforward to test.
+ */
 export class Util512Higher {
     /**
      * weakUuid, by broofa
@@ -51,7 +55,7 @@ export class Util512Higher {
             nextPowerOf2 *= 2;
         }
 
-        // use rejection sampling. slower, but better for uniform values
+        /* use rejection sampling. slower, but better for uniform values */
         let buf = new Uint8Array(8);
         while (true) {
             window.crypto.getRandomValues(buf);
@@ -93,82 +97,91 @@ export class Util512Higher {
      */
     static beginLoadImage(url: string, img: HTMLImageElement, callback: () => void) {
         let haveRunCallback = false;
-        img.addEventListener('load', () => {
+        let on_load = () => {
             if (!haveRunCallback) {
                 haveRunCallback = true;
                 callback();
             }
-        });
-        img.onerror = () => {
-            throw makeUI512Error('4L|failed to load ' + url);
         };
+
+        let on_error = () => {
+            throw new Error('failed to load ' + url);
+        };
+
+        img.addEventListener('load', () =>
+            showMsgIfExceptionThrown(on_load, 'LoadImage.on_load')
+        );
+        img.addEventListener('error', () =>
+            showMsgIfExceptionThrown(on_error, 'LoadImage.on_error')
+        );
         img.src = url;
         if (img.complete) {
-            /* some sources say it might be possible for .complete to be set
-            immediately if image was cached */
-            haveRunCallback = true;
-            callback();
+            /* apparently it might be possible for .complete to be set
+            immediately in some cases */
+            showMsgIfExceptionThrown(() => {
+                haveRunCallback = true;
+                callback();
+            }, 'LoadImage.on_load');
         }
     }
 
     /**
      * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
-    static beginLoadJson(
+    private static loadJsonImpl(
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
-        callbackOnErr?: () => void
+        callbackOnErr: (n: number) => void
     ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
-        if (!callbackOnErr) {
-            callbackOnErr = () => {
-                throw makeUI512Error(`4K|failed to load ${url}, status=${req.status}`);
-            };
-        }
-
-        req.addEventListener('load', () => {
-            if (req.status === 200) {
+        let on_load = () => {
+            if (req.status >= 200 && req.status <= 299) {
                 callback(req.responseText);
-            } else if (callbackOnErr) {
-                callbackOnErr();
+            } else {
+                callbackOnErr(req.status);
             }
-        });
+        };
 
-        req.addEventListener('error', () => {
-            if (callbackOnErr) {
-                callbackOnErr();
-            }
-        });
+        let on_error = () => {
+            callbackOnErr(-1);
+        };
 
+        req.addEventListener('load', () =>
+            showMsgIfExceptionThrown(on_load, 'loadJson.on_load')
+        );
+        req.addEventListener('error', () =>
+            showMsgIfExceptionThrown(on_error, 'loadJson.on_error')
+        );
         req.send();
     }
 
     /**
-     * download json asynchronously, and return parsed js object.
-     * chose to use an old-style Promise rather than async
+     * download json asynchronously, and return string.
      */
-    /* eslint-disable-next-line @typescript-eslint/promise-function-async */
-    static asyncBeginLoadJson(url: string): Promise<AnyJson> {
+    static asyncLoadJsonString(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
-            Util512Higher.beginLoadJson(
+            Util512Higher.loadJsonImpl(
                 url,
                 req,
                 s => {
-                    let parsed = undefined;
-                    try {
-                        parsed = JSON.parse(s);
-                    } catch (e) {
-                        reject(e);
-                    }
-
-                    resolve(parsed);
+                    resolve(s);
                 },
-                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`))
+                n => {
+                    reject(new Error(`failed to load ${url}, status=${n}`));
+                }
             );
         });
+    }
+
+    /**
+     * download json asynchronously, and return parsed js object.
+     */
+    static async asyncLoadJson(url: string): Promise<AnyUnshapedJson> {
+        let s = await Util512Higher.asyncLoadJsonString(url);
+        return JSON.parse(s);
     }
 
     /**
@@ -188,23 +201,110 @@ export class Util512Higher {
 
             /* prevents cb from being called twice */
             let loaded = false;
-            script.onerror = () => {
+            /* prevents cb from being called twice */
+            let on_error = () => {
                 let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + last(urlsplit)));
+                reject(new Error('Did not load ' + arLast(urlsplit)));
             };
 
-            script.onload = () => {
-                if (!loaded) {
-                    Util512Higher.scriptsAlreadyLoaded[url] = true;
-                    loaded = true;
-                    resolve();
-                }
+            let on_load = () => {
+                Util512Higher.scriptsAlreadyLoaded[url] = true;
+                loaded = true;
+                resolve();
             };
 
-            (script as any).onreadystatechange = script.onload; /* browser compat */
-
+            script.addEventListener('load', () =>
+                showMsgIfExceptionThrown(on_load, 'LoadJs.on_load')
+            );
+            script.addEventListener('error', () =>
+                showMsgIfExceptionThrown(on_error, 'LoadJs.on_error')
+            );
+            /* if you need to support old browsers, use onreadystatechange */
             window.document.getElementsByTagName('head')[0].appendChild(script);
         });
+    }
+
+    /**
+     * all code that goes from sync to async *must* use this method
+     * so that errors can be shown, otherwise they might be invisible.
+     */
+    static syncToAsyncTransition<T>(
+        fn: Promise<T>,
+        context: string,
+        rtype: RespondToErr
+    ) {
+        fn.then(
+            () => {
+                /* fulfilled with no exceptions */
+            },
+            (err: Error) => {
+                respondUI512Error(err, context, rtype === RespondToErr.ConsoleErrOnly);
+            }
+        );
+    }
+
+    /**
+     * essentially a replacement for timeout.
+     */
+    static syncToAsyncAfterPause<T>(
+        fn: () => unknown,
+        nMilliseconds: number,
+        context: string,
+        rtype: RespondToErr
+    ) {
+        let asyncf = async () => {
+            await Util512Higher.sleep(nMilliseconds);
+            fn();
+        };
+
+        Util512Higher.syncToAsyncTransition(asyncf(), context, rtype);
+    }
+
+    /**
+     * call this in an async function: await sleep(1000) to wait one second.
+     */
+    static sleep(ms: number) {
+        return new Promise<void>(resolve => {
+            /* it's ok to use an old-style promise, we're not going from sync to async */
+            /* eslint-disable-next-line ban/ban */
+            setTimeout(resolve, ms);
+        });
+    }
+
+    /**
+     * rejects if operation takes too long.
+     * if I threw an exception to reject from within fTimeout, I'd have to
+            1) add state to ensure the timeout was cleared and
+            2) use a try/finally in case fn throws exceptions
+        I think my approach is simpler.
+     */
+    static async runAsyncWithTimeout<T>(fn: Promise<T>, ms: number): Promise<T> {
+        class SentinelClass {}
+        let fTimeout = async () => {
+            await Util512Higher.sleep(ms);
+            return new SentinelClass();
+        };
+
+        let ps = [fn, fTimeout()];
+        let ret = await Promise.race(ps);
+        if (ret instanceof SentinelClass) {
+            checkThrow512(false, 'Timed out.');
+        } else {
+            return ret;
+        }
+    }
+
+    /**
+     * takes at least ms seconds.
+     */
+    static async runAsyncWithMinimumTime<T>(fn: Promise<T>, ms: number): Promise<T> {
+        let fTimeout = async (): Promise<any> => {
+            return Util512Higher.sleep(ms);
+        };
+
+        let ps = [fn, fTimeout()];
+        let ret = await Promise.all(ps);
+        return ret[0];
     }
 
     /**
@@ -231,10 +331,53 @@ export class Util512Higher {
 }
 
 /**
+ * by default, alert on every exception
+ */
+export enum RespondToErr {
+    __isUI512Enum = 1,
+    Alert,
+    ConsoleErrOnly
+}
+
+/**
+ * if an error is thrown, show a message
+ */
+export function showMsgIfExceptionThrown(fn: () => void, context: string) {
+    try {
+        fn();
+        return undefined;
+    } catch (e) {
+        respondUI512Error(e, context);
+        return e as Error;
+    }
+}
+
+/**
+ * if an error is thrown, show a warning message just in the console
+ */
+export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string) {
+    try {
+        fn();
+        return undefined;
+    } catch (e) {
+        respondUI512Error(e, context, true);
+        return e as Error;
+    }
+}
+
+/**
  * easier-to-read type aliases
  */
 export type VoidFn = () => void;
 export type AsyncVoidFn = () => Promise<void>;
+export type AsyncFn = () => Promise<unknown>;
+
+/**
+ * used to intentionally free memory
+ */
+export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
+    return (undefined as any) as T;
+}
 
 /**
  * can be used to build a periodic timer.
@@ -274,15 +417,8 @@ export class RenderComplete {
     }
 }
 
-/**
- * sleep, if called in an async function.
- * await sleep(1000) to wait one second.
- */
-export function sleep(ms: number) {
-    return new Promise<void>(resolve => {
-        setTimeout(resolve, ms);
-    });
-}
+
+
 
 /**
  * CharClassify

@@ -9,7 +9,7 @@ export function bool(x: unknown): boolean {
 }
 
 /**
- * use as a type assertion
+ * works as a typescript type assertion
  */
 export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
     return bool(x);
@@ -178,4 +178,3 @@ export class UI512Compress {
         return LZString.decompressFromUTF16(s) ?? '';
     }
 }
-
