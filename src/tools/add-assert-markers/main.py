@@ -1,55 +1,12 @@
 
 from base90 import *
 from assertmarkerutils import *
+import readconfig
 
 # Ben Fisher, 2018
 # this script adds markers to asserts
 # it even works if there is a complex condition to be tested
 # and it works across multiple lines
-
-desiredArgIndex = {
-    # base
-    'assertTrue': 1,
-    'assertWarn': 1,
-    'checkThrow512': 1,
-    'assertEq': 2,
-    'assertWarnEq': 2,
-    'checkThrowEq512': 2,
-    # higher level
-    'checkThrow': 1,
-    'checkThrowEq': 2,
-    # higher level helpers
-    'checkThrowInternal': 1,
-    'checkThrowNotifyMessage': 1,
-    
-    # other
-    'ensureDefined': 1,
-    'assertThrows': 0,
-    'assertThrowsAsync': 0,
-    'assertAsserts': 0,
-}
-
-skipThese = {
-    # signatures
-    'assertThrows(msgWithMark: string': True,
-    'assertEqWarn(\n    expected: unknown': True,
-    'expected: unknown': True,
-    'condition: unknown': True,
-    # ok calls that have the tag
-    'makeUI512Error(msgAssertEq, c1, c2, c3': True,
-    'makeUI512Error(msgInAssertEqWarn,': True,
-    'makeUI512Error(msgInThrowIfUndefined': True,
-    'makeUI512Error(msg: string,': True,
-}
-
-skipFiles = {
-    'vpcParser.ts': True,
-    'vpcTokens.ts': True,
-    'vpcVisitor.ts': True,
-}
-
-sAssertsToMarker = '|'.join( '\\b' + k + '\\(' for k in desiredArgIndex.keys())
-reAssertsToMarker = re.compile(sAssertsToMarker)
 
 def go(srcdirectory, previewOnly):
     assertTrueMsg(files.isdir(srcdirectory), 'directory not found', srcdirectory)
@@ -70,7 +27,7 @@ def go(srcdirectory, previewOnly):
     for key in skipThese:
         if skipThese[key] != 'seen':
             warn('expected to skip this, but not seen. this might mean we accidentally wrote an assert marker ' +
-                'to assertTrue itself, or it could just mean that the list is not up to date. ' + key)
+                'to the signature of an assert itself, or it could just mean that the list is not up to date. \n' + key)
 
 
 def goForFile(f, previewOnly, state, marksAleadySeen):
@@ -105,8 +62,10 @@ def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
     return content
 
 def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength):
-    reFindMarker = r'''^\s*("[^"][^"]|'[^'][^']|`[^`][^`])\|'''
-    reFindQuote = r'''^\s*(["'`])'''
+    reFindMarker = r'''^\s*LS("[^"][^"]|'[^'][^']|`[^`][^`])\|'''
+    reFindQuote = r'''^\s*LS(["'`])'''
+    reFindMarker = reFindMarker.replace('LS', r'(?:longstr\(\s*)?')
+    reFindQuote = reFindQuote.replace('LS', r'(?:longstr\(\s*)?')
 
     for key in skipThese:
         if key in looksLike:
@@ -142,7 +101,16 @@ def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, whic
                     args[narg] = splice(args[narg], ind, 0, newmarker + '|' )
                     return True
     # no string literals found at all
-    assertTrueMsg(False, 'no string literals found', looksLike, file=f)
+    assertTrueMsg(False, 'no string literals found', looksLike, file=f, linenum=lineOffset(content, posStart))
+
+def lineOffset(contents, posStart):
+    lines = contents.split('\n')
+    total = 0
+    for i, line in enumerate(lines):
+        total += len(line) + 1
+        if total >= posStart:
+            return i + 1
+    return 1
 
 def genNewMarker(state):
     state.latestMarker += 1
@@ -206,8 +174,11 @@ def tests():
 tests()
 
 if __name__=='__main__':
+    dir, desiredArgIndex, skipThese, skipFiles = readconfig.readconfig()
+    sAssertsToMarker = '|'.join( '\\b' + k + '\\(' for k in desiredArgIndex.keys())
+    reAssertsToMarker = re.compile(sAssertsToMarker)
+
     previewOnly = True
     # previewOnly = False
-    dir = os.path.abspath('../../src')
     go(dir, previewOnly)
 
