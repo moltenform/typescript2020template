@@ -55,13 +55,21 @@ export function runOnLoad() {
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
         elBtnGoAsync.addEventListener('click', () => {
-            Util512Higher.syncToAsyncTransition(onBtnGoAsync(), onBtnGoAsync.name, RespondToErr.Alert) 
+            Util512Higher.syncToAsyncTransition(
+                onBtnGoAsync(),
+                onBtnGoAsync.name,
+                RespondToErr.Alert
+            );
         });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            Util512Higher.syncToAsyncTransition(SimpleUtil512Tests.runTests(true), onBtnGoAsync.name, RespondToErr.Alert) 
+            Util512Higher.syncToAsyncTransition(
+                SimpleUtil512Tests.runTests(true),
+                onBtnGoAsync.name,
+                RespondToErr.Alert
+            );
         }
     });
 

@@ -1,5 +1,4 @@
 
-
 /**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */

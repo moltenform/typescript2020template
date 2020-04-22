@@ -417,9 +417,6 @@ export class RenderComplete {
     }
 }
 
-
-
-
 /**
  * CharClassify
  *
