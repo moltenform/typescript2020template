@@ -8,17 +8,25 @@ from assertmarkerutils import *
 # and it works across multiple lines
 
 desiredArgIndex = {
-    'make512Error': 0,
+    # base
     'assertTrue': 1,
-    'assertTrueWarn': 1,
+    'assertWarn': 1,
     'checkThrow512': 1,
-    'ensureDefined': 1,
+    'assertEq': 2,
+    'assertWarnEq': 2,
+    'checkThrowEq512': 2,
+    # higher level
     'checkThrow': 1,
     'checkThrowEq': 2,
-    'assertEq': 2,
-    'assertEqWarn': 2,
+    # higher level helpers
+    'checkThrowInternal': 1,
+    'checkThrowNotifyMessage': 1,
+    
+    # other
+    'ensureDefined': 1,
     'assertThrows': 0,
     'assertThrowsAsync': 0,
+    'assertAsserts': 0,
 }
 
 skipThese = {
@@ -28,10 +36,10 @@ skipThese = {
     'expected: unknown': True,
     'condition: unknown': True,
     # ok calls that have the tag
-    'make512Error(msgAssertEq, c1, c2, c3': True,
-    'make512Error(msgInAssertEqWarn,': True,
-    'make512Error(msgInThrowIfUndefined': True,
-    'make512Error(msg: string,': True,
+    'makeUI512Error(msgAssertEq, c1, c2, c3': True,
+    'makeUI512Error(msgInAssertEqWarn,': True,
+    'makeUI512Error(msgInThrowIfUndefined': True,
+    'makeUI512Error(msg: string,': True,
 }
 
 skipFiles = {
@@ -109,7 +117,7 @@ def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, whic
         if fndQuote:
             fndMarker = re.search(reFindMarker, arg)
             if fndMarker:
-                # already marked. make sure it's not a duplicate
+                # it's apparently already marked. make sure it's not a duplicate
                 thefoundMarker = fndMarker.group(1)[1:]
                 alreadySaw = marksAleadySeen.get(thefoundMarker, False)
                 if not alreadySaw:
@@ -140,6 +148,28 @@ def genNewMarker(state):
     ret = ret.ljust(2, '0')
     return ret
 
+class GeneratedCodeDetector(object):
+    gStart = '/* generated code, any changes past this point will be lost: --------------- */'
+    gEnd = '/* generated code, any changes above this point will be lost: --------------- */'
+    startInd = None
+    endInd = None
+    def __init__(self, contents):
+        pts = contents.split(self.gStart)
+        if len(pts)==1:
+            return
+        elif len(pts)==2:
+            self.startInd = contents.find(self.gStart)
+            self.endInd = contents.find(self.gEnd)
+            assertTrue(self.startInd >= 0, 'not seen', self.gStart, f)
+            assertTrue(self.endInd >= 0, 'not seen', self.gEnd, f)
+            self.startInd += len(self.gStart)
+        else:
+            assertTrue(False, 'we only support one generated code chunk per file', f)
+    def isInsideGeneratedCode(self, index):
+        if self.startInd is None or self.endInd is None:
+            return False
+        return index > self.startInd and index < self.endInd
+
 def tests():
     assertEq(('other fn(', ['1', '2', '3'], ')', 15), parseArguments("other fn(1,2,3)", 0))
     assertEq(('other fn(', ['a b', 'c d', 'e f'], ')', 21), parseArguments("other fn(a b,c d,e f)", 0))
@@ -161,8 +191,8 @@ def tests():
 tests()
 
 if __name__=='__main__':
-    #~ previewOnly = True
-    previewOnly = False
+    previewOnly = True
+    # previewOnly = False
     dir = os.path.abspath('../../src')
     go(dir, previewOnly)
 
