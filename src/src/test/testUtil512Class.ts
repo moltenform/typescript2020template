@@ -92,14 +92,14 @@ t.test('parseIntStrict', () => {
     assertEq(12, Util512.parseIntStrict(' 12'), 'N?|');
     assertEq(12, Util512.parseIntStrict('12 '), 'N>|');
     assertEq(12, Util512.parseIntStrict(' 12 '), 'N=|');
-    assertEq(NaN, Util512.parseIntStrict(''), 'N<|');
-    assertEq(NaN, Util512.parseIntStrict(undefined), 'N;|');
-    assertEq(NaN, Util512.parseIntStrict('1more'), 'N:|');
-    assertEq(NaN, Util512.parseIntStrict('1 more'), 'N/|');
-    assertEq(NaN, Util512.parseIntStrict('1.1'), 'N.|');
-    assertEq(NaN, Util512.parseIntStrict('12a'), 'N-|');
-    assertEq(NaN, Util512.parseIntStrict('a12'), 'N,|');
-    assertEq(NaN, Util512.parseIntStrict('abc'), 'N+|');
+    assertEq(undefined, Util512.parseIntStrict(''), 'N<|');
+    assertEq(undefined, Util512.parseIntStrict(undefined), 'N;|');
+    assertEq(undefined, Util512.parseIntStrict('1more'), 'N:|');
+    assertEq(undefined, Util512.parseIntStrict('1 more'), 'N/|');
+    assertEq(undefined, Util512.parseIntStrict('1.1'), 'N.|');
+    assertEq(undefined, Util512.parseIntStrict('12a'), 'N-|');
+    assertEq(undefined, Util512.parseIntStrict('a12'), 'N,|');
+    assertEq(undefined, Util512.parseIntStrict('abc'), 'N+|');
     assertEq(12, Util512.parseIntStrict('012'), 'N*|');
     assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
@@ -259,58 +259,64 @@ t.test('capitalizeFirst.Alphabet', () => {
 t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lo|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '', [true, 1], true)
     );
 
     assertThrows('Ln|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a b', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a b', [true, 1], true)
     );
 
     assertThrows('Lm|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a', [true, 1], true)
     );
 
     assertThrows('Ll|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '?', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '?', [true, 1], true)
     );
 
     assertThrows('Lk|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '1a', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '1a', [true, 1], true)
     );
 
     assertThrows('Lj|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '_c', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '_c', [true, 1], true)
     );
 
     assertThrows('Li|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '__c', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '__c', [true, 1], true)
     );
 
     assertThrows('Lh|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '.', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '.', [true, 1], true)
     );
 
     assertThrows('Lg|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a.b', [true, 1], true)
+        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a.b', [true, 1], true)
     );
 });
 t.test('callAsMethod.MissingMethodWhenAllowed', () => {
     let o = new TestClsWithMethods();
-    Util512.callAsMethodOnClass('TestClsWithMethods', o, 'notExist', [true, 1], true);
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], true);
 });
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lf|', 'could not find', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'notExist', [true, 1], false)
+        Util512.callAsMethodOnClass(
+            TestClsWithMethods.name,
+            o,
+            'notExist',
+            [true, 1],
+            false
+        )
     );
 });
 t.test('callAsMethod.ValidMethod', () => {
     let o1 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass('TestClsWithMethods', o1, 'goAbc', [true, 1], false);
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false);
     assertEq(true, o1.calledAbc, 'D^|');
     assertEq(false, o1.calledZ, 'D]|');
     let o2 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass('TestClsWithMethods', o2, 'goZ', [true, 1], false);
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false);
     assertEq(false, o2.calledAbc, 'D[|');
     assertEq(true, o2.calledZ, 'D@|');
 });

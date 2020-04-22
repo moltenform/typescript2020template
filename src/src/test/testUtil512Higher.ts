@@ -1,8 +1,9 @@
 
 /* auto */ import { Util512Higher } from './../util/util512Higher';
+/* auto */ import { O } from './../util/util512Base';
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync, sorted } from './testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
 export let testCollectionUtil512Higher = t;
@@ -44,8 +45,268 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests', true);
-export let testCollectionExampleAsyncTests = t;
+/**
+ * example for testing serializable.
+ * field names begining in optional_ can be skipped.
+ */
+class DemoSerializable implements IsUtil512Serializable {
+    __isUtil512Serializable = true;
+    __private = 'not serialized';
+    fld1 = 'fld 1';
+    fld2 = 'fld 2 and text';
+    optional_f1: O<string> = 'an optional field';
+    optional_f2: O<string> = 'also optional';
+}
+
+t.test('serialize: expected', () => {
+    t.say(/*——————————*/ 'typical usage');
+    let o = new DemoSerializable();
+    let s = Util512SerializableHelpers.serializeToJson(o);
+    let got = JSON.parse(s);
+    let ks = sorted(Util512.getMapKeys(got)).join(',');
+    assertEq('f1,f2,fld1,fld2', ks, '');
+    assertEq('fld 1', got.fld1, '');
+    assertEq('fld 2 and text', got.fld2, '');
+    assertEq('an optional field', got.f1, '');
+    assertEq('also optional', got.f2, '');
+    assertTrue(undefined === got.__private, '');
+    t.say(/*——————————*/ 'round trip');
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        ks,
+        ''
+    );
+    assertEq('fld 1', oGot.fld1, '');
+    assertEq('fld 2 and text', oGot.fld2, '');
+    assertEq('an optional field', oGot.optional_f1, '');
+    assertEq('also optional', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+});
+t.test('serialize: private values not sent', () => {
+    t.say(/*——————————*/ 'typical usage');
+    let o = new DemoSerializable();
+    o.__private += '~';
+    o.fld1 += '~';
+    o.fld2 += '~';
+    o.optional_f1 += '~';
+    o.optional_f2 += '~';
+    let s = Util512SerializableHelpers.serializeToJson(o);
+    t.say(/*——————————*/ 'round trip');
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    let ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        ks,
+        ''
+    );
+    assertEq('fld 1~', oGot.fld1, '');
+    assertEq('fld 2 and text~', oGot.fld2, '');
+    assertEq('an optional field~', oGot.optional_f1, '');
+    assertEq('also optional~', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+});
+t.test('serialize: missing an optional is fine', () => {
+    let okIncoming = { fld1: 'a', fld2: 'b', f2: 'c' };
+    let s = JSON.stringify(okIncoming);
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    let ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        ks,
+        ''
+    );
+    assertEq('a', oGot.fld1, '');
+    assertEq('b', oGot.fld2, '');
+    assertTrue(undefined === oGot.optional_f1, '');
+    assertEq('c', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+});
+t.test('serialize: getting extra data is fine', () => {
+    let okIncoming = { fld1: 'a', fld2: 'b', f1: 'c', f2: 'd', somethingelse: 'e' };
+    let s = JSON.stringify(okIncoming);
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    let ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        ks,
+        ''
+    );
+    assertEq('a', oGot.fld1, '');
+    assertEq('b', oGot.fld2, '');
+    assertEq('c', oGot.optional_f1, '');
+    assertEq('d', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+});
+t.test('serialize: throw on missing field ', () => {
+    let badIncoming = { fld1: 'fld 1', f1: 'an optional field', f2: 'also optional' };
+    let s = JSON.stringify(badIncoming);
+    assertThrows('', 'required', () =>
+        Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s)
+    );
+});
+t.test('serialize: throw on unsupported type 1', () => {
+    let badIncoming = {
+        fld1: 'fld 1',
+        fld2: 1234,
+        f1: 'an optional field',
+        f2: 'also optional'
+    };
+    let s = JSON.stringify(badIncoming);
+    assertThrows('', 'support', () =>
+        Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s)
+    );
+});
+t.test('serialize: throw on unsupported type 2', () => {
+    let badIncoming = { fld1: 'fld 1', fld2: 'b', f1: 1234, f2: 'also optional' };
+    let s = JSON.stringify(badIncoming);
+    assertThrows('', 'not a string', () =>
+        Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s)
+    );
+});
+t.test('serialize: invalid send, undefined', () => {
+    let badOutgoing = {
+        __isUtil512Serializable: true,
+        fld1: 'fld 1',
+        fld2: undefined,
+        optional_f1: 'b',
+        optional_f2: 'also optional'
+    };
+    assertThrows('', 'support', () =>
+        Util512SerializableHelpers.serializeToJson(badOutgoing)
+    );
+});
+t.test('serialize: invalid send, not string', () => {
+    let badOutgoing = {
+        __isUtil512Serializable: true,
+        fld1: 'fld 1',
+        fld2: 1234,
+        optional_f1: 'b',
+        optional_f2: 'also optional'
+    };
+    assertThrows('', 'support', () =>
+        Util512SerializableHelpers.serializeToJson(badOutgoing)
+    );
+});
+t.test('serialize: invalid send, not string opt', () => {
+    let badOutgoing = {
+        __isUtil512Serializable: true,
+        fld1: 'fld 1',
+        fld2: 'a',
+        optional_f1: [123],
+        optional_f2: 'also optional'
+    };
+    assertThrows('', 'support', () =>
+        Util512SerializableHelpers.serializeToJson(badOutgoing)
+    );
+});
+t.test('serialize: invalid send, not marked', () => {
+    let badOutgoing = {
+        __isUtil512Serializable: true,
+        fld1: 'fld 1',
+        fld2: 1234,
+        optional_f1: 'b',
+        optional_f2: 'also optional'
+    };
+    badOutgoing.__isUtil512Serializable = undefined as any;
+    assertThrows('', 'must be', () =>
+        Util512SerializableHelpers.serializeToJson(badOutgoing)
+    );
+});
+t.test('serialize: invalid recieve, not marked', () => {
+    let o = new DemoSerializable();
+    let s = Util512SerializableHelpers.serializeToJson(o);
+    class NotMarked {
+        __private = 'not serialized';
+        fld1 = 'fld 1';
+        fld2 = 'fld 2 and text';
+        optional_f1: O<string> = 'an optional field';
+        optional_f2: O<string> = 'also optional';
+    }
+    assertThrows('', 'must be', () =>
+        Util512SerializableHelpers.deserializeFromJson(NotMarked as any, s)
+    );
+});
+t.test('serialize: ok to send an undefined if optional', () => {
+    t.say(/*——————————*/ 'send');
+    let o = new DemoSerializable();
+    o.__private += '~';
+    o.fld1 += '~';
+    o.fld2 += '~';
+    o.optional_f1 = undefined;
+    o.optional_f2 += '~';
+    let s = Util512SerializableHelpers.serializeToJson(o);
+    let ks = sorted(Util512.getMapKeys(JSON.parse(s))).join(',');
+    assertEq('f2,fld1,fld2', ks, '');
+    t.say(/*——————————*/ 'round trip');
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        ks,
+        ''
+    );
+    assertEq('fld 1~', oGot.fld1, '');
+    assertEq('fld 2 and text~', oGot.fld2, '');
+    assertTrue(undefined === oGot.optional_f1, '');
+    assertEq('also optional~', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+});
+t.test('serialize: incoming nulls map to undefined ', () => {
+    let okIncoming = { fld1: 'a', fld2: 'b', f1: 'c', f2: null };
+    let s = JSON.stringify(okIncoming);
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    assertTrue(undefined === oGot.optional_f2, '');
+    assertTrue('a' === oGot.fld1, '');
+});
+t.test("serialize: we don't read private incoming", () => {
+    let okIncoming = { fld1: 'a', fld2: 'b', f1: 'c', f2: 'd', __private: 'e' };
+    let s = JSON.stringify(okIncoming);
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
+    assertTrue('not serialized' === oGot.__private, '');
+    assertTrue('d' === oGot.optional_f2, '');
+    assertTrue('c' === oGot.optional_f1, '');
+    assertTrue('b' === oGot.fld2, '');
+});
+t.test('serialize: inheritance works, methods skipped', () => {
+    class DemoChild extends DemoSerializable {
+        other = 'other';
+        method1 = () => {
+            return 1;
+        };
+    }
+    let o = new DemoChild();
+    o.__private += '~';
+    o.fld1 += '~';
+    o.fld2 += '~';
+    o.optional_f1 += '~';
+    o.optional_f2 += '~';
+    (o as any).method2 = () => {
+        return 2;
+    };
+    let s = Util512SerializableHelpers.serializeToJson(o);
+    let got = JSON.parse(s);
+    let ks = sorted(Util512.getMapKeys(got)).join(',');
+    assertEq('f1,f2,fld1,fld2,other', ks, '');
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoChild, s);
+    ks = sorted(Util512.getMapKeys(oGot)).join(',');
+    assertEq(
+        '__isUtil512Serializable,__private,fld1,fld2,method1,optional_f1,optional_f2,other',
+        ks,
+        ''
+    );
+    ks = sorted(IsUtil512Serializable.getKeys(oGot)).join(',');
+    assertEq('fld1,fld2,optional_f1,optional_f2,other', ks, '');
+    assertEq('fld 1~', oGot.fld1, '');
+    assertEq('fld 2 and text~', oGot.fld2, '');
+    assertEq('an optional field~', oGot.optional_f1, '');
+    assertEq('also optional~', oGot.optional_f2, '');
+    assertEq('not serialized', oGot.__private, '');
+    assertEq('other', oGot.other, '');
+    assertEq(1, oGot.method1(), '');
+    assertTrue(undefined === oGot['method2'], '');
+});
 
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */
@@ -58,14 +319,96 @@ t.atest('canAwaitACall', async () => {
     await exampleAsyncFn();
     t.say(/*——————————*/ '3');
 });
-/* ok to disable warning, we're intentionally returning a promise */
-/* eslint-disable-next-line @typescript-eslint/promise-function-async */
-t.atest('canChainACall', () => {
+/* note that we're intentionally returning a promise */
+t.atest('canChainACall', async () => {
     return exampleAsyncFn();
 });
 
+/* an example async function */
 async function exampleAsyncFn() {
     t.say(/*——————————*/ '1...');
-    await sleep(100);
+    await Util512Higher.sleep(100);
     t.say(/*——————————*/ '2...');
 }
+t.atest('minimumTimeSlowsDown', async () => {
+    let shortFn = async () => {
+        await Util512Higher.sleep(100);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithMinimumTime(shortFn(), 500);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start > 400, 'too fast');
+});
+t.atest('minimumTimeStaysSame', async () => {
+    let longFn = async () => {
+        await Util512Higher.sleep(500);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithMinimumTime(longFn(), 100);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start > 400, 'too fast');
+});
+t.atest('doesNotTimeOut', async () => {
+    let shortFn = async () => {
+        await Util512Higher.sleep(200);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithTimeout(shortFn(), 800);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start < 600, 'too slow');
+});
+t.atest('timesOut', async () => {
+    let longFn = async () => {
+        await Util512Higher.sleep(800);
+        return 123;
+    };
+    let start = performance.now();
+    let cb = async () => {
+        return Util512Higher.runAsyncWithTimeout(longFn(), 200);
+    };
+    await assertThrowsAsync('', 'Timed out', () => cb());
+    assertTrue(performance.now() - start < 600, 'too slow');
+});
+
+/**
+ * test some less useful classes
+ */
+t.test('LockableArr', () => {
+    t.say(/*——————————*/ 'standard use');
+    let ar = new Util512.LockableArr<number>();
+    ar.set(0, 55);
+    ar.set(1, 56);
+    assertEq(55, ar.at(0), 'OS|');
+    assertEq(56, ar.at(1), 'OR|');
+    assertEq(2, ar.len(), 'OQ|');
+    ar.lock();
+    assertThrows('OP|', 'locked', () => {
+        ar.set(1, 57);
+    });
+    t.say(/*——————————*/ "changing the copy won't change original");
+    let copy = ar.getUnlockedCopy();
+    assertEq(55, copy.at(0), 'OO|');
+    assertEq(56, copy.at(1), 'ON|');
+    assertEq(2, copy.len(), 'OM|');
+    copy.set(1, 57);
+    assertEq(57, copy.at(1), 'OL|');
+    assertEq(56, ar.at(1), 'OK|');
+});
+t.test('keepOnlyUnique', () => {
+    assertEq([], Util512.keepOnlyUnique([]), 'OJ|');
+    assertEq(['1'], Util512.keepOnlyUnique(['1']), 'OI|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']), 'OH|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']), 'OG|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']), 'OF|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']), 'OE|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']), 'OD|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']), 'OC|');
+    assertEq(
+        ['11', '12', '13', '14', '15'],
+        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
+        'OB|'
+    );
+});

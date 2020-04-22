@@ -1,7 +1,7 @@
 
 /* auto */ import { bool } from './../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, last, longstr, slength, util512Sort } from './../util/util512';
+/* auto */ import { assertTrue } from './../util/util512Assert';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
@@ -70,36 +70,36 @@ t.test('findStrToEnum.UseAlts', () => {
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'), 'Dd|');
 });
 t.test('getEnumToStr.FoundPrimary', () => {
-    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.First), 'Dc|');
-    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.Second), 'Db|');
-    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
+    assertEq('first', getEnumToStrOrFallback(TestEnum, TestEnum.First), 'Dc|');
+    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.Second), 'Db|');
+    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.Third), 'Da|');
 });
 t.test('getEnumToStr.AlternatesHaveSameVal', () => {
     assertEq(
         'first',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__TheFirst),
         'DZ|'
     );
     assertEq(
         'second',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Scnd),
         'DY|'
     );
     assertEq(
         'third',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Thd),
         'DX|'
     );
 });
 t.test('getEnumToStr.NotFound', () => {
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, 999), 'DV|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, -1), 'DW|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, 999), 'DV|');
 });
 t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__isUI512Enum), 'DU|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__isUI512Enum), 'DU|');
     assertEq(
         'Unknown',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__UI512EnumCapitalize),
         'DT|'
     );
 });
@@ -119,19 +119,16 @@ t.test('getStrToEnum.FoundPrimary', () => {
 t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     let excMessage = '';
     try {
-        UI512ErrorHandling.breakOnThrow = false;
         getStrToEnum(TestEnum, 'TestEnum', 'Firstf');
     } catch (e) {
         excMessage = e.toString();
-    } finally {
-        UI512ErrorHandling.breakOnThrow = true;
     }
 
     let pts = excMessage.split(',');
     pts.sort(util512Sort);
-    assertEq(pts[0], ` first`, 'DP|');
-    assertEq(pts[1], ` second`, 'DO|');
-    assertEq(pts[2], ` third (4E)`, 'DN|');
+    assertEq(` first`, pts[0], 'DP|');
+    assertEq(` second`, pts[1], 'DO|');
+    assertEq(` third (4E)`, pts[2], 'DN|');
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
 t.test('slength', () => {
@@ -158,12 +155,12 @@ t.test('cast', () => {
     }
 
     let o1: unknown = new Parent();
-    assertEq('parent', cast(o1, Parent).a(), 'NC|');
+    assertEq('parent', cast(Parent, o1).a(), 'NC|');
     o1 = new Child();
-    assertEq('child', cast(o1, Parent).a(), 'NB|');
+    assertEq('child', cast(Parent, o1).a(), 'NB|');
     o1 = new Other();
     assertThrows('NA|', 'type cast exception', () => {
-        cast(o1, Parent);
+        cast(Parent, o1);
     });
 });
 t.test('isString', () => {
@@ -393,7 +390,7 @@ t.test('forOfGenerator', () => {
 
     assertEq([10, 20, 30, 40], result, '0s|');
 });
-t.test('testOrderedHash.IterKeys', () => {
+t.test('OrderedHash.IterKeys', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -405,7 +402,7 @@ t.test('testOrderedHash.IterKeys', () => {
 
     assertEq(['ccc', 'ccb', 'cca'], result, '0q|');
 });
-t.test('testOrderedHash.IterVals', () => {
+t.test('OrderedHash.IterVals', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -417,7 +414,7 @@ t.test('testOrderedHash.IterVals', () => {
 
     assertEq([30, 29, 28], result, '0p|');
 });
-t.test('testOrderedHash.IterReversed', () => {
+t.test('OrderedHash.IterReversed', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -470,8 +467,8 @@ t.test('checkThrowEq', () => {
     });
 });
 t.test('last', () => {
-    assertEq(3, last([1, 2, 3]), 'M&|');
-    assertEq(1, last([1]), 'M%|');
+    assertEq(3, arLast([1, 2, 3]), 'M&|');
+    assertEq(1, arLast([1]), 'M%|');
 });
 t.test('bool', () => {
     assertEq(true, bool(true), 'M#|');

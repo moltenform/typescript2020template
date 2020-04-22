@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, checkThrow512, respondUI512Error } from './util512Assert';
-/* auto */ import { Util512, assertEq, fitIntoInclusive } from './util512';
+/* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license

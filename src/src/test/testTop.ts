@@ -3,11 +3,11 @@
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './testUtil512Higher';
+/* auto */ import { testCollectionUtil512Higher } from './testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './testExternalLibs';
+/* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {

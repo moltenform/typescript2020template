@@ -1,11 +1,11 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../util/util512Higher';
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 
 import { toWords } from 'number-to-words';
 import type { Bowser } from '../../external/bowser/bowser';
-import { Util512Higher, RespondToErr } from '../util/util512Higher';
 declare const bowser: typeof Bowser;
 
 function getTestString() {

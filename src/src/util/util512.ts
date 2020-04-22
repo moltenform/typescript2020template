@@ -1,6 +1,6 @@
 
 /* auto */ import { O, tostring } from './util512Base';
-/* auto */ import { assertTrue, checkThrow512, ensureDefined, make512Error } from './util512Assert';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -76,30 +76,32 @@ export class Util512 {
     /*
      * plain parseInt allows trailing text
      */
-    static parseIntStrict(s: O<string>) {
+    static parseIntStrict(s: O<string>): O<number> {
         if (!s) {
-            return NaN;
+            return undefined;
         }
 
         s = s.trim();
         if (s.match(/^\d+$/)) {
             return Util512.parseInt(s);
         } else {
-            return NaN;
+            return undefined;
         }
     }
 
     /*
      * use this, not parseInt where you might forget to specify base 10
      */
-    static parseInt(s: O<string>) {
+    static parseInt(s: O<string>): O<number> {
+        let ret = 0;
         if (s) {
-            /* ok to use here, we remembered to say base 10 */
+            /* ok to use, we remembered to say base 10 */
             /* eslint-disable-next-line ban/ban */
-            return parseInt(s, 10);
+            ret = parseInt(s, 10);
         } else {
-            return NaN;
+            ret = NaN;
         }
+        return Number.isFinite(ret) ? ret : undefined;
     }
 
     /**
@@ -143,8 +145,8 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-    static shallowClone(o: object) {
-        return Object.assign({}, o);
+    static shallowClone<T extends object>(o: object): T {
+        return Object.assign({}, o) as T;
     }
 
     /**
@@ -189,7 +191,7 @@ export class Util512 {
     }
 
     /**
-     * instead of a switch() or a map string->Function,
+     * instead of a switch() or a map string->function,
      * use the class itself. (we'll need to tell js minifiers not to minify method names).
      * example:
      * class MyClass {
@@ -199,15 +201,16 @@ export class Util512 {
      *
      * let inst = new MyClass()
      * let method = 'goAbc'
-     * callAsMethodOnClass('MyClass', inst, method, [], true)
+     * callAsMethodOnClass(MyClass.name, inst, method, [], true)
      */
     static callAsMethodOnClass(
         clsname: string,
         me: any,
         s: string,
         args: unknown[],
-        okIfNotExists: boolean
-    ) {
+        okIfNotExists: boolean,
+        returnIfNotExists = ''
+    ): unknown {
         checkThrow512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
@@ -225,13 +228,11 @@ export class Util512 {
             );
 
             assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
-
-            /* eslint-disable-next-line ban/ban */
-            return method.apply(me, args);
+            return method.apply(me, args); /* warn-apply-ok */
         } else if (okIfNotExists) {
-            return undefined;
+            return returnIfNotExists ? returnIfNotExists : undefined;
         } else {
-            throw make512Error(`4G|callAsMethodOnClass ${clsname} could not find ${s}`);
+            checkThrow512(false, `4G|callAsMethodOnClass ${clsname} could not find ${s}`);
         }
     }
 
@@ -245,7 +246,7 @@ export class Util512 {
     /**
      * returns list of keys.
      */
-    static getMapKeys<U>(map: { [key: string]: U }): string[] {
+    static getMapKeys(map: object): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -348,16 +349,27 @@ export class Util512 {
     }
 
     /**
+     * javascript's default sort is dangerous because it's
+     * always a string sort, but we can use this for cases where
+     * we know we are sorting strings. our util512 sort is
+     * usually better though because it checks types at runtime.
+     */
+    static sortStringArray(arr: string[]) {
+        /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
+        arr.sort();
+    }
+
+    /**
      * use the function to provide sort order
      * like Python's sort(key=fn)
      * often more efficient than passing a comparison function.
      */
     static sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
-        // 1) decorate
+        /* 1) decorate */
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
-        // 2) sort
+        /* 2) sort */
         decorated.sort((a, b) => util512Sort(a[0], b[0]));
-        // 3) undecorate
+        /* 3) undecorate */
         return decorated.map(val => val[1]);
     }
 
@@ -366,6 +378,22 @@ export class Util512 {
      */
     static normalizeNewlines(s: string) {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
+
+    /**
+     * filter a list, keeping only unique values.
+     */
+    static keepOnlyUnique(ar: string[]) {
+        let ret: string[] = [];
+        let seen: { [key: string]: boolean } = {};
+        for (let i = 0; i < ar.length; i++) {
+            if (!seen[ar[i]]) {
+                seen[ar[i]] = true;
+                ret.push(ar[i]);
+            }
+        }
+
+        return ret;
     }
 }
 
@@ -386,11 +414,11 @@ export namespace Util512 {
             this.locked = true;
         }
         push(v: T) {
-            checkThrowEq(false, this.locked, 'Ow|locked');
+            checkThrowEq512(false, this.locked, 'Ow|locked');
             this.vals.push(v);
         }
         set(i: number, v: T) {
-            checkThrowEq(false, this.locked, '4A|locked');
+            checkThrowEq512(false, this.locked, '4A|locked');
             this.vals[i] = v;
         }
         len() {
@@ -405,22 +433,6 @@ export namespace Util512 {
             other.vals = this.vals.slice(0);
             return other;
         }
-    }
-
-    /**
-     * filter a list, keeping only unique values.
-     */
-    export function keepOnlyUnique(ar: string[]) {
-        let ret: string[] = [];
-        let seen: { [key: string]: boolean } = {};
-        for (let i = 0; i < ar.length; i++) {
-            if (!seen[ar[i]]) {
-                seen[ar[i]] = true;
-                ret.push(ar[i]);
-            }
-        }
-
-        return ret;
     }
 }
 
@@ -458,6 +470,20 @@ if (!String.prototype.startsWith) {
 }
 
 /**
+ * polyfill for String.endsWith, from https://developer.mozilla.org
+ * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+ */
+if (!String.prototype.endsWith) {
+    /* eslint-disable-next-line no-extend-native */
+    String.prototype.endsWith = function (search: string, this_len?: number) {
+        if (this_len === undefined || this_len > this.length) {
+            this_len = this.length;
+        }
+        return this.substring(this_len - search.length, this_len) === search;
+    };
+}
+
+/**
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
@@ -479,6 +505,7 @@ type AnyJsonInner =
  * indicates that the value is a plain JS object
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
+export type AnyUnshapedJson = any;
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 
@@ -554,7 +581,7 @@ export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
             msgContext += 'try one of' + listEnumVals(Enm, makeLowercase);
         }
 
-        throw make512Error(msgContext, '4E|');
+        checkThrow512(false, msgContext, '4E|');
     }
 }
 
@@ -571,7 +598,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
     /* using e[n] would work, but it's fragile if enum implementation changes. */
     for (let enumMember in Enm) {
         if (
-            (Enm[enumMember] as any) === n &&
+            (Enm[enumMember] as unknown) === n &&
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__')
         ) {
@@ -588,7 +615,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
 /**
  * findEnumToStr, but returns a fallback value.
  */
-export function getEnumToStrOrUnknown<E>(
+export function getEnumToStrOrFallback<E>(
     Enm: TypeLikeAnEnum<E>,
     n: number,
     fallback = 'Unknown'
@@ -606,18 +633,25 @@ export function slength(s: string | null | undefined) {
 /**
  * safe cast, throws if cast would fail.
  * ts inference lets us type simply
- * let myObj = cast(o, MyClass)
+ * let myObj = cast(MyClass, o)
+
+ * instanceof is a little slow, so at one point I used a
+ * class Foo {
+ *  isFoo = true
+ * }
+ * and could type check by doing (obj as Foo).isFoo,
+ * but it looked clumsy, and didn't type-guard.
  */
 export function cast<T>(
-    instance: unknown,
     ctor: AnyParameterCtor<T>,
+    instance: unknown,
     context?: string
 ): T {
     if (instance instanceof ctor) {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    checkThrow512(false, 'J7|type cast exception', context);
 }
 
 /**
@@ -628,7 +662,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context).clsAsErr();
 }
 
 /**
@@ -639,7 +673,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context).clsAsErr();
 }
 
 /**
@@ -657,7 +691,7 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * works on arbitrarily nested array structures.
  * can be used in .sort() or just to compare values.
  */
-export function util512Sort(a: unknown, b: unknown): number {
+export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
     if (a === undefined && b === undefined) {
         return 0;
     } else if (a === null && b === null) {
@@ -684,7 +718,11 @@ export function util512Sort(a: unknown, b: unknown): number {
         }
         return 0;
     } else {
-        throw make512Error(`4B|could not compare types ${a} and ${b}`);
+        if (silent) {
+            return 1;
+        } else {
+            checkThrow512(false, `4B|could not compare types ${a} and ${b}`);
+        }
     }
 }
 
@@ -799,7 +837,12 @@ export class MapKeyToObject<T> {
         return ensureDefined(this.objects[key], '3_|id not found', key);
     }
 
-    find(key: O<string>) {
+    getOrFallback(key:string, fallback:T) {
+        let found = this.objects[key]
+        return found ?? fallback
+    }
+
+    find(key: O<string>):O<T> {
         if (key) {
             return this.objects[key];
         } else {
@@ -809,9 +852,10 @@ export class MapKeyToObject<T> {
 
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
-        if (this.objects[key] !== undefined) {
-            throw make512Error(`3]|duplicate key, ${key} already exists`);
-        }
+        checkThrow512(
+            this.objects[key] === undefined,
+            `3]|duplicate key, ${key} already exists`
+        );
 
         this.objects[key] = obj;
     }
@@ -844,67 +888,67 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
 }
 
 /**
+ * a quick way to trigger assertion if value is not what was expected.
+ * 'hard' assert, does not let execution continue.
+ */
+export function assertEq<T>(
+    expected: T,
+    got: unknown,
+    msg: string,
+    c1?: unknown,
+    c2?: unknown
+): asserts got is T {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        assertTrue(false, msg + msgEq, c1, c2);
+    }
+}
+
+/**
+ * if expected and msg are not the same, assertWarn.
+ */
+export function assertWarnEq(
+    expected: unknown,
+    got: unknown,
+    msg: string,
+    c1?: unknown,
+    c2?: unknown
+) {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        assertWarn(false, msg + msgEq, c1, c2);
+    }
+}
+
+/**
  * a quick way to throw an expection if value is not what was expected.
  */
-export function checkThrowEq<T>(
+export function checkThrowEq512<T>(
     expected: T,
     got: unknown,
     msg: string,
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (util512Sort(expected, got) !== 0) {
-        throw make512Error(
-            `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`
-        );
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        checkThrow512(false, msg + msgEq, c1, c2);
     }
 }
 
 /**
- * a quick way to trigger assertion if value is not what was expected.
- * 'hard' assert, does not let execution continue.
+ * get last of an array
  */
-export function assertEq(
-    expected: unknown,
-    received: unknown,
-    c1: string,
-    c2?: unknown,
-    c3?: unknown
-) {
-    if (util512Sort(expected, received) !== 0) {
-        let msgAssertEq = longstr(`assertion failed in assertEq,
-            expected '${expected}' but got '${received}'.`);
-        throw make512Error(msgAssertEq, c1, c2, c3);
-    }
-}
-
-/**
- * a quick way to trigger assertion if value is not what was expected.
- *  'soft' assert, lets execution continue.
- */
-export function assertEqWarn(
-    expected: unknown,
-    received: unknown,
-    c1: string,
-    c2?: unknown,
-    c3?: unknown
-) {
-    if (util512Sort(expected, received) !== 0) {
-        let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,
-            expected '${expected}' but got '${received}'.`);
-        let er = make512Error(msgInAssertEqWarn, c1, c2, c3);
-        if (!window.confirm('continue?')) {
-            throw er;
-        }
-    }
-}
-
-/**
-get last of an array
-*/
-export function last<T>(ar: T[]): T {
+export function arLast<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];
+}
+
+/**
+ * get last of an array, or undefined if array is empty
+ */
+export function lastIfThere<T>(ar: T[]): O<T> {
+    return ar ? ar[ar.length - 1] : undefined;
 }
 
 /**

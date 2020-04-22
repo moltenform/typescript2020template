@@ -1,8 +1,8 @@
 
 /* auto */ import { O } from './../util/util512Base';
 /* auto */ import { assertTrue } from './../util/util512Assert';
-/* auto */ import { Util512, assertEq, longstr } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './testUtils';
+/* auto */ import { assertEq, longstr } from './../util/util512';
+/* auto */ import { SimpleUtil512TestCollection } from './testUtils';
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
@@ -100,46 +100,6 @@ t.test('testClassSerializationWithNulls', () => {
     assertTrue(got.holding[0] === 'a', 'OV|');
     assertTrue(got.holding[1] === null, 'OU|expected undefined->null');
     assertTrue(got.holding[2] === 'c', 'OT|');
-});
-
-t = new SimpleUtil512TestCollection('testCollectionUtil512LessUsefulLibs');
-export let testCollectionUtil512LessUsefulLibs = t;
-
-t.test('LockableArr', () => {
-    t.say(/*——————————*/ 'standard use');
-    let ar = new Util512.LockableArr<number>();
-    ar.set(0, 55);
-    ar.set(1, 56);
-    assertEq(55, ar.at(0), 'OS|');
-    assertEq(56, ar.at(1), 'OR|');
-    assertEq(2, ar.len(), 'OQ|');
-    ar.lock();
-    assertThrows('OP|', 'locked', () => {
-        ar.set(1, 57);
-    });
-    t.say(/*——————————*/ "changing the copy won't change original");
-    let copy = ar.getUnlockedCopy();
-    assertEq(55, copy.at(0), 'OO|');
-    assertEq(56, copy.at(1), 'ON|');
-    assertEq(2, copy.len(), 'OM|');
-    copy.set(1, 57);
-    assertEq(57, copy.at(1), 'OL|');
-    assertEq(56, ar.at(1), 'OK|');
-});
-t.test('keepOnlyUnique', () => {
-    assertEq([], Util512.keepOnlyUnique([]), 'OJ|');
-    assertEq(['1'], Util512.keepOnlyUnique(['1']), 'OI|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']), 'OH|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']), 'OG|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']), 'OF|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']), 'OE|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']), 'OD|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']), 'OC|');
-    assertEq(
-        ['11', '12', '13', '14', '15'],
-        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
-        'OB|'
-    );
 });
 
 declare namespace csv {
