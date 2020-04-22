@@ -81,11 +81,13 @@ def goForFile(f, previewOnly, state, marksAleadySeen):
             files.writeall(f, newcontent, encoding='utf-8')
 
 def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
+    skipIfInGeneratedCode = GeneratedCodeDetector(content, f)
     matches = []
     for m in re.finditer(reAssertsToMarker, content):
         which = m.group(0).split('(')[0]
         posStart = m.start(0)
-        matches.append((posStart, which))
+        if not skipIfInGeneratedCode.isInsideGeneratedCode(posStart):
+            matches.append((posStart, which))
         
     # iterate the matches backwards so we can alter the string without altering indexes in the document
     matches.reverse()
@@ -153,7 +155,7 @@ class GeneratedCodeDetector(object):
     gEnd = '/* generated code, any changes above this point will be lost: --------------- */'
     startInd = None
     endInd = None
-    def __init__(self, contents):
+    def __init__(self, contents, f=''):
         pts = contents.split(self.gStart)
         if len(pts)==1:
             return
@@ -187,6 +189,19 @@ def tests():
 
     assertEq(('fn(', ['1', '2', '3'], ')', 9), parseArguments("'test_test' otherotherotherotherotherother fn(1,2,3)", 43))
     assertEq(('fn(', ['1', '2', '3'], ')', 9), parseArguments("'test\\'tes' otherotherotherotherotherother fn(1,2,3)", 43))
+
+    gStart = GeneratedCodeDetector('').gStart
+    gEnd = GeneratedCodeDetector('').gEnd
+    exampleDoc = f'first\nlines\n\nthen\n{gStart}\ninside\nthe_generated\narea\n{gEnd}outside\nagain'
+    detector = GeneratedCodeDetector(exampleDoc)
+    assertTrue(not detector.isInsideGeneratedCode(0))
+    assertTrue(not detector.isInsideGeneratedCode(1))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('then')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('inside')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('the_generated')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('area')))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('outside')))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('again')))
 
 tests()
 
