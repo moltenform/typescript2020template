@@ -1,6 +1,6 @@
 
 /* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort } from './../util/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, last, longstr, slength, util512Sort } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
@@ -166,16 +166,18 @@ t.test('cast', () => {
     });
 });
 t.test('isString', () => {
-    assertTrue(isString(''), 'N9|');
-    assertTrue(isString('abc'), 'N8|');
-    assertTrue(isString(String('abc')), 'N7|');
-    assertTrue(!isString(123), 'N5|');
-    assertTrue(!isString(null), 'N4|');
-    assertTrue(!isString(undefined), 'N3|');
-    assertTrue(!isString(['a']), 'N2|');
-    /* ok to disable the warning, intentionally making a Object-style-string */
+    assertTrue(typeof '' === 'string', 'N9|');
+    assertTrue(typeof 'abc' === 'string', 'N8|');
+    assertTrue(typeof String('abc') === 'string', 'N7|');
+    assertTrue(typeof 123 !== 'string', 'N5|');
+    assertTrue(typeof null !== 'string', 'N4|');
+    assertTrue(typeof undefined !== 'string', 'N3|');
+    assertTrue(typeof ['a'] !== 'string', 'N2|');
+    /* ok to disable the warning, intentionally making a Object-style-string.
+    we now assume that these will never occur, so it's ok that
+    they aren't identified as strings. */
     /* eslint-disable-next-line no-new-wrappers */
-    assertTrue(isString(new String('abc')), 'N6|');
+    assertTrue(typeof new String('abc') !== 'string', 'N6|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');

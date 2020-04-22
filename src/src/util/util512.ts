@@ -493,7 +493,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
     for (let enumMember in Enm) {
         /* show possible values */
         if (
-            isString(enumMember) &&
+            typeof enumMember === 'string' &&
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__') &&
             !'0123456789'.includes(enumMember[0].toString())
@@ -631,7 +631,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
  * safe cast, throws if cast would fail.
  */
 export function castVerifyIsStr(instance: unknown, context?: string): string {
-    if (isString(instance)) {
+    if (typeof instance === 'string') {
         return instance;
     }
 
@@ -643,13 +643,6 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
  */
 export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T): T {
     return instance ? instance : defaultval;
-}
-
-/**
- * be extra cautious in case string was made via new String
- */
-export function isString(v: unknown): v is string {
-    return bool(typeof v === 'string') || bool(v instanceof String);
 }
 
 /**
@@ -672,7 +665,7 @@ export function util512Sort(a: unknown, b: unknown): number {
         return 0;
     } else if (a === null && b === null) {
         return 0;
-    } else if (isString(a) && isString(b)) {
+    } else if (typeof a === 'string' && typeof b === 'string') {
         return a < b ? -1 : a > b ? 1 : 0;
     } else if (typeof a === 'number' && typeof b === 'number') {
         return a < b ? -1 : a > b ? 1 : 0;
