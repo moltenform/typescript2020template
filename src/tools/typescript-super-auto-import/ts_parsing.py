@@ -14,11 +14,14 @@ def getSymbolsFromLine(s):
         yield m.group(2)
 
 def getFileLines(f, tryToStripComments):
+    assertTrue(tryToStripComments in (True,
+        False, 'multilineonly', 'singlelineonly'))
+
     text = files.readall(f, encoding='utf8')
-    if tryToStripComments:
+    if tryToStripComments and tryToStripComments != 'singlelineonly':
         text = simpleStripMultilineComments(text, '/*', '*/')
     lines = text.replace('\r\n', '\n').split('\n')
-    if tryToStripComments:
+    if tryToStripComments and tryToStripComments != 'multilineonly':
         lines = [line.split('//')[0] for line in lines]
     return lines
 
