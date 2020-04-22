@@ -57,6 +57,7 @@ module.exports = {
         'no-constant-condition': 'off',
         'prefer-const': 'off',
         'prefer-destructuring': 'off',
+        'no-empty': 'off',
 
         // typescript, ones that I think are fine
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -68,9 +69,12 @@ module.exports = {
         '@typescript-eslint/no-inferrable-types': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-empty': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/prefer-regexp-exec': 'off',
         '@typescript-eslint/promise-function-async': 'off',
+        '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/require-await': 'off',
 
         // leaving disabled, since default vals in classes seem to work fine
         'no-invalid-this': 'off',
@@ -144,8 +148,11 @@ module.exports = {
 
         "ban/ban": [
             1, // warn
-            {"name": ["*", "apply"], "message": "apply is dangerous, there could be max arg limits."},
             {"name": "parseInt", "message": "prefer my parseint in utils, don't need to remember to specify base10."},
+            {"name": ["*", "setTimeout"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
         ]
     },
     settings: {
