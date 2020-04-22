@@ -4,6 +4,9 @@
 /* auto */ import { assertEq, longstr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './testUtils';
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
 

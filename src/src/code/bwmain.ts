@@ -4,6 +4,9 @@
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 import { toWords } from 'number-to-words';
 import type { Bowser } from '../../external/bowser/bowser';
 declare const bowser: typeof Bowser;

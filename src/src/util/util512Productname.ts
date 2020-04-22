@@ -1,6 +1,6 @@
 
-// moltenform.com(Ben Fisher), 2020
-// MIT license
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
 
 /**
  * change these as appropriate for your product

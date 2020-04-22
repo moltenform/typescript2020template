@@ -1,4 +1,7 @@
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 /**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */

@@ -1,8 +1,8 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, callDebuggerIfNotInProduction, tostring } from './util512Base';
 
-// moltenform.com(Ben Fisher), 2020
-// MIT license
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
 
 /**
  * EXCEPTION HANDLING STRATEGY:

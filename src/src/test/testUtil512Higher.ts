@@ -6,6 +6,9 @@
 /* auto */ import { Util512, assertEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync, sorted } from './testUtils';
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
 export let testCollectionUtil512Higher = t;
 

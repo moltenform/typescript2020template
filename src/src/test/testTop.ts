@@ -9,6 +9,9 @@
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
 /* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 /**
  * a very simple testing framework.
  */

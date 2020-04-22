@@ -2,8 +2,8 @@
 /* auto */ import { checkThrow512 } from './util512Assert';
 /* auto */ import { NoParameterCtor, Util512 } from './util512';
 
-/* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the GPLv3 license */
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
 
 /**
  * serialize and deserialize simple structures.

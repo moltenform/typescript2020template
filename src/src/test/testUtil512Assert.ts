@@ -4,6 +4,9 @@
 /* auto */ import { assertEq, assertWarnEq, checkThrowEq512 } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
 
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Assert');
 export let testCollectionUtil512Assert = t;
 
