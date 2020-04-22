@@ -65,6 +65,7 @@ def checkText(f, lines, prettierCfg):
         # iterate backwards, so that as you fix the problems, the line numbers are still valid
         problemLines.reverse()
         for lines, i in problemLines:
+            line = lines[i]
             trace(f'silence by putting /* check_long_lines_silence_subsequent */ earlier in the file')
             trace(f'or /* prettier-ignore */ on the prior line')
             showWarningGccStyle(f, i+1, f'length of line is {len(line)} which exceeds .prettierrc.js printWidth ({currentPrintWidth.val})')
