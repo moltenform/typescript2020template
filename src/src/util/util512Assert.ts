@@ -394,9 +394,22 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
 }
 
 /**
+ * at build time, the string below
+ * might be replaced with "debugger".
+ * V8's perf can be affected if there's a debugger statement around,
+ * so this makes sure it's not even there.
+ */
+export function callDebuggerIfNotInProduction(context?: string) {
+    window['DBG' + 'PLACEHOLDER'] = true;
+    /* eslint-disable-next-line no-unused-expressions */
+    DBGPLACEHOLDER;
+}
+
+/**
  * this will not exist at runtime, the string is rewritten
  */
 declare const WEBPACK_PRODUCTION: boolean;
+declare const DBGPLACEHOLDER: boolean;
 
 /**
  * check if we are in a production build.
