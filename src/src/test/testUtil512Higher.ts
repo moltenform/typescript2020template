@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512Higher, sleep } from './../util/util512Higher';
+/* auto */ import { Util512Higher } from './../util/util512Higher';
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './testUtils';

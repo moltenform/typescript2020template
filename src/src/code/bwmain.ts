@@ -1,11 +1,11 @@
 
-/* auto */ import { sleep } from './../util/util512Higher';
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 
 import { toWords } from 'number-to-words';
 import type { Bowser } from '../../external/bowser/bowser';
+import { Util512Higher, RespondToErr } from '../util/util512Higher';
 declare const bowser: typeof Bowser;
 
 function getTestString() {
@@ -27,9 +27,9 @@ async function onBtnGoAsync() {
     let el = document.getElementById('output');
     if (el) {
         el.innerHTML += '1... ';
-        await sleep(1000);
+        await Util512Higher.sleep(1000);
         el.innerHTML += '2... ';
-        await sleep(1000);
+        await Util512Higher.sleep(1000);
         el.innerHTML += '3';
     }
 }
@@ -55,19 +55,13 @@ export function runOnLoad() {
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
         elBtnGoAsync.addEventListener('click', () => {
-            onBtnGoAsync().then(
-                () => {},
-                () => {}
-            );
+            Util512Higher.syncToAsyncTransition(onBtnGoAsync(), onBtnGoAsync.name, RespondToErr.Alert) 
         });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            SimpleUtil512Tests.runTests(true).then(
-                () => {},
-                () => {}
-            );
+            Util512Higher.syncToAsyncTransition(SimpleUtil512Tests.runTests(true), onBtnGoAsync.name, RespondToErr.Alert) 
         }
     });
 

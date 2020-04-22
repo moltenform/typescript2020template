@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncVoidFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../util/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue, make512Error } from './../util/util512Assert';
 /* auto */ import { util512Sort } from './../util/util512';
 
 /**
@@ -67,7 +67,7 @@ export function sorted(ar: any[]) {
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        throw makeUI512Error(`1!|It looks like the debugger is set to break
+        throw make512Error(`1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
             many tests intentionally throw exceptions.`);
     });

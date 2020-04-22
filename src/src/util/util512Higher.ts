@@ -1,6 +1,6 @@
 
-/* auto */ import { assertTrue, makeUI512Error } from './util512Assert';
-/* auto */ import { AnyJson, Util512, assertEq, fitIntoInclusive, last } from './util512';
+/* auto */ import { assertTrue, checkThrow512, respondUI512Error } from './util512Assert';
+/* auto */ import { Util512, assertEq, fitIntoInclusive } from './util512';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -126,7 +126,7 @@ export class Util512Higher {
     }
 
     /**
-     * download json asynchronously. see vpcrequest.ts if sending parameters.
+     * download json asynchronously.
      */
     private static loadJsonImpl(
         url: string,

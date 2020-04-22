@@ -8,11 +8,11 @@ from assertmarkerutils import *
 # and it works across multiple lines
 
 desiredArgIndex = {
-    'makeUI512Error': 0,
+    'make512Error': 0,
     'assertTrue': 1,
     'assertTrueWarn': 1,
-    'checkThrowUI512': 1,
-    'throwIfUndefined': 1,
+    'checkThrow512': 1,
+    'ensureDefined': 1,
     'checkThrow': 1,
     'checkThrowEq': 2,
     'assertEq': 2,
@@ -28,10 +28,10 @@ skipThese = {
     'expected: unknown': True,
     'condition: unknown': True,
     # ok calls that have the tag
-    'makeUI512Error(msgAssertEq, c1, c2, c3': True,
-    'makeUI512Error(msgInAssertEqWarn,': True,
-    'makeUI512Error(msgInThrowIfUndefined': True,
-    'makeUI512Error(msg: string,': True,
+    'make512Error(msgAssertEq, c1, c2, c3': True,
+    'make512Error(msgInAssertEqWarn,': True,
+    'make512Error(msgInThrowIfUndefined': True,
+    'make512Error(msg: string,': True,
 }
 
 skipFiles = {

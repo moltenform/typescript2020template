@@ -1,6 +1,6 @@
 
 /* auto */ import { O, tostring } from './util512Base';
-/* auto */ import { assertTrue, checkThrowUI512, makeUI512Error, throwIfUndefined } from './util512Assert';
+/* auto */ import { assertTrue, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 
 // moltenform.com(Ben Fisher), 2020
 // MIT license
@@ -208,7 +208,7 @@ export class Util512 {
         args: unknown[],
         okIfNotExists: boolean
     ) {
-        checkThrowUI512(
+        checkThrow512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
             s
@@ -231,7 +231,7 @@ export class Util512 {
         } else if (okIfNotExists) {
             return undefined;
         } else {
-            throw makeUI512Error(`4G|callAsMethodOnClass ${clsname} could not find ${s}`);
+            throw make512Error(`4G|callAsMethodOnClass ${clsname} could not find ${s}`);
         }
     }
 
@@ -554,7 +554,7 @@ export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
             msgContext += 'try one of' + listEnumVals(Enm, makeLowercase);
         }
 
-        throw makeUI512Error(msgContext, '4E|');
+        throw make512Error(msgContext, '4E|');
     }
 }
 
@@ -617,7 +617,7 @@ export function cast<T>(
         return instance;
     }
 
-    throw makeUI512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context);
 }
 
 /**
@@ -628,7 +628,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
         return instance;
     }
 
-    throw makeUI512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context);
 }
 
 /**
@@ -639,7 +639,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
         return instance;
     }
 
-    throw makeUI512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context);
 }
 
 /**
@@ -684,7 +684,7 @@ export function util512Sort(a: unknown, b: unknown): number {
         }
         return 0;
     } else {
-        throw makeUI512Error(`4B|could not compare types ${a} and ${b}`);
+        throw make512Error(`4B|could not compare types ${a} and ${b}`);
     }
 }
 
@@ -736,7 +736,7 @@ export class OrderedHash<TValue> {
     }
 
     get(k: string): TValue {
-        return throwIfUndefined(this.find(k), '41|could not find ', k);
+        return ensureDefined(this.find(k), '41|could not find ', k);
     }
 
     delete(k: string): boolean {
@@ -796,7 +796,7 @@ export class MapKeyToObject<T> {
     }
 
     get(key: string) {
-        return throwIfUndefined(this.objects[key], '3_|id not found', key);
+        return ensureDefined(this.objects[key], '3_|id not found', key);
     }
 
     find(key: O<string>) {
@@ -810,7 +810,7 @@ export class MapKeyToObject<T> {
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
         if (this.objects[key] !== undefined) {
-            throw makeUI512Error(`3]|duplicate key, ${key} already exists`);
+            throw make512Error(`3]|duplicate key, ${key} already exists`);
         }
 
         this.objects[key] = obj;
@@ -854,7 +854,7 @@ export function checkThrowEq<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (util512Sort(expected, got) !== 0) {
-        throw makeUI512Error(
+        throw make512Error(
             `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`
         );
     }
@@ -874,7 +874,7 @@ export function assertEq(
     if (util512Sort(expected, received) !== 0) {
         let msgAssertEq = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
-        throw makeUI512Error(msgAssertEq, c1, c2, c3);
+        throw make512Error(msgAssertEq, c1, c2, c3);
     }
 }
 
@@ -892,7 +892,7 @@ export function assertEqWarn(
     if (util512Sort(expected, received) !== 0) {
         let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,
             expected '${expected}' but got '${received}'.`);
-        let er = makeUI512Error(msgInAssertEqWarn, c1, c2, c3);
+        let er = make512Error(msgInAssertEqWarn, c1, c2, c3);
         if (!window.confirm('continue?')) {
             throw er;
         }
