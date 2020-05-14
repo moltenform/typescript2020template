@@ -40,17 +40,17 @@
  * https://github.com/bjyoungblood/es6-error
  */
 export class Util512BaseErr {
-    isUtil512BaseErr = true;
-    origClass = Util512BaseErr.name;
+    typeName = 'Util512BaseErr';
     protected constructor(public message: string, public level: string) {}
 
     /**
      * cast an Error instance to a Util512BaseErr, or return undefined
      * if the Error isn't marked as that classs.
+     * we used to use isUtil512BaseErr, which supported inheritance,
+     * but this doesn't support inheritance now
      */
-    static errAsCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
-        let fld = 'is' + nm;
-        if ((e as any)[fld]) {
+    static errIfExactCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
+        if ((e as any).typeName === nm) {
             return (e as any) as T;
         } else {
             return undefined;
@@ -61,8 +61,8 @@ export class Util512BaseErr {
      * cast a class to an Error
      */
     clsAsErr() {
-        assertWarn((this as any).isUtil512BaseErr, '');
-        assertWarn((this as any).message, '');
+        assertWarn((this as any).typeName, 'RW|');
+        assertWarn((this as any).message, 'RV|');
         return (this as any) as Error;
     }
 
@@ -83,12 +83,11 @@ export class Util512BaseErr {
      * it has the same shape, it works fine)
      */
     static createErrorImpl<T extends Util512BaseErr>(
-        fnCtor: (a: string, b: string) => T,
-        a: string,
-        b: string
+        fnCtor: (...args: unknown[]) => T,
+        ...params: unknown[]
     ): T {
         let e = new Error();
-        let err = fnCtor(a, b);
+        let err = fnCtor(...params);
         Object.assign(e, err);
         let cls = (e as any) as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
@@ -110,8 +109,8 @@ export class Util512BaseErr {
     /**
      * create a Util512BaseErr (or at least something that acts like one)
      */
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
     }
 }
 
@@ -120,13 +119,12 @@ export class Util512BaseErr {
  * we'll show a message to the user.
  */
 export class Util512Warn extends Util512BaseErr {
-    isUtil512Warn = true;
-    origClass = Util512Warn.name;
+    typeName = 'Util512Warn';
     protected static gen(message: string, level: string) {
         return new Util512Warn(message, level);
     }
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512Warn.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params);
     }
 }
 
@@ -134,13 +132,12 @@ export class Util512Warn extends Util512BaseErr {
  * just a message, not an error case.
  */
 export class Util512Message extends Util512BaseErr {
-    isUtil512Message = true;
-    origClass = Util512Message.name;
+    typeName = 'Util512Message';
     protected static gen(message: string, level: string) {
         return new Util512Message(message, level);
     }
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512Message.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params);
     }
 }
 
@@ -286,9 +283,11 @@ export class UI512ErrorHandling {
  * how to respond to exception:
  */
 export function respondUI512Error(e: Error, context: string, logOnly = false) {
-    let message = Util512BaseErr.errAsCls(Util512Message.name, e);
-    let warn = Util512BaseErr.errAsCls(Util512Warn.name, e);
-    let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e);
+    let message =
+        (e as any).typeName?.includes('Message') ||
+        /* bool */ (e as any).typeName?.includes('Msg');
+    let warn = (e as any).typeName?.includes('Warn');
+    let structure = bool((e as any).typeName);
     callDebuggerIfNotInProduction(e.message);
     if (message) {
         /* not really an error, just a message */
@@ -339,7 +338,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
             /* do nothing, we've already logged it */
         } else if (UI512ErrorHandling.silenceWarningsAndMoreCount > 4) {
             /* unfortunately, we probably want an option like this,
-            otherwise if there's */
+            otherwise if there's a steady stream of dialogs it will be bad */
             let msgTotal =
                 sAllInfo +
                 ` -- we recommend that you save your` +
@@ -397,7 +396,7 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
  * a way to safely go from optional<T> to T
  */
 export function ensureDefined<T>(
-    v: O<T>,
+    v: T | null | undefined,
     s1: string,
     s2: unknown = '',
     s3: unknown = ''
