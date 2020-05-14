@@ -14,7 +14,7 @@ def go():
     layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(dir)
     confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers)
     autoAddImports(config, dir, layers, useSingleQuotes)
-    enforceLayering(dir)
+    enforceLayering(config, dir)
 
 def autoAddImports(config, srcdirectory, layers, useSingleQuotes):
     mapSymbolNameToLayer = {}
@@ -41,7 +41,7 @@ def autoAddImports(config, srcdirectory, layers, useSingleQuotes):
         
         addNewForThisFile = []
         for line in lines:
-            if not line.strip().startswith('import ') and not line.strip().startswith('/* auto */ import'):
+            if not line.strip().startswith('import ') and not line.strip().startswith('/* auto */ import') and not 'import {' in line:
                 for symbol in getSymbolsFromLine(line):
                     foundFromExports = mapSymbolNameToLayer.get(symbol, None)
                     if foundFromExports is not None:
@@ -98,7 +98,11 @@ def getImportFromFile(config, srcdirectory, layerfullpath, srcfilename):
 def countDirDepth(s):
     return len(s.replace('\\', '/').split('/')) - 1
 
-def enforceLayering(srcdirectory):
+def enforceLayering(config, srcdirectory):
+    if not int(config['main']['enforceLayersOrder']):
+        print('complete')
+        return
+    
     print('running enforceLayering...')
     layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(srcdirectory)
     for layer in layers:
@@ -120,6 +124,7 @@ def enforceLayering(srcdirectory):
                     sErr = f'file {layer[0]} referred to a layer above it "{disallowedfilename}" ({jlayer[0]})'
                     showWarningGccStyle(layer[0], 1, sErr)
                     warn(sErr)
+    
     print('layer check complete')
 
 if __name__ == '__main__':
