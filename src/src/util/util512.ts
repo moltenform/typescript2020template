@@ -106,11 +106,20 @@ export const Util512 = /* static class */ {
     },
 
     /**
-     * useful for map/reduce
+     * ensure that the string is <= maxLen
      */
-    static add(n1: number, n2: number) {
-        return n1 + n2;
-    }
+    truncateWithEllipsis(s: string, maxLen: number) {
+        if (s.length <= maxLen) {
+            return s;
+        } else {
+            const ellipsis = '...';
+            if (maxLen < ellipsis.length) {
+                return s.slice(0, maxLen);
+            } else {
+                return s.slice(0, maxLen - ellipsis.length) + ellipsis;
+            }
+        }
+    },
 
     /**
      * useful for map/reduce
@@ -799,14 +808,18 @@ export class OrderedHash<TValue> {
 }
 
 /**
- * currently just the detected OS
+ * dump ordered hash to a string
  */
-export enum BrowserOSInfo {
-    __isUI512Enum = 1,
-    Unknown,
-    Windows,
-    Linux,
-    Mac
+export function orderedHashSummary<T>(hash: OrderedHash<T>) {
+    let ret = '';
+    for (let k of hash.iterKeys()) {
+        ret += k;
+        ret += ':';
+        ret += hash.get(k);
+        ret += '\n';
+    }
+
+    return ret;
 }
 
 /**
