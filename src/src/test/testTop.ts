@@ -45,9 +45,9 @@ export const SimpleUtil512Tests = /* static class */ {
         let mapSeen = new MapKeyToObjectCanSet<boolean>();
 
         /* put slow tests after fast tests */
-        let slowTests = colls.filter(item=> item.slow)
-        let fastTests = colls.filter(item=> !item.slow)
-        colls = fastTests.concat(slowTests)
+        let slowTests = colls.filter(item => item.slow);
+        let fastTests = colls.filter(item => !item.slow);
+        colls = fastTests.concat(slowTests);
         let countTotal = colls
             .filter(item => includeSlow || !item.slow)
             .map(item => item.tests.length)

@@ -84,7 +84,8 @@ export class Util512BaseErr {
      */
     static createErrorImpl<T extends Util512BaseErr>(
         fnCtor: (message: string, level: string) => T,
-        message:string, level:string
+        message: string,
+        level: string
     ): T {
         let e = new Error();
         let err = fnCtor(message, level);
