@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue } from './../util/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../util/util512';
+/* auto */ import { Util512, assertEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -106,30 +106,25 @@ t.test('parseIntStrict', () => {
     assertEq(12, Util512.parseIntStrict('012'), 'N*|');
     assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
+t.test('truncateWithEllipsis', () => {
+    assertEq('', Util512.truncateWithEllipsis('', 2), '');
+    assertEq('a', Util512.truncateWithEllipsis('a', 2), '');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 2), '');
+    assertEq('ab', Util512.truncateWithEllipsis('abc', 2), '');
+    assertEq('ab', Util512.truncateWithEllipsis('abcd', 2), '');
+    assertEq('', Util512.truncateWithEllipsis('', 4), '');
+    assertEq('a', Util512.truncateWithEllipsis('a', 4), '');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 4), '');
+    assertEq('abcd', Util512.truncateWithEllipsis('abcd', 4), '');
+    assertEq('a...', Util512.truncateWithEllipsis('abcde', 4), '');
+    assertEq('a...', Util512.truncateWithEllipsis('abcdef', 4), '');
+});
 t.test('add', () => {
     assertEq(0, Util512.add(0, 0), 'N(|');
     assertEq(9, Util512.add(4, 5), 'N&|');
     assertEq(6, [1, 2, 3].reduce(Util512.add), 'N%|');
     assertEq(9, [1, 2, 3].reduce(Util512.add, 3), 'N#|');
     assertEq(0, [].reduce(Util512.add, 0), 'N!|');
-});
-t.test('getBrowserOS', () => {
-    let s = longstr(`Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X)
-        AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a
-        Safari/604.1`);
-    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), 'N |');
-    s = longstr(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
-        (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246`);
-    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), 'Nz|');
-    s = longstr(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9
-        (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9`);
-    assertEq(BrowserOSInfo.Mac, Util512.getBrowserOS(s), 'Ny|');
-    s = longstr(`Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML,
-        like Gecko) Chrome/47.0.2526.111 Safari/537.36`);
-    assertEq(BrowserOSInfo.Windows, Util512.getBrowserOS(s), 'Nx|');
-    s = longstr(`Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101
-        Firefox/15.0.1`);
-    assertEq(BrowserOSInfo.Linux, Util512.getBrowserOS(s), 'Nw|');
 });
 t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
