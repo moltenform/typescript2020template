@@ -38,42 +38,42 @@ t.test('CheckThrow', () => {
     });
 });
 t.test('AssertAsserts', () => {
-    assertTrue(1, '');
-    assertWarn(1, '');
-    assertEq(2, 1 + 1, '');
-    assertWarnEq(2, 1 + 1, '');
-    assertAsserts('', 'a message', () => {
-        assertTrue(0, 'a message');
+    assertTrue(1, 'PQ|');
+    assertWarn(1, 'PP|');
+    assertEq(2, 1 + 1, 'PO|');
+    assertWarnEq(2, 1 + 1, 'PN|');
+    assertAsserts('PM|', 'a message', () => {
+        assertTrue(0, 'PL|a message');
     });
-    assertAsserts('', 'a message', () => {
-        assertWarn(0, 'a message');
+    assertAsserts('PK|', 'a message', () => {
+        assertWarn(0, 'PJ|a message');
     });
-    assertAsserts('', 'a message', () => {
-        assertEq(3, 1 + 1, 'a message');
+    assertAsserts('PI|', 'a message', () => {
+        assertEq(3, 1 + 1, 'PH|a message');
     });
-    assertAsserts('', 'a message', () => {
-        assertWarnEq(3, 1 + 1, 'a message');
+    assertAsserts('PG|', 'a message', () => {
+        assertWarnEq(3, 1 + 1, 'PF|a message');
     });
 });
 t.test('GetAssertMessages', () => {
-    checkThrow512(1, '');
-    checkThrowEq512('a', 'a', '');
-    assertThrows('', 'ui512: a (;0)', () => {
+    checkThrow512(1, 'PE|');
+    checkThrowEq512('a', 'a', 'PD|');
+    assertThrows('P8|', 'ui512: a (;0)', () => {
         checkThrow512(false, ';0|a');
     });
-    assertThrows('', 'ui512: a\nb (;1)', () => {
+    assertThrows('P7|', 'ui512: a\nb (;1)', () => {
         checkThrow512(false, ';1|a', 'b');
     });
-    assertThrows('', 'ui512: a\nb, c (;2)', () => {
+    assertThrows('P6|', 'ui512: a\nb, c (;2)', () => {
         checkThrow512(false, ';2|a', 'b', 'c');
     });
-    assertThrows('', "ui512: a expected 'a' but got 'b'. (;3)", () => {
+    assertThrows('P5|', "ui512: a expected 'a' but got 'b'. (;3)", () => {
         checkThrowEq512('a', 'b', ';3|a');
     });
-    assertThrows('', "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
+    assertThrows('P4|', "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
         checkThrowEq512('a', 'b', ';4|a', 'c1');
     });
-    assertThrows('', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
+    assertThrows('P3|', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
         checkThrowEq512('a', 'b', ';5|a', 'c1', 'c2');
     });
 });
