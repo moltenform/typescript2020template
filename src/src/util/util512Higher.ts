@@ -126,7 +126,7 @@ export class Util512Higher {
     }
 
     /**
-     * download json asynchronously.
+     * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
     private static loadJsonImpl(
         url: string,
@@ -200,17 +200,21 @@ export class Util512Higher {
             script.setAttribute('src', url);
 
             /* prevents cb from being called twice */
-            let loaded = false;
-            /* prevents cb from being called twice */
+            let cbCalled = false;
             let on_error = () => {
-                let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + arLast(urlsplit)));
+                if (!cbCalled) {
+                    cbCalled = true;
+                    let urlsplit = url.split('/');
+                    reject(new Error('Did not load ' + arLast(urlsplit)));
+                }
             };
 
             let on_load = () => {
-                Util512Higher.scriptsAlreadyLoaded[url] = true;
-                loaded = true;
-                resolve();
+                if (!cbCalled) {
+                    cbCalled = true;
+                    Util512Higher.scriptsAlreadyLoaded[url] = true;
+                    resolve();
+                }
             };
 
             script.addEventListener('load', () =>
@@ -288,7 +292,7 @@ export class Util512Higher {
         let ps = [fn, fTimeout()];
         let ret = await Promise.race(ps);
         if (ret instanceof SentinelClass) {
-            checkThrow512(false, 'Timed out.');
+            checkThrow512(false, 'RX|Timed out.');
         } else {
             return ret;
         }
@@ -345,7 +349,7 @@ export enum RespondToErr {
 export function showMsgIfExceptionThrown(fn: () => void, context: string) {
     try {
         fn();
-        return undefined;
+        return true;
     } catch (e) {
         respondUI512Error(e, context);
         return e as Error;
@@ -358,7 +362,7 @@ export function showMsgIfExceptionThrown(fn: () => void, context: string) {
 export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string) {
     try {
         fn();
-        return undefined;
+        return true;
     } catch (e) {
         respondUI512Error(e, context, true);
         return e as Error;
@@ -414,6 +418,30 @@ export class RenderComplete {
 
     andB(other: boolean) {
         this.complete = this.complete && other;
+    }
+}
+
+/**
+ * can be used to build a periodic timer.
+ */
+export class RepeatingTimer {
+    periodInMilliseconds = 0;
+    lasttimeseen = 0;
+    started = 0;
+    constructor(periodInMilliseconds: number) {
+        this.periodInMilliseconds = periodInMilliseconds;
+    }
+
+    update(ms: number) {
+        this.lasttimeseen = ms;
+    }
+
+    isDue(): boolean {
+        return this.lasttimeseen - this.started > this.periodInMilliseconds;
+    }
+
+    reset() {
+        this.started = this.lasttimeseen;
     }
 }
 

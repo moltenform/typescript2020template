@@ -12,22 +12,22 @@
  * fields beginning with "__" will be skipped.
  * unknown incoming fields are skipped silently.
  */
-export namespace Util512SerializableHelpers {
+export const Util512SerializableHelpers = /* static class */ {
     /**
      * serialize a typescript object to a plain json map of strings to strings
      */
-    export function serializeObj<T extends IsUtil512Serializable>(obj: T) {
-        checkThrow512(obj.__isUtil512Serializable, 'must be a isUtil512Serializable');
+    serializeObj<T extends IsUtil512Serializable>(obj: T) {
+        checkThrow512(obj.__isUtil512Serializable, 'Rg|must be a isUtil512Serializable');
         let objToSend: { [key: string]: unknown } = {};
         for (let prop in obj) {
-            if (shouldSerializeProperty(obj, prop)) {
+            if (this.shouldSerializeProperty(obj, prop)) {
                 let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
                     checkThrow512(
                         obj[prop] === undefined ||
                             obj[prop] === null ||
                             typeof obj[prop] === 'string',
-                        'we currently only support strings'
+                        'Rf|we currently only support strings'
                     );
                     let propDest = prop.slice('optional_'.length);
                     if (typeof obj[prop] === 'string') {
@@ -36,7 +36,7 @@ export namespace Util512SerializableHelpers {
                 } else {
                     checkThrow512(
                         typeof obj[prop] === 'string',
-                        'we currently only support strings'
+                        'Re|we currently only support strings'
                     );
                     objToSend[prop] = obj[prop];
                 }
@@ -44,57 +44,60 @@ export namespace Util512SerializableHelpers {
         }
 
         return objToSend;
-    }
+    },
 
     /**
      * helper that calls stringify for you
      */
-    export function serializeToJson<T extends IsUtil512Serializable>(obj: T) {
-        return JSON.stringify(serializeObj(obj));
-    }
+    serializeToJson<T extends IsUtil512Serializable>(obj: T) {
+        return JSON.stringify(this.serializeObj(obj));
+    },
 
     /**
      * goes from a plain json map of string-of-strings
      * to instance of a typescript class
      */
-    export function deserializeObj<T extends IsUtil512Serializable>(
+    deserializeObj<T extends IsUtil512Serializable>(
         ctor: NoParameterCtor<T>,
         incoming: IsUtil512Serializable
     ): T {
         let objNew = new ctor();
-        checkThrow512(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable');
+        checkThrow512(
+            objNew.__isUtil512Serializable,
+            'Rd|must be a isUtil512Serializable'
+        );
         let prop = '';
         for (prop in objNew) {
-            if (shouldSerializeProperty(objNew, prop)) {
+            if (this.shouldSerializeProperty(objNew, prop)) {
                 let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
                     checkThrow512(
                         objNew[prop] === undefined ||
                             objNew[prop] === null ||
                             typeof objNew[prop] === 'string',
-                        'we currently only support strings'
+                        'Rc|we currently only support strings'
                     );
                     let propSrc = prop.slice('optional_'.length);
                     checkThrow512(
                         typeof incoming[propSrc] === 'string' ||
                             incoming[propSrc] === null ||
                             incoming[propSrc] === undefined,
-                        `field ${prop} is not a string`
+                        `Rb|field ${prop} is not a string`
                     );
                     objNew[prop] =
                         incoming[propSrc] === null ? undefined : incoming[propSrc];
                 } else {
                     checkThrow512(
                         typeof objNew[prop] === 'string',
-                        'we currently only support strings'
+                        'Ra|we currently only support strings'
                     );
                     checkThrow512(
                         incoming[prop] !== undefined,
-                        `did not see required field ${prop}`
+                        `RZ|did not see required field ${prop}`
                     );
                     checkThrow512(
                         typeof incoming[prop] === 'string',
-                        `field ${prop} not a string, only support strings`
+                        `RY|field ${prop} not a string, only support strings`
                     );
                     objNew[prop] = incoming[prop];
                 }
@@ -102,38 +105,38 @@ export namespace Util512SerializableHelpers {
         }
 
         return objNew;
-    }
+    },
 
     /**
      * helper that cals json parse for you
      */
-    export function deserializeFromJson<T extends IsUtil512Serializable>(
+    deserializeFromJson<T extends IsUtil512Serializable>(
         ctor: NoParameterCtor<T>,
         s: string
     ): T {
-        return deserializeObj(ctor, JSON.parse(s));
-    }
+        return this.deserializeObj(ctor, JSON.parse(s));
+    },
 
     /**
      * is this something like toString() that's everywhere?
      * another approach is checking hasOwnProperty,
      * but we do want to see parent classes
      */
-    export function isAPropertyOnAllObjects(prop: string) {
+    isAPropertyOnAllObjects(prop: string) {
         return prop in new Object();
-    }
+    },
 
     /**
      * we'll skip methods, Object properties, and props starting with __
      */
-    export function shouldSerializeProperty(obj: { [key: string]: any }, prop: string) {
+    shouldSerializeProperty(obj: { [key: string]: any }, prop: string) {
         return (
-            !isAPropertyOnAllObjects(prop) &&
+            !this.isAPropertyOnAllObjects(prop) &&
             !prop.startsWith('__') &&
             typeof obj[prop] !== 'function'
         );
     }
-}
+};
 
 /**
  * essentially just a signal that this class can be serialized
