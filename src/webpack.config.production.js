@@ -12,7 +12,8 @@ const main = [
 ];
 
 module.exports = {
-    context: process.cwd(), // to automatically find tsconfig.json
+    /* automatically find tsconfig.json */
+    context: process.cwd(),
     entry: {
         main: main
     },
@@ -44,18 +45,20 @@ module.exports = {
             },
         }),
         new webpack.DefinePlugin({
-            //  note that the plugin does a direct text replacement.
-            WEBPACK_PRODUCTION: true,
-        }),
+            /*  note that the plugin does a direct text replacement. */
+            WEBPACK_PRODUCTION: true
+        })
     ],
     module: {
         rules: [
             {
                 test: /.tsx?$/,
                 use: [
-                    { loader: 'ts-loader', options: { 
-                        transpileOnly: true,
-                    }}
+                    {
+                        loader: 'ts-loader', options: {
+                            transpileOnly: true,
+                        }
+                    }
                 ],
             }
         ]
@@ -63,9 +66,13 @@ module.exports = {
     resolve: {
         extensions: [".tsx", ".ts", ".js"]
     },
+    performance: {
+        /* suppress warning about large asset size */
+        hints: false
+    },
     optimization: {
-        // Set this to false if you'd rather not minimize code,
-        // if you get a warning about asset size you can add hints: false here too.
+        // Set this to false if you'd rather not minimize code
         minimize: true
     },
 };
+

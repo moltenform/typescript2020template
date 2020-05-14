@@ -13,7 +13,8 @@ const main = [
 ];
 
 module.exports = {
-    context: process.cwd(), // to automatically find tsconfig.json
+    /* automatically find tsconfig.json */
+    context: process.cwd(),
     entry: {
         main
     },
@@ -26,14 +27,15 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin({
             eslint: true
         }),
-        // enable this if pop-up notifications are desired
-        // new ForkTsCheckerNotifierWebpackPlugin({ title: 'TypeScript', excludeWarnings: false }),
+        /* turn off pop-up notifications */
+        /* new ForkTsCheckerNotifierWebpackPlugin(
+            { title: 'TypeScript', excludeWarnings: false }), */
         new HtmlWebpackPlugin({
             inject: true,
             template: 'src/index.html'
         }),
         new webpack.DefinePlugin({
-            //  note that the plugin does a direct text replacement.
+            /*  note that the plugin does a direct text replacement. */
             WEBPACK_PRODUCTION: false,
             DBGPLACEHOLDER: 'debugger'
         }),
@@ -57,6 +59,7 @@ module.exports = {
         open: true,
         historyApiFallback: true,
         stats: 'errors-only',
-        liveReload: false, // auto-refresh browser on changes
+        /* turn off auto-refresh browser on changes */
+        liveReload: false,
     }
 };
