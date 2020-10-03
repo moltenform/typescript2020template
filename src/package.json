@@ -42,7 +42,7 @@
     "@types/number-to-words": "^1.2.0",
     "core-js": "^3.6.4",
     "number-to-words": "^1.2.4",
-    "serializer.ts": "0.0.12",
+    "serializer.ts": "^0.0.12",
     "whatwg-fetch": "^3.0.0"
   },
   "repository": {
