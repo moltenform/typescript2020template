@@ -95,7 +95,7 @@ export const SimpleUtil512Tests = /* static class */ {
         );
 
         /* note that some tests require async tests to be done first. */
-        let tests: [string, VoidFn | AsyncFn][] = coll.atests;
+        let tests: [string, AsyncFn | VoidFn][] = coll.atests;
         tests = tests.concat(coll.tests);
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];

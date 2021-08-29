@@ -138,7 +138,7 @@ t.test('isMapEmpty.Class', () => {
     let o0 = new TestClsEmpty();
     let o1 = new TestClsOne();
     let o2 = new TestClsOne();
-    (o2 as any).aSingleAdded = 1;
+    (o2 as unknown as { aSingleAdded: number }).aSingleAdded = 1;
     assertTrue(Util512.isMapEmpty(o0 as any), 'EJ|');
     assertTrue(!Util512.isMapEmpty(o1 as any), 'EI|');
     assertTrue(!Util512.isMapEmpty(o2 as any), 'EH|');
@@ -158,7 +158,7 @@ t.test('getMapShallowClone.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
-    (cls2 as any).aSingleAdded = 1;
+    (cls2 as unknown as { aSingleAdded: number }).aSingleAdded = 1;
     let clone0 = Util512.shallowClone(cls0);
     let clone1 = Util512.shallowClone(cls1);
     let clone2 = Util512.shallowClone(cls2);
@@ -193,9 +193,9 @@ t.test('freezeRecurse.Class', () => {
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
     let cls3 = new TestClsOne();
-    (cls1 as any).child = cls2;
-    (cls2 as any).child = cls3;
-    (cls3 as any).nullchild = undefined;
+    (cls1 as unknown as { child: TestClsOne }).child = cls2;
+    (cls2 as unknown as { child: TestClsOne }).child = cls3;
+    (cls3 as unknown as { nullchild: undefined }).nullchild = undefined;
     assertTrue(!Object.isFrozen(cls1), 'EF|');
     Util512.freezeRecurse(cls1);
     assertTrue(Object.isFrozen(cls1), 'EE|');
@@ -206,7 +206,7 @@ t.test('freezeRecurse.Class', () => {
     });
 
     assertThrows('Lp|', '', () => {
-        (cls1 as any).newProp = true;
+        (cls1 as unknown as { newProp: boolean }).newProp = true;
     });
 });
 t.test('EscapeForRegex.NoEscapeNeeded', () => {
@@ -339,7 +339,7 @@ t.test('getMapKeys.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
-    (cls2 as any).aSingleAdded = 1;
+    (cls2 as unknown as {aSingleAdded:number}).aSingleAdded = 1;
     assertEq([], sorted(Util512.getMapKeys(cls0 as any)), 'E8|');
     assertEq(['aSingleProp'], sorted(Util512.getMapKeys(cls1 as any)), 'E7|');
     assertEq(
@@ -360,7 +360,7 @@ t.test('getMapVals.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
-    (cls2 as any).aSingleAdded = false;
+    (cls2 as unknown as {aSingleAdded:boolean}).aSingleAdded = false;
     assertEq([], sorted(Util512.getMapVals(cls0 as any)), 'E2|');
     assertEq([true], sorted(Util512.getMapVals(cls1 as any)), 'E1|');
     assertEq([false, true], sorted(Util512.getMapVals(cls2 as any)), 'E0|');
@@ -381,11 +381,11 @@ t.test('arrayToBase64.Uint8Array', () => {
     assertEq('aGVsbG8=', Util512.arrayToBase64(uint8), 'D*|');
 });
 t.test('arrayToBase64.ArrayBuffer', () => {
-    let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
+    let nums = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
     let buffer = new ArrayBuffer(nums.length);
     let view = new Uint8Array(buffer);
     for (let i = 0; i < nums.length; i++) {
-        view[i] = nums[i];
+        view[i] = nums[i] as number;
     }
 
     assertEq('aGVsbG8=', Util512.arrayToBase64(view), 'D)|');

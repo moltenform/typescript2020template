@@ -66,7 +66,7 @@ t.test('serialize: expected', () => {
     t.say(/*——————————*/ 'typical usage');
     let o = new DemoSerializable();
     let s = Util512SerializableHelpers.serializeToJson(o);
-    let got = JSON.parse(s);
+    let got:unknown = JSON.parse(s);
     let ks = sorted(Util512.getMapKeys(got)).join(',');
     assertEq('f1,f2,fld1,fld2', ks, 'Q6|');
     assertEq('fld 1', got.fld1, 'Q5|');
