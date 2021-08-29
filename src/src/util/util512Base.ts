@@ -20,11 +20,11 @@ export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
 /**
  * cast to string.
  * we used to have an isstring() check, but weird 'new String'
- * hybrid strings are rare and banned by es-lint
+ * hybrid strings are rare and banned by es-lint, so assumed not to occur.
  */
 export function tostring(s: unknown): string {
-    /* eslint-disable-next-line no-implicit-coercion */
-    return '' + s;
+    /* nb: this is not the unsafe `new String()` constructor */
+    return String(s);
 }
 
 /**
@@ -63,6 +63,7 @@ export function checkIsProductionBuild(): boolean {
  * so this makes sure it's not even there.
  */
 export function callDebuggerIfNotInProduction(context?: string) {
+    console.log('callDebuggerIfNotInProduction: ' + (context ?? ''));
     window['DBG' + 'PLACEHOLDER'] = true;
     /* eslint-disable-next-line no-unused-expressions */
     DBGPLACEHOLDER;
@@ -120,7 +121,7 @@ export abstract class RingBuffer {
 export class RingBufferLocalStorage extends RingBuffer {
     getAt(index: number): string {
         if (window.localStorage) {
-            return window.localStorage['ui512Log_' + index] ?? '';
+            return window.localStorage.getItem('ui512Log_' + index.toString()) ?? ''
         } else {
             return '';
         }
@@ -128,13 +129,13 @@ export class RingBufferLocalStorage extends RingBuffer {
 
     setAt(index: number, s: string) {
         if (window.localStorage) {
-            window.localStorage['ui512Log_' + index] = s;
+            window.localStorage.setItem('ui512Log_' + index.toString(), s)
         }
     }
 
     getLatestIndex() {
         if (window.localStorage) {
-            let sLatest = window.localStorage['ui512LogPtr'] ?? '0';
+            let sLatest = window.localStorage.getItem('ui512LogPtr') ?? '0';
 
             /* ok to use here, we remembered to say base 10 */
             /* eslint-disable-next-line ban/ban */
@@ -147,7 +148,7 @@ export class RingBufferLocalStorage extends RingBuffer {
 
     setLatestIndex(index: number) {
         if (window.localStorage) {
-            window.localStorage['ui512LogPtr'] = index.toString();
+            window.localStorage.setItem('ui512LogPtr', index.toString());
         }
     }
 }
@@ -161,7 +162,10 @@ export type O<T> = T | undefined;
 /**
  * external LZString compression
  */
-declare let LZString: any;
+declare namespace LZString {
+    function compressToUTF16(s: string): string;
+    function decompressFromUTF16(s: string): string;
+  }
 
 /**
  * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.

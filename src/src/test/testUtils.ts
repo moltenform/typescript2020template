@@ -83,7 +83,7 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
 /**
  * test-only code, since this is inefficient
  */
-export function sorted(ar: any[]) {
+export function sorted<T>(ar: T[]) {
     let arCopy = ar.slice();
     arCopy.sort(util512Sort);
     return arCopy;

@@ -181,13 +181,14 @@ export class Util512Higher {
      */
     static async asyncLoadJson(url: string): Promise<AnyUnshapedJson> {
         let s = await Util512Higher.asyncLoadJsonString(url);
+        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return JSON.parse(s);
     }
 
     /**
      * load and run script. must be on same domain.
      */
-    static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
+    static scriptsAlreadyLoaded: Record<string, boolean> = {};
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
             assertTrue(url.startsWith('/'), 'J8|');
@@ -306,7 +307,7 @@ export class Util512Higher {
             return Util512Higher.sleep(ms);
         };
 
-        let ps = [fn, fTimeout()];
+        let ps:[Promise<T>, Promise<any>] = [fn, fTimeout()];
         let ret = await Promise.all(ps);
         return ret[0];
     }
@@ -323,12 +324,12 @@ export class Util512Higher {
             hours = 12;
         }
 
-        let sc = includeSeconds ? '-' + ('0' + d.getSeconds()).slice(-2) : '';
+        let sc = includeSeconds ? '-' + ('0' + d.getSeconds().toString()).slice(-2) : '';
         return (
             `${d.getMonth() + 1} ${d.getDate()}, ` +
-            ('0' + hours).slice(-2) +
+            ('0' + hours.toString()).slice(-2) +
             '-' +
-            ('0' + d.getMinutes()).slice(-2) +
+            ('0' + d.getMinutes().toString()).slice(-2) +
             sc
         );
     }
@@ -346,28 +347,28 @@ export enum RespondToErr {
 /**
  * if an error is thrown, show a message
  */
-export function showMsgIfExceptionThrown(fn: () => void, context: string) {
+export function showMsgIfExceptionThrown(fn: () => void, context: string):Error|true {
     try {
         fn();
         return true;
     } catch (e) {
         checkIsError(e)
         respondUI512Error(e, context);
-        return e as Error;
+        return e;
     }
 }
 
 /**
  * if an error is thrown, show a warning message just in the console
  */
-export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string) {
+export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string):Error|true {
     try {
         fn();
         return true;
     } catch (e) {
         checkIsError(e)
         respondUI512Error(e, context, true);
-        return e as Error;
+        return e;
     }
 }
 

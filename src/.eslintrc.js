@@ -75,6 +75,7 @@ module.exports = {
         '@typescript-eslint/promise-function-async': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/require-await': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
 
         // leaving disabled, since default vals in classes seem to work fine
         'no-invalid-this': 'off',
@@ -124,6 +125,13 @@ module.exports = {
         'no-var': 'warn',
         'prefer-rest-params': 'warn',
 
+        // after v6.8
+        'no-useless-backreference': 'error',
+        'default-case-last': 'error',
+        'no-unreachable-loop': 'error',
+        'no-promise-executor-return': 'error',
+        'no-unsafe-optional-chaining': 'error',
+
         // unfortunately incompatible with prettier, see .prettier.js for more
         'no-mixed-operators': 'off',
 
@@ -133,7 +141,24 @@ module.exports = {
         '@typescript-eslint/no-implied-eval': 'warn',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         '@typescript-eslint/no-throw-literal': 'warn',
-        '@typescript-eslint/require-array-sort-compare': 'warn',
+        '@typescript-eslint/require-array-sort-compare': 'warn', 
+        
+        // after 2.26.0
+        '@typescript-eslint/sort-type-union-intersection-members': 'warn', 
+        '@typescript-eslint/non-nullable-type-assertion-style': 'warn', 
+        '@typescript-eslint/no-confusing-void-expression': 'warn', 
+        '@typescript-eslint/consistent-indexed-object-style': 'error', 
+        '@typescript-eslint/no-implicit-any-catch': 'off', 
+        '@typescript-eslint/prefer-reduce-type-parameter': 'error', 
+        '@typescript-eslint/prefer-ts-expect-error': 'error', 
+        "no-duplicate-imports": "off", // turn off eslint's in favor of the ts version
+        "@typescript-eslint/no-duplicate-imports": ["error"],
+        "comma-dangle": "off", // turn off eslint's in favor of the ts version
+        "@typescript-eslint/comma-dangle": ["error"],
+        "no-loop-func": "off", // turn off eslint's in favor of the ts version
+        "@typescript-eslint/no-loop-func": ["error"],
+        "no-loss-of-precision": "off", // turn off eslint's in favor of the ts version
+        "@typescript-eslint/no-loss-of-precision": ["error"],
 
         // checks locals, not fn params.
         // annoying to leave this on while editing, so we'll use typescript 6133 instead
@@ -153,7 +178,7 @@ module.exports = {
             {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-        ]
+        ],
     },
     settings: {
     }
