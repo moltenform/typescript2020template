@@ -83,14 +83,13 @@ export class Util512BaseErr {
      * it has the same shape, it works fine)
      */
     static createErrorImpl<T extends Util512BaseErr>(
-        fnCtor: (message: string, level: string) => T,
-        message: string,
-        level: string
+        fnCtor: (...args: unknown[]) => T,
+        ...params: unknown[]
     ): T {
         let e = new Error();
-        let err = fnCtor(message, level);
+        let err = fnCtor(...params);
         Object.assign(e, err);
-        let cls = e as any as T;
+        let cls = (e as any) as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
         cls.addErr = err.addErr.bind(e);
         if (!UI512ErrorHandling.runningTests) {
@@ -110,8 +109,8 @@ export class Util512BaseErr {
     /**
      * create a Util512BaseErr (or at least something that acts like one)
      */
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
     }
 }
 
@@ -124,8 +123,8 @@ export class Util512Warn extends Util512BaseErr {
     protected static gen(message: string, level: string) {
         return new Util512Warn(message, level);
     }
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512Warn.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params);
     }
 }
 
@@ -137,8 +136,8 @@ export class Util512Message extends Util512BaseErr {
     protected static gen(message: string, level: string) {
         return new Util512Message(message, level);
     }
-    static createError(message: string, level: string) {
-        return Util512BaseErr.createErrorImpl(Util512Message.gen, message, level);
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params);
     }
 }
 
@@ -166,7 +165,7 @@ export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unkno
 /**
  * duck type-checking, useful for try/catch
  */
-export function checkIsError(e: unknown): asserts e is Error {
+export function ensureIsError(e: unknown): asserts e is Error {
     assertTrue(Boolean((e as any).message), 'Does not appear to be an error object');
 }
 
@@ -199,7 +198,7 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
         if (UI512ErrorHandling.silenceAssertMsgs) {
             /* we are in a assertAsserts test,
             for testing convenience throw, we won't normally. */
-            throw new Error('assert:' + s1 + (s2 ?? '') + (s3 ?? ''));
+            throw new Error('assert:' + s1 + (s2 ? tostring(s2) : '') + (s3 ? tostring(s3) : ''));
         }
 
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
@@ -316,10 +315,10 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
         sAllInfo += '\n\n' + e.stack.toString();
     }
     if ((e as any).line) {
-        sAllInfo += '\n\n' + (e as any).line.toString();
+        sAllInfo += '\n\n' + tostring((e as any).line);
     }
     if ((e as any).sourceURL) {
-        sAllInfo += '\n\n' + (e as any).sourceURL;
+        sAllInfo += '\n\n' + tostring((e as any).sourceURL);
     }
     if (!structure && UI512ErrorHandling.contextHint) {
         sAllInfo += ` ${UI512ErrorHandling.contextHint}`;
@@ -374,9 +373,9 @@ export function joinIntoMessage(
     c0 = findMarkers(c0, markers) ?? '';
     s1 = findMarkers(s1, markers);
     let message = level + ': ' + c0;
-    message += s1 ? '\n' + s1 : '';
-    message += s2 ? ', ' + s2 : '';
-    message += s3 ? ', ' + s3 : '';
+    message += s1 ? '\n' + tostring(s1) : '';
+    message += s2 ? ', ' + tostring(s2) : '';
+    message += s3 ? ', ' + tostring(s3) : '';
     if (markers.length) {
         message += ' (' + markers.join(',') + ')';
     }
@@ -416,11 +415,11 @@ export function ensureDefined<T>(
         }
 
         if (s2 !== '') {
-            sTotal += ', ' + s2;
+            sTotal += ', ' + tostring(s2);
         }
 
         if (s3 !== '') {
-            sTotal += ', ' + s3;
+            sTotal += ', ' + tostring(s3);
         }
 
         throw make512Error(sTotal).clsAsErr();

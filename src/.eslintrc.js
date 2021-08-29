@@ -76,6 +76,14 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/require-await': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/restrict-template-expressions': 'off',
+
+        // for now I think it's fine to allow some implicit anys, like it's ok to return `any` from a fn
+        // or call a method on an `any` object since the `any` already indicates this is unsafe.
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
 
         // leaving disabled, since default vals in classes seem to work fine
         'no-invalid-this': 'off',
@@ -144,7 +152,6 @@ module.exports = {
         '@typescript-eslint/require-array-sort-compare': 'warn', 
         
         // after 2.26.0
-        '@typescript-eslint/sort-type-union-intersection-members': 'warn', 
         '@typescript-eslint/non-nullable-type-assertion-style': 'warn', 
         '@typescript-eslint/no-confusing-void-expression': 'warn', 
         '@typescript-eslint/consistent-indexed-object-style': 'error', 

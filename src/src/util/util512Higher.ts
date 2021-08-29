@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkIsError, checkThrow512, respondUI512Error } from './util512Assert';
+/* auto */ import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -181,7 +181,6 @@ export class Util512Higher {
      */
     static async asyncLoadJson(url: string): Promise<AnyUnshapedJson> {
         let s = await Util512Higher.asyncLoadJsonString(url);
-        /* eslint-disable-next-line @typescript-eslint/no-unsafe-return */
         return JSON.parse(s);
     }
 
@@ -352,7 +351,7 @@ export function showMsgIfExceptionThrown(fn: () => void, context: string): Error
         fn();
         return true;
     } catch (e) {
-        checkIsError(e);
+        ensureIsError(e);
         respondUI512Error(e, context);
         return e;
     }
@@ -369,7 +368,7 @@ export function justConsoleMsgIfExceptionThrown(
         fn();
         return true;
     } catch (e) {
-        checkIsError(e);
+        ensureIsError(e);
         respondUI512Error(e, context, true);
         return e;
     }

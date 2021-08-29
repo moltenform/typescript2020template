@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, checkIsError } from './../util/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from './../util/util512Assert';
 /* auto */ import { Util512, util512Sort } from './../util/util512';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -19,7 +19,7 @@ export async function assertThrowsAsync<T>(
     try {
         await fn();
     } catch (e) {
-        checkIsError(e);
+        ensureIsError(e);
         msg = e.message ? e.message : '';
     }
 
@@ -39,7 +39,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
     try {
         fn();
     } catch (e) {
-        checkIsError(e);
+        ensureIsError(e);
         msg = e.message ?? '';
     }
 
@@ -61,7 +61,7 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
     try {
         fn();
     } catch (e) {
-        checkIsError(e);
+        ensureIsError(e);
         msg = e.message ?? '';
     } finally {
         UI512ErrorHandling.silenceAssertMsgs = svd;

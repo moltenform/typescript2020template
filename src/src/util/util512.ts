@@ -122,6 +122,11 @@ export const Util512 = /* static class */ {
     },
 
     /**
+     * for unused-variable warnings
+     */
+    unused(..._args: unknown[]) {},
+
+    /**
      * useful for map/reduce
      */
     add(n1: number, n2: number) {
@@ -131,7 +136,7 @@ export const Util512 = /* static class */ {
     /**
      * is map empty
      */
-    isMapEmpty<U>(map: { [key: string]: U }) {
+    isMapEmpty<U>(map: Record<string, U>) {
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
                 return false;
@@ -144,14 +149,14 @@ export const Util512 = /* static class */ {
     /**
      * shallow clone of an object
      */
-    shallowClone<T extends object>(o: object): T {
+    shallowClone<T extends unknown>(o: unknown): T {
         return Object.assign({}, o) as T;
     },
 
     /**
-     * freeze a property
+     * freeze a property on an object
      */
-    freezeProperty(o: object, propName: string) {
+    freezeProperty(o: any, propName: string) {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     },
@@ -160,7 +165,7 @@ export const Util512 = /* static class */ {
      * https://github.com/substack/deep-freeze
      * public domain
      */
-    freezeRecurse(o: object) {
+    freezeRecurse(o: any) {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -208,7 +213,8 @@ export const Util512 = /* static class */ {
         s: string,
         args: unknown[],
         okIfNotExists: boolean,
-        returnIfNotExists = ''
+        returnIfNotExists = '',
+        okIfOnParentClass = false
     ): unknown {
         checkThrow512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
@@ -220,7 +226,9 @@ export const Util512 = /* static class */ {
         assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
         if (method && typeof method === 'function') {
             assertTrue(
-                me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s),
+                okIfOnParentClass ||
+                    me.hasOwnProperty(s) ||
+                    me.__proto__.hasOwnProperty(s),
                 '4H|cannot use parent classes',
                 clsname,
                 s
@@ -238,14 +246,14 @@ export const Util512 = /* static class */ {
     /**
      * for use with callAsMethodOnClass
      */
-    isMethodOnClass(me: object, s: string) {
+    isMethodOnClass(me: any, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
     },
 
     /**
      * returns list of keys.
      */
-    getMapKeys(map: object): string[] {
+    getMapKeys(map: any): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -259,7 +267,7 @@ export const Util512 = /* static class */ {
     /**
      * returns list of vals.
      */
-    getMapVals<T>(map: { [key: string]: T }): T[] {
+    getMapVals<T>(map:  Record<string, T>): T[] {
         let ret: T[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -384,7 +392,7 @@ export const Util512 = /* static class */ {
      */
     keepOnlyUnique(ar: string[]) {
         let ret: string[] = [];
-        let seen: { [key: string]: boolean } = {};
+        let seen:  Record<string, boolean> = {};
         for (let i = 0; i < ar.length; i++) {
             if (!seen[ar[i]]) {
                 seen[ar[i]] = true;
@@ -485,20 +493,8 @@ export class ValHolder<T> {
 }
 
 /**
- * a plain JS object, can be null
- */
-type AnyJsonInner =
-    | string
-    | number
-    | boolean
-    | null
-    | { [property: string]: AnyJsonInner }
-    | AnyJsonInner[];
-
-/**
  * indicates that the value is a plain JS object
  */
-export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 export type AnyUnshapedJson = any;
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
@@ -506,9 +502,30 @@ export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 /**
  * by jcalz, stackoverflow
  */
-export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & {
-    [k: number]: string;
-};
+export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & Record<number, string>
+
+/**
+ * list enum vals
+ */
+export function listEnumValsIncludingAlternates<T>(Enm: T) {
+    let ret: string[] = [];
+    for (let enumMember in Enm) {
+        /* show possible values */
+        if (
+            typeof enumMember === 'string' &&
+            !'0123456789'.includes(enumMember[0].toString())
+        ) {
+            let s = enumMember.toString();
+            if (s.startsWith('__AlternateForm__')) {
+                s = s.substr('__AlternateForm__'.length);
+            }
+
+            ret.push(s);
+        }
+    }
+
+    return ret;
+}
 
 /**
  * list enum vals
@@ -726,7 +743,7 @@ export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
  */
 export class OrderedHash<TValue> {
     protected keys: string[] = [];
-    protected vals: { [key: string]: TValue } = Object.create(null);
+    protected vals: Record<string, TValue> = Object.create(null); 
 
     deleteAll() {
         this.keys = [];
@@ -826,7 +843,7 @@ export function orderedHashSummary<T>(hash: OrderedHash<T>) {
  * map a key to object, does not allow setting a value twice.
  */
 export class MapKeyToObject<T> {
-    protected objects: { [key: string]: T } = Object.create(null);
+    protected objects:  Record<string, T> = Object.create(null);
     exists(key: string) {
         return Object.prototype.hasOwnProperty.call(this.objects, key);
     }
