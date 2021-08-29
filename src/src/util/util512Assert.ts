@@ -50,7 +50,7 @@ export class Util512BaseErr {
      * but this doesn't support inheritance now
      */
     static errIfExactCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
-        if ((e as any as {typeName?:string}).typeName === nm) {
+        if ((e as any).typeName === nm) {
             return e as any as T;
         } else {
             return undefined;
@@ -374,9 +374,9 @@ export function joinIntoMessage(
     c0 = findMarkers(c0, markers) ?? '';
     s1 = findMarkers(s1, markers);
     let message = level + ': ' + c0;
-    message += s1 ? '\n' + tostring(s1) : '';
-    message += s2 ? ', ' + tostring(s2) : '';
-    message += s3 ? ', ' + tostring(s3) : '';
+    message += s1 ? '\n' + s1 : '';
+    message += s2 ? ', ' + s2 : '';
+    message += s3 ? ', ' + s3 : '';
     if (markers.length) {
         message += ' (' + markers.join(',') + ')';
     }
@@ -416,11 +416,11 @@ export function ensureDefined<T>(
         }
 
         if (s2 !== '') {
-            sTotal += ', ' + tostring(s2);
+            sTotal += ', ' + s2;
         }
 
         if (s3 !== '') {
-            sTotal += ', ' + tostring(s3);
+            sTotal += ', ' + s3;
         }
 
         throw make512Error(sTotal).clsAsErr();

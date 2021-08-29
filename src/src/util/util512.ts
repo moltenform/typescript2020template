@@ -131,7 +131,7 @@ export const Util512 = /* static class */ {
     /**
      * is map empty
      */
-    isMapEmpty<U>(map: Record<string, U>) {
+    isMapEmpty<U>(map: { [key: string]: U }) {
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
                 return false;
@@ -144,14 +144,14 @@ export const Util512 = /* static class */ {
     /**
      * shallow clone of an object
      */
-    shallowClone<T extends Record<string, unknown>>(o: Record<string, unknown>): T {
+    shallowClone<T extends object>(o: object): T {
         return Object.assign({}, o) as T;
     },
 
     /**
      * freeze a property
      */
-    freezeProperty(o: Record<string, unknown>, propName: string) {
+    freezeProperty(o: object, propName: string) {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     },
@@ -160,7 +160,7 @@ export const Util512 = /* static class */ {
      * https://github.com/substack/deep-freeze
      * public domain
      */
-    freezeRecurse(o: Record<string, unknown>) {
+    freezeRecurse(o: object) {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -170,7 +170,7 @@ export const Util512 = /* static class */ {
                 (typeof o[prop] === 'object' || typeof o[prop] === 'function') &&
                 !Object.isFrozen(o[prop])
             ) {
-                Util512.freezeRecurse(o[prop] as Record<string, unknown>);
+                Util512.freezeRecurse(o[prop]);
             }
         }
     },
@@ -238,14 +238,14 @@ export const Util512 = /* static class */ {
     /**
      * for use with callAsMethodOnClass
      */
-    isMethodOnClass(me: any, s: string):any {
+    isMethodOnClass(me: object, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
     },
 
     /**
      * returns list of keys.
      */
-    getMapKeys(map: Record<string, unknown>): string[] {
+    getMapKeys(map: object): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {

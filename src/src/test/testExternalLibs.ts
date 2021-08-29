@@ -27,9 +27,9 @@ t.test('testCsvLib', () => {
 t.test('testSimpleSerialize', () => {
     let o = new ClassTestSimpleSerialization('id1001');
     o.unimportant = 'not important';
-    let oAsJson:unknown = serialize(o);
+    let oAsJson = serialize(o);
     let oAsString = JSON.stringify(oAsJson);
-    let gotJson:unknown = JSON.parse(oAsString);
+    let gotJson = JSON.parse(oAsString);
     let oFromString = deserialize<ClassTestSimpleSerialization>(
         ClassTestSimpleSerialization,
         gotJson
@@ -81,8 +81,7 @@ t.test('testClassSerializationWithNulls', () => {
 
     t.say(/*——————————*/ 'with array with null and undefined');
     h = new Hand(1, 'test');
-    // intentionally give it weird input
-    h.holding = [null as unknown as string, undefined as unknown as string];
+    h.holding = [null as any, undefined as any];
     expectedS = 'hid=1,hnm=test,hol=|,o=up,f=[]';
     assertEq(expectedS, h.asString(), 'Od|');
     serialized = JSON.stringify(serialize(h));

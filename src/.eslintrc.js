@@ -76,7 +76,6 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/require-await': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
-        '@typescript-eslint/restrict-template-expressions': 'off',
 
         // leaving disabled, since default vals in classes seem to work fine
         'no-invalid-this': 'off',
