@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkThrow512, respondUI512Error } from './util512Assert';
+/* auto */ import { assertTrue, checkIsError, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -250,7 +250,7 @@ export class Util512Higher {
     /**
      * essentially a replacement for timeout.
      */
-    static syncToAsyncAfterPause<T>(
+    static syncToAsyncAfterPause(
         fn: () => unknown,
         nMilliseconds: number,
         context: string,
@@ -351,6 +351,7 @@ export function showMsgIfExceptionThrown(fn: () => void, context: string) {
         fn();
         return true;
     } catch (e) {
+        checkIsError(e)
         respondUI512Error(e, context);
         return e as Error;
     }
@@ -364,6 +365,7 @@ export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string)
         fn();
         return true;
     } catch (e) {
+        checkIsError(e)
         respondUI512Error(e, context, true);
         return e as Error;
     }

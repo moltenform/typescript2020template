@@ -164,6 +164,13 @@ export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unkno
 }
 
 /**
+ * duck type-checking, useful for try/catch
+ */
+export function checkIsError(e:unknown): asserts e is Error {
+    assertTrue(Boolean((e as any).message), "Does not appear to be an error object");
+}
+
+/**
  * this is a hard assert that always throws.
  */
 export function assertTrue(

@@ -3,7 +3,7 @@
 
 - code can be organized into modules
 - release builds are bundled to a single file
-    - better because there are fewer network requests, unless there's SPDY
+    - better because there are fewer network roundtrips, unless there's HTTP/2
     - better because some browsers like old mobile android don't yet support es6 modules
 - release builds are minifed
     - doesn't save download time because of gzip transfer

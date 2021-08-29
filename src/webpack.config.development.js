@@ -25,7 +25,6 @@ module.exports = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({
-            eslint: true
         }),
         /* turn off pop-up notifications */
         /* new ForkTsCheckerNotifierWebpackPlugin(
@@ -55,11 +54,13 @@ module.exports = {
     },
     devtool: 'inline-source-map',
     devServer: {
-        clientLogLevel: 'warning',
         open: true,
         historyApiFallback: true,
-        stats: 'errors-only',
         /* turn off auto-refresh browser on changes */
         liveReload: false,
-    }
+        client: {
+            logging: 'warn'
+        }
+    },
+    stats: 'errors-only',
 };

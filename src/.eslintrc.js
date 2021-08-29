@@ -23,7 +23,7 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
         'plugin:@typescript-eslint/recommended-requiring-type-checking', // You need both to actually get the defaults
-        'prettier/@typescript-eslint', // Disable ESLint rules if their redundant with a prettier error 
+        'prettier', // Disable ESLint rules if their redundant with a prettier error 
         // 'plugin:prettier/recommended' // Displays prettier errors as ESLint errors. (must be last)
     ],
     parserOptions: {
