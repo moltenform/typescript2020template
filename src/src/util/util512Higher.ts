@@ -307,7 +307,7 @@ export class Util512Higher {
             return Util512Higher.sleep(ms);
         };
 
-        let ps:[Promise<T>, Promise<any>] = [fn, fTimeout()];
+        let ps: [Promise<T>, Promise<any>] = [fn, fTimeout()];
         let ret = await Promise.all(ps);
         return ret[0];
     }
@@ -347,12 +347,12 @@ export enum RespondToErr {
 /**
  * if an error is thrown, show a message
  */
-export function showMsgIfExceptionThrown(fn: () => void, context: string):Error|true {
+export function showMsgIfExceptionThrown(fn: () => void, context: string): Error | true {
     try {
         fn();
         return true;
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         respondUI512Error(e, context);
         return e;
     }
@@ -361,12 +361,15 @@ export function showMsgIfExceptionThrown(fn: () => void, context: string):Error|
 /**
  * if an error is thrown, show a warning message just in the console
  */
-export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string):Error|true {
+export function justConsoleMsgIfExceptionThrown(
+    fn: () => void,
+    context: string
+): Error | true {
     try {
         fn();
         return true;
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         respondUI512Error(e, context, true);
         return e;
     }
@@ -383,7 +386,7 @@ export type AsyncFn = () => Promise<unknown>;
  * used to intentionally free memory
  */
 export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
-    return (undefined as any) as T;
+    return undefined as any as T;
 }
 
 /**

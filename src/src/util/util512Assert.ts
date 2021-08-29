@@ -51,7 +51,7 @@ export class Util512BaseErr {
      */
     static errIfExactCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
         if ((e as any).typeName === nm) {
-            return (e as any) as T;
+            return e as any as T;
         } else {
             return undefined;
         }
@@ -63,7 +63,7 @@ export class Util512BaseErr {
     clsAsErr() {
         assertWarn((this as any).typeName, 'RW|');
         assertWarn((this as any).message, 'RV|');
-        return (this as any) as Error;
+        return this as any as Error;
     }
 
     /**
@@ -90,7 +90,7 @@ export class Util512BaseErr {
         let e = new Error();
         let err = fnCtor(message, level);
         Object.assign(e, err);
-        let cls = (e as any) as T;
+        let cls = e as any as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
         cls.addErr = err.addErr.bind(e);
         if (!UI512ErrorHandling.runningTests) {
@@ -166,8 +166,8 @@ export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unkno
 /**
  * duck type-checking, useful for try/catch
  */
-export function checkIsError(e:unknown): asserts e is Error {
-    assertTrue(Boolean((e as any).message), "Does not appear to be an error object");
+export function checkIsError(e: unknown): asserts e is Error {
+    assertTrue(Boolean((e as any).message), 'Does not appear to be an error object');
 }
 
 /**

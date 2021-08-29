@@ -19,7 +19,7 @@ export async function assertThrowsAsync<T>(
     try {
         await fn();
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         msg = e.message ? e.message : '';
     }
 
@@ -39,7 +39,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
     try {
         fn();
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         msg = e.message ?? '';
     }
 
@@ -61,7 +61,7 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
     try {
         fn();
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         msg = e.message ?? '';
     } finally {
         UI512ErrorHandling.silenceAssertMsgs = svd;
@@ -93,7 +93,7 @@ export function sorted<T>(ar: T[]) {
  * test-only code, to avoid type casts
  */
 export function YetToBeDefinedTestHelper<T>(): T {
-    return (undefined as any) as T;
+    return undefined as any as T;
 }
 
 /**

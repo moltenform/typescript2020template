@@ -121,7 +121,7 @@ export abstract class RingBuffer {
 export class RingBufferLocalStorage extends RingBuffer {
     getAt(index: number): string {
         if (window.localStorage) {
-            return window.localStorage.getItem('ui512Log_' + index.toString()) ?? ''
+            return window.localStorage.getItem('ui512Log_' + index.toString()) ?? '';
         } else {
             return '';
         }
@@ -129,7 +129,7 @@ export class RingBufferLocalStorage extends RingBuffer {
 
     setAt(index: number, s: string) {
         if (window.localStorage) {
-            window.localStorage.setItem('ui512Log_' + index.toString(), s)
+            window.localStorage.setItem('ui512Log_' + index.toString(), s);
         }
     }
 
@@ -165,7 +165,7 @@ export type O<T> = T | undefined;
 declare namespace LZString {
     function compressToUTF16(s: string): string;
     function decompressFromUTF16(s: string): string;
-  }
+}
 
 /**
  * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.

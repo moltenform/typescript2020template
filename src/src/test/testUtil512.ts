@@ -124,7 +124,7 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     try {
         getStrToEnum(TestEnum, 'TestEnum', 'Firstf');
     } catch (e) {
-        checkIsError(e)
+        checkIsError(e);
         excMessage = e.toString();
     }
 
