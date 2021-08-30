@@ -184,3 +184,4 @@ export class UI512Compress {
         return LZString.decompressFromUTF16(s) ?? '';
     }
 }
+

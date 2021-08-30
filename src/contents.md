@@ -87,6 +87,7 @@ For more scripts, see the "scripts" section of `package.json`.
 * bowser, MIT license
 * lz-string, wtfpl license
 * serializer.ts, Apache-2.0 license
+* map-values-deep, MIT license
 * tested with node 14.17.5
 
 ### libraries used solely as an example

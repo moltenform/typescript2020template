@@ -1,6 +1,8 @@
 
 /* auto */ import { O, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
+import { TypedJSON } from 'typedjson';
+import { map, isArray, isObject, isPlainObject, mapValues } from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -673,7 +675,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context).clsAsErr();
+    throw make512Error('J7|type cast exception', context);
 }
 
 /**
@@ -684,7 +686,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context).clsAsErr();
+    throw make512Error('J7|type cast exception', context);
 }
 
 /**
@@ -972,4 +974,32 @@ export function lastIfThere<T>(ar: T[]): O<T> {
 export function longstr(s: string, newlinesBecome = ' ') {
     s = s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
     return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
+}
+
+/**
+ * apply mapping
+ * https://www.npmjs.com/package/map-values-deep
+ */
+export function mapValuesDeep(obj:any, fn:any, key:any):any {
+  return isArray(obj)
+    ? map(obj, (innerObj, idx) => mapValuesDeep(innerObj, fn, idx))
+    : isPlainObject(obj)
+      ? mapValues(obj, (val, key) => mapValuesDeep(val, fn, key))
+      : isObject(obj)
+        ? obj
+        : fn(obj, key)
+}
+
+
+/**
+ * wrapper over TypedJson. converts null into undefined.
+ */
+ export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
+    const serializer = new TypedJSON(cls);
+    const objectGot = serializer.parse(json);
+    const replaceWithUndef = (value:unknown, key:string) => {
+        return value===null ? undefined : value
+    }
+
+    return mapValuesDeep(objectGot, replaceWithUndef)
 }

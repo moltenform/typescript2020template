@@ -1,5 +1,6 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -29,117 +30,36 @@
  */
 
 /**
- * It's useful to distinguish between errors we've thrown
- * and generic javascript errors.
- *
- * Currently we use a plain Error object and expando our
- * own properties onto it. Works for everything except
- * instanceof, because it's not actually a different class.
- * If I wanted true custom Error objects I'd have to navigate
- * a lot of browser differences, see
- * https://github.com/bjyoungblood/es6-error
+ * browser support is tricky when making a custom JS Error class.
+ * previously, I rolled my own by adding properties onto a default Error class,
+ * then checking for the existence of those tags.
+ * browser support for ES6 is high enough now that I can target it and use npm's es6-error. 
  */
-export class Util512BaseErr {
+ export class Util512BaseErr extends ExtendableError {
+     /* use this instead of .name to protect against minifying */
     typeName = 'Util512BaseErr';
-    protected constructor(public message: string, public level: string) {}
+    level = ''
+    constructor(message: string, level: string) {
+        super(message);
+        this.level = level
+      }
+  }
 
-    /**
-     * cast an Error instance to a Util512BaseErr, or return undefined
-     * if the Error isn't marked as that classs.
-     * we used to use isUtil512BaseErr, which supported inheritance,
-     * but this doesn't support inheritance now
-     */
-    static errIfExactCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
-        if ((e as any).typeName === nm) {
-            return e as any as T;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * cast a class to an Error
-     */
-    clsAsErr() {
-        assertWarn((this as any).typeName, 'RW|');
-        assertWarn((this as any).message, 'RV|');
-        return this as any as Error;
-    }
-
-    /**
-     * take the information from another Error object
-     * and put it into the information in this object.
-     */
-    addErr(e: Error) {
-        (this as any).message += '\n' + e.message;
-        (this as any).stack = e.stack;
-        (this as any).line = (e as any).line;
-        (this as any).sourceURL = (e as any).sourceURL;
-    }
-
-    /**
-     * create an Error instance that also acts like a
-     * Util512BaseErr instance (it isn't really, but because
-     * it has the same shape, it works fine)
-     */
-    static createErrorImpl<T extends Util512BaseErr>(
-        fnCtor: (...args: unknown[]) => T,
-        ...params: unknown[]
-    ): T {
-        let e = new Error();
-        let err = fnCtor(...params);
-        Object.assign(e, err);
-        let cls = e as any as T;
-        cls.clsAsErr = err.clsAsErr.bind(e);
-        cls.addErr = err.addErr.bind(e);
-        if (!UI512ErrorHandling.runningTests) {
-            callDebuggerIfNotInProduction(e.message);
-        }
-
-        return cls;
-    }
-
-    /**
-     * workaround because constructor is protected
-     */
-    protected static gen(message: string, level: string) {
-        return new Util512BaseErr(message, level);
-    }
-
-    /**
-     * create a Util512BaseErr (or at least something that acts like one)
-     */
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
-    }
-}
-
-/**
+  /**
  * a warning. execution can continue afterwards, but
  * we'll show a message to the user.
  */
-export class Util512Warn extends Util512BaseErr {
+ export class Util512Warn extends Util512BaseErr {
     typeName = 'Util512Warn';
-    protected static gen(message: string, level: string) {
-        return new Util512Warn(message, level);
-    }
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params);
-    }
-}
+  }
+
 
 /**
  * just a message, not an error case.
  */
-export class Util512Message extends Util512BaseErr {
+ export class Util512Message extends Util512BaseErr {
     typeName = 'Util512Message';
-    protected static gen(message: string, level: string) {
-        return new Util512Message(message, level);
-    }
-    static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params);
-    }
-}
+  }
 
 /**
  * helper for making a Util512BaseErr, at any level
@@ -152,7 +72,7 @@ function makeUtil512BaseErrGeneric(
     s3?: unknown
 ) {
     let msg = joinIntoMessage(firstMsg, level, s1, s2, s3);
-    return Util512BaseErr.createError(msg, level);
+    return new Util512BaseErr(msg, level);
 }
 
 /**
@@ -185,7 +105,7 @@ export function assertTrue(
             callDebuggerIfNotInProduction(msg);
         }
 
-        throw make512Error('assert:', s1, s2, s3).clsAsErr();
+        throw make512Error('assert:', s1, s2, s3)
     }
 }
 
@@ -209,8 +129,8 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
         if (!UI512ErrorHandling.silenceWarnings) {
             /* we won't throw this error, but we'll make it
             so we can save it + the callstack to logs */
-            let e = Util512Warn.createError(msg, 'ui512warn');
-            respondUI512Error(e.clsAsErr(), 'ui512warn');
+            let e = new Util512Warn(msg, 'ui512warn');
+            respondUI512Error(e, 'ui512warn');
             if (UI512ErrorHandling.runningTests) {
                 let msgTotal = msg + ' Press Cancel to exit tests.';
                 if (!confirm(msgTotal)) {
@@ -238,7 +158,7 @@ export function checkThrow512(
     s2: unknown = ''
 ): asserts condition {
     if (!condition) {
-        throw make512Error(msg, s1, s2).clsAsErr();
+        throw make512Error(msg, s1, s2);
     }
 }
 
@@ -424,7 +344,7 @@ export function ensureDefined<T>(
             sTotal += ', ' + tostring(s3);
         }
 
-        throw make512Error(sTotal).clsAsErr();
+        throw make512Error(sTotal);
     } else {
         return v;
     }
