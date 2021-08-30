@@ -89,7 +89,7 @@ export class Util512BaseErr {
         let e = new Error();
         let err = fnCtor(...params);
         Object.assign(e, err);
-        let cls = (e as any) as T;
+        let cls = e as any as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
         cls.addErr = err.addErr.bind(e);
         if (!UI512ErrorHandling.runningTests) {
@@ -198,7 +198,9 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
         if (UI512ErrorHandling.silenceAssertMsgs) {
             /* we are in a assertAsserts test,
             for testing convenience throw, we won't normally. */
-            throw new Error('assert:' + s1 + (s2 ? tostring(s2) : '') + (s3 ? tostring(s3) : ''));
+            throw new Error(
+                'assert:' + s1 + (s2 ? tostring(s2) : '') + (s3 ? tostring(s3) : '')
+            );
         }
 
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);

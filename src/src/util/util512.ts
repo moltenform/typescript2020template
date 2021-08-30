@@ -267,7 +267,7 @@ export const Util512 = /* static class */ {
     /**
      * returns list of vals.
      */
-    getMapVals<T>(map:  Record<string, T>): T[] {
+    getMapVals<T>(map: Record<string, T>): T[] {
         let ret: T[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -392,7 +392,7 @@ export const Util512 = /* static class */ {
      */
     keepOnlyUnique(ar: string[]) {
         let ret: string[] = [];
-        let seen:  Record<string, boolean> = {};
+        let seen: Record<string, boolean> = {};
         for (let i = 0; i < ar.length; i++) {
             if (!seen[ar[i]]) {
                 seen[ar[i]] = true;
@@ -502,7 +502,7 @@ export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 /**
  * by jcalz, stackoverflow
  */
-export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & Record<number, string>
+export type TypeLikeAnEnum<E> = Record<keyof E, number | string> & Record<number, string>;
 
 /**
  * list enum vals
@@ -743,7 +743,7 @@ export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
  */
 export class OrderedHash<TValue> {
     protected keys: string[] = [];
-    protected vals: Record<string, TValue> = Object.create(null); 
+    protected vals: Record<string, TValue> = Object.create(null);
 
     deleteAll() {
         this.keys = [];
@@ -843,7 +843,7 @@ export function orderedHashSummary<T>(hash: OrderedHash<T>) {
  * map a key to object, does not allow setting a value twice.
  */
 export class MapKeyToObject<T> {
-    protected objects:  Record<string, T> = Object.create(null);
+    protected objects: Record<string, T> = Object.create(null);
     exists(key: string) {
         return Object.prototype.hasOwnProperty.call(this.objects, key);
     }
