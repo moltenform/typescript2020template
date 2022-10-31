@@ -107,17 +107,17 @@ t.test('parseIntStrict', () => {
     assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
 t.test('truncateWithEllipsis', () => {
-    assertEq('', Util512.truncateWithEllipsis('', 2), '');
-    assertEq('a', Util512.truncateWithEllipsis('a', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('ab', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('abc', 2), '');
-    assertEq('ab', Util512.truncateWithEllipsis('abcd', 2), '');
-    assertEq('', Util512.truncateWithEllipsis('', 4), '');
-    assertEq('a', Util512.truncateWithEllipsis('a', 4), '');
-    assertEq('ab', Util512.truncateWithEllipsis('ab', 4), '');
-    assertEq('abcd', Util512.truncateWithEllipsis('abcd', 4), '');
-    assertEq('a...', Util512.truncateWithEllipsis('abcde', 4), '');
-    assertEq('a...', Util512.truncateWithEllipsis('abcdef', 4), '');
+    assertEq('', Util512.truncateWithEllipsis('', 2), 'Ub|');
+    assertEq('a', Util512.truncateWithEllipsis('a', 2), 'Ua|');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 2), 'UZ|');
+    assertEq('ab', Util512.truncateWithEllipsis('abc', 2), 'UY|');
+    assertEq('ab', Util512.truncateWithEllipsis('abcd', 2), 'UX|');
+    assertEq('', Util512.truncateWithEllipsis('', 4), 'UW|');
+    assertEq('a', Util512.truncateWithEllipsis('a', 4), 'UV|');
+    assertEq('ab', Util512.truncateWithEllipsis('ab', 4), 'UU|');
+    assertEq('abcd', Util512.truncateWithEllipsis('abcd', 4), 'UT|');
+    assertEq('a...', Util512.truncateWithEllipsis('abcde', 4), 'US|');
+    assertEq('a...', Util512.truncateWithEllipsis('abcdef', 4), 'UR|');
 });
 t.test('add', () => {
     assertEq(0, Util512.add(0, 0), 'N(|');
@@ -125,6 +125,29 @@ t.test('add', () => {
     assertEq(6, [1, 2, 3].reduce(Util512.add), 'N%|');
     assertEq(9, [1, 2, 3].reduce(Util512.add, 3), 'N#|');
     assertEq(0, [].reduce(Util512.add, 0), 'N!|');
+});
+t.test('getBrowserOS', () => {
+    let s = longstr(`Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X)
+        AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a
+        Safari/604.1`);
+    assertEq(BrowserOSInfo.Mac, new BrowserInfo(s).os, 'N |');
+    s = longstr(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+        (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246`);
+    assertEq(BrowserOSInfo.Windows, new BrowserInfo(s).os, 'Nz|');
+    s = longstr(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9
+        (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9`);
+    assertEq(BrowserOSInfo.Mac, new BrowserInfo(s).os, 'Ny|');
+    s = longstr(`Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML,
+        like Gecko) Chrome/47.0.2526.111 Safari/537.36`);
+    assertEq(BrowserOSInfo.Windows, new BrowserInfo(s).os, 'Nx|');
+    s = longstr(`Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101
+        Firefox/15.0.1`);
+    assertEq(BrowserOSInfo.Linux, new BrowserInfo(s).os, 'Nw|');
+    /* previously:
+    Windows
+    iPhone|iPad|iPod,Mac OS X,MacPPC|MacIntel|Mac_PowerPC|Macintosh
+    Linux|X11|UNIX
+    */
 });
 t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};

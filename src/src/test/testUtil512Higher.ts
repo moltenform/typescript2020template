@@ -47,7 +47,7 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-// incoming nulls -> undefined
+
 
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */

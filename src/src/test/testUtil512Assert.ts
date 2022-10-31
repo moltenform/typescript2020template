@@ -58,6 +58,10 @@ t.test('AssertAsserts', () => {
 t.test('GetAssertMessages', () => {
     checkThrow512(1, 'PE|');
     checkThrowEq512('a', 'a', 'PD|');
+    checkThrow(1, 'PC|');
+    checkThrowEq('a', 'a', 'PB|');
+    checkThrowInternal(1, 'PA|');
+    checkThrowNotifyMsg(1, 'P9|');
     assertThrows('P8|', 'ui512: a (;0)', () => {
         checkThrow512(false, ';0|a');
     });
@@ -75,6 +79,42 @@ t.test('GetAssertMessages', () => {
     });
     assertThrows('P3|', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
         checkThrowEq512('a', 'b', ';5|a', 'c1', 'c2');
+    });
+    assertThrows('P2|', 'vpc: a (;6)', () => {
+        checkThrow(false, ';6|a');
+    });
+    assertThrows('P1|', 'vpc: a\nb (;7)', () => {
+        checkThrow(false, ';7|a', 'b');
+    });
+    assertThrows('P0|', 'vpc: a\nb, c (;8)', () => {
+        checkThrow(false, ';8|a', 'b', 'c');
+    });
+    assertThrows('O~|', "vpc: a expected 'a' but got 'b'. (;9)", () => {
+        checkThrowEq('a', 'b', ';9|a');
+    });
+    assertThrows('O}|', "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
+        checkThrowEq('a', 'b', ';a|a', 'c1');
+    });
+    assertThrows('O||', "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
+        checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
+    });
+    assertThrows('O{|', 'vpcinternal: a (;c)', () => {
+        checkThrowInternal(false, ';c|a');
+    });
+    assertThrows('O_|', 'vpcinternal: a\nb (;d)', () => {
+        checkThrowInternal(false, ';d|a', 'b');
+    });
+    assertThrows('O^|', 'vpcinternal: a\nb, c (;e)', () => {
+        checkThrowInternal(false, ';e|a', 'b', 'c');
+    });
+    assertThrows('O]|', 'vpcmessage: a (;f)', () => {
+        checkThrowNotifyMsg(false, ';f|a');
+    });
+    assertThrows('O[|', 'vpcmessage: a\nb (;g)', () => {
+        checkThrowNotifyMsg(false, ';g|a', 'b');
+    });
+    assertThrows('O@|', 'vpcmessage: a\nb, c (;h)', () => {
+        checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
     });
 });
 t.test('ThrowIfUndefined', () => {

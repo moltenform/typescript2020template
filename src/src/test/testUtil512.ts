@@ -460,6 +460,16 @@ t.test('MapKeyToObjectCanSet', () => {
     o.remove('five');
     assertEq(undefined, o.find('five'), 'M.|');
 });
+t.test('checkThrowEq', () => {
+    checkThrowEq(1, 1, 'M-|');
+    checkThrowEq('abc', 'abc', 'M,|');
+    assertThrows('M+|', 'but got', () => {
+        checkThrowEq(1, 2, 'M*|');
+    });
+    assertThrows('M)|', 'but got', () => {
+        checkThrowEq('abc', 'ABC', 'M(|');
+    });
+});
 t.test('last', () => {
     assertEq(3, arLast([1, 2, 3]), 'M&|');
     assertEq(1, arLast([1]), 'M%|');

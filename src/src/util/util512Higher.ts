@@ -387,6 +387,56 @@ export type AsyncFn = () => Promise<unknown>;
 export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
     return undefined as any as T;
 }
+/**
+ * currently just the detected OS
+ */
+export enum BrowserOSInfo {
+    __isUI512Enum = 1,
+    Unknown,
+    Windows,
+    Linux,
+    Mac
+}
+
+/**
+ * stores browser/platform information
+ */
+export class BrowserInfo {
+    os = BrowserOSInfo.Unknown;
+    bowserOs = BowserOS.unknown;
+    browser = BowserBrowsers.unknown;
+    platform = BowserPlatform.unknown;
+    static cached: O<BrowserInfo>;
+    static get() {
+        if (!BrowserInfo.cached) {
+            BrowserInfo.cached = new BrowserInfo();
+        }
+
+        return BrowserInfo.cached;
+    }
+
+    /**
+     * use the bowser library to get information
+     */
+    constructor(nav?: string) {
+        nav = nav ?? window.navigator.userAgent;
+        try {
+            let [br, os, platform] = bridgedGetAllBrowserInfo(nav);
+            this.browser = br;
+            this.bowserOs = os;
+            this.platform = platform;
+            if (os === BowserOS.windows) {
+                this.os = BrowserOSInfo.Windows;
+            } else if (os === BowserOS.macos || os === BowserOS.ios) {
+                this.os = BrowserOSInfo.Mac;
+            } else if (os === BowserOS.linux) {
+                this.os = BrowserOSInfo.Linux;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
 
 /**
  * can be used to build a periodic timer.

@@ -2,6 +2,7 @@
 nocpy_*
 dist/
 *.pyc
+*.tsbuildinfo
 
 # Logs
 logs
