@@ -27,8 +27,8 @@ module.exports = {
         // 'plugin:prettier/recommended' // Displays prettier errors as ESLint errors. (must be last)
     ],
     parserOptions: {
-        project: path.resolve(__dirname, './tsconfig.json').replace(/\\/g, '/'),
-        tsconfigRootDir: __dirname.replace(/\\/g, '/'),
+        project: path.resolve(__dirname, './tsconfig.json'),
+        tsconfigRootDir: __dirname,
         ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
         sourceType: 'module', // Allows for the use of imports
         ecmaFeatures: {
