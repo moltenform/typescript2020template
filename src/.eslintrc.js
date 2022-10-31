@@ -154,11 +154,15 @@ module.exports = {
 
         // went through all non-default ts ones, chose to turn these on
         '@typescript-eslint/no-extra-non-null-assertion': 'warn',
-        '@typescript-eslint/no-floating-promises': 'warn',
+        '@typescript-eslint/no-floating-promises': 'error',
         '@typescript-eslint/no-implied-eval': 'warn',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         '@typescript-eslint/no-throw-literal': 'warn',
         '@typescript-eslint/require-array-sort-compare': 'warn', 
+        
+        // a few other ones
+        '@typescript-eslint/consistent-type-assertions': 'error',
+        '@typescript-eslint/consistent-type-imports': {prefer: 'type-imports'},
         
         // after 2.26.0
         '@typescript-eslint/non-nullable-type-assertion-style': 'warn', 
@@ -175,6 +179,14 @@ module.exports = {
         "@typescript-eslint/no-loop-func": ["error"],
         "no-loss-of-precision": "off", // turn off eslint's in favor of the ts version
         "@typescript-eslint/no-loss-of-precision": ["error"],
+        
+        // after eslint7.32.0 + eslint-ts4.29.3
+        'no-constant-binary-expression': 'error',
+        'no-unused-private-class-members': 'error',
+        'prefer-object-has-own': 'off',
+        '@typescript-eslint/consistent-generic-constructors': 'error',
+        '@typescript-eslint/no-unsafe-declaration-merging': 'error',
+        '@typescript-eslint/no-duplicate-enum-values': 'error',
 
         // checks locals, not fn params.
         // annoying to leave this on while editing, so we'll use typescript 6133 instead
