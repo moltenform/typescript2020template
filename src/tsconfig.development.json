@@ -69,16 +69,16 @@
         // "assumeChangesOnlyAffectDirectDependencies": false,
         "types": [], /* safer to set this explicitly, otherwise npm dependencies can appear */
         // Newest:
-        allowUnusedLabels: false,
-        noFallthroughCasesInSwitch: true,
-        noImplicitOverride: true,
+        "allowUnusedLabels": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
         // noPropertyAccessFromIndexSignature 
-        noUncheckedIndexedAccess: true,
+        "noUncheckedIndexedAccess": true,
         // useUnknownInCatchVariables
         // emitBOM, emitDeclarationOnly, importHelpers, importsNotUsedAsValues
         // newLine, noEmit, noEmitHelpers
         // noEmitOnError
-        preserveConstEnums = true,
+        "preserveConstEnums": true,
         // preserveValueImports, removeComments
         // maxNodeModuleJsDepth, disableSizeLimit
         // jsx, jsxFactory, jsxImportSource, reactNamespace

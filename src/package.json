@@ -47,7 +47,6 @@
     "install": "^0.13.0",
     "lodash": "^4.17.21",
     "map-values-deep": "^1.0.2",
-    "npm": "^7.21.1",
     "number-to-words": "^1.2.4",
     "serializer.ts": "^0.0.12",
     "typedjson": "^1.7.0",
