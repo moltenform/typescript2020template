@@ -62,7 +62,7 @@ module.exports = {
             logging: 'warn'
         },
         static: { 
-            directory: path.resolve(__dirname, './static'), 
+            directory: path.resolve(__dirname, './src/static'), 
             publicPath: '/static'
         }
     },
