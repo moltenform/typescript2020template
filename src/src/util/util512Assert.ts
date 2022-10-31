@@ -1,6 +1,6 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
-import ExtendableError from 'es6-error';
+import  ExtendableError  from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -162,7 +162,8 @@ export function checkThrow512(
     }
 }
 
-/* see also: assertEq, assertWarnEq, checkThrowEq512 in util512.ts */
+
+/* see also: assertEq, assertWarnEq, checkThrowEq in util512.ts */
 
 /**
  * store logs. user can choose "send err report" to send us error context.

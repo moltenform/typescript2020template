@@ -3,21 +3,22 @@
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
-import  'reflect-metadata';
+//~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-import { toWords } from 'number-to-words';
-import type { Bowser } from '../../external/bowser/bowser';
-declare const bowser: typeof Bowser;
+//~ import { toWords } from 'number-to-words';
+//~ import type { Bowser } from '../../external/bowser/bowser';
+//~ declare const bowser: typeof Bowser;
 
 function getTestString() {
-    let s1 = Util512.repeat(4, 'a').join('_');
-    let s2 = Util512.range(1, 5);
-    let s3 = toWords(13);
-    let s4 = checkIsProductionBuild() ? 'release' : 'debug';
-    return [s1, s2, s3, s4].join('<br/>');
+    return 'abc'
+    //~ let s1 = Util512.repeat(4, 'a').join('_');
+    //~ let s2 = Util512.range(1, 5);
+    //~ let s3 = toWords(13);
+    //~ let s4 = checkIsProductionBuild() ? 'release' : 'debug';
+    //~ return [s1, s2, s3, s4].join('<br/>');
 }
 
 export function setOutputToTestString() {
@@ -39,15 +40,15 @@ async function onBtnGoAsync() {
 }
 
 function doDetectBrowser() {
-    let o = bowser.parse(window.navigator.userAgent);
-    let s = '';
-    s += `<br/>name: ${o.browser.name}`;
-    s += `<br/>v: ${o.browser.version}`;
-    s += `<br/>platform: ${o.platform.type}`;
-    let el = document.getElementById('detectedBrowser');
-    if (el) {
-        el.innerHTML = s;
-    }
+    //~ let o = bowser.parse(window.navigator.userAgent);
+    //~ let s = '';
+    //~ s += `<br/>name: ${o.browser.name}`;
+    //~ s += `<br/>v: ${o.browser.version}`;
+    //~ s += `<br/>platform: ${o.platform.type}`;
+    //~ let el = document.getElementById('detectedBrowser');
+    //~ if (el) {
+        //~ el.innerHTML = s;
+    //~ }
 }
 
 export function runOnLoad() {

@@ -418,11 +418,11 @@ export const Util512 = /* static class */ {
             this.locked = true;
         }
         push(v: T) {
-            checkThrowEq512(false, this.locked, 'Ow|locked');
+            checkThrowEq(false, this.locked, 'Ow|locked');
             this.vals.push(v);
         }
         set(i: number, v: T) {
-            checkThrowEq512(false, this.locked, '4A|locked');
+            checkThrowEq(false, this.locked, '4A|locked');
             this.vals[i] = v;
         }
         len() {
@@ -958,6 +958,23 @@ export function assertWarnEq(
 
 /**
  * a quick way to throw an expection if value is not what was expected.
+ */
+export function checkThrowEq<T>(
+    expected: T,
+    got: unknown,
+    msg: string,
+    c1: unknown = '',
+    c2: unknown = ''
+): asserts got is T {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        throw new Error(`${msgEq} ${c1} ${c2}`)
+    }
+}
+
+/**
+ * a quick way to throw an expection if value is not what was expected.
+ * throws a 512 flavor of error
  */
 export function checkThrowEq512<T>(
     expected: T,

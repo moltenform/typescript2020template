@@ -98,7 +98,7 @@ For more scripts, see the "scripts" section of `package.json`.
 * hit ctrl-shift-b, then can run the npm scripts
 * can debug, if started in new chrome instance
 
-no longer need: html-webpack-plugin
+no longer need: html-webpack-plugin - do need this after all
 no longer need: install module?
 no longer need: csv.js, BSD-3-Clause license
 no longer need: number-to-words, MIT license
