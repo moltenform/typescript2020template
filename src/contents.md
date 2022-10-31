@@ -103,7 +103,7 @@ no longer need: install module?
 no longer need: csv.js, BSD-3-Clause license
 no longer need: number-to-words, MIT license
 
-  might need   "uglifyjs-webpack-plugin": "^2.2.0",
+might need   "uglifyjs-webpack-plugin": "^2.2.0",
 todo:   "reflect-metadata": "^0.1.13",
 todo: typedjson
 might want core-js-bundled, then can do

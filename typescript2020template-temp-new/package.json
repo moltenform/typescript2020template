@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/lodash": "^4.14.186",
+    "@types/text-encoding": "^0.0.36",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "cross-env": "^7.0.3",
@@ -29,8 +30,12 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "base64-js": "^1.5.1",
     "bowser": "^2.11.0",
+    "FileSaver": "^0.10.0",
+    "js-lru": "^1.0.0",
     "lodash": "^4.17.21",
+    "lz-string": "^1.4.4",
     "serializer.ts": "^0.0.12",
     "whatwg-fetch": "^3.6.2"
   }
