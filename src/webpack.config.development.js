@@ -60,6 +60,10 @@ module.exports = {
         liveReload: false,
         client: {
             logging: 'warn'
+        },
+        static: { 
+            directory: path.resolve(__dirname, './static'), 
+            publicPath: '/static'
         }
     },
     stats: 'errors-only',

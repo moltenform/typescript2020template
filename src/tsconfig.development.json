@@ -1,4 +1,11 @@
+
 // https://www.typescriptlang.org/tsconfig
+
+// use npm list --depth=0 to see installed package versions.
+
+// if you see
+// Debug Failure. Expected C:/b/pydev/dev/good_projects/typescript2020template/src/src/tsconfig.json === C:\b\pydev\dev\good_projects\typescript2020template\src\src\tsconfig.json.
+// this could mean a parse failure in tsconfig
 {
     "compilerOptions": {
         /* Basic Options */
@@ -31,12 +38,15 @@
         "skipLibCheck": true, /* skips typechecking in d.ts. otherwise get bowser.d.ts:An export assignment cannot be used in a module with other exported elements. */
         "suppressImplicitAnyIndexErrors": true,
         /* Strict Type-Checking Options */
-        "strict": true, /* Enable all strict type-checking options. */
+        //"strict": true, /* Enable all strict type-checking options. */
+        "strict": false, //TEMPORARY /* Enable all strict type-checking options. */
         "noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type. */
-        "strictNullChecks": true, /* Enable strict null checks. */
+        //"strictNullChecks": true, /* Enable strict null checks. */
+        "strictNullChecks": false, //TEMPORARY /* Enable strict null checks. */
         "strictFunctionTypes": true, /* Enable strict checking of function types. */
         "strictBindCallApply": true, /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-        "strictPropertyInitialization": true, /* Enable strict checking of property initialization in classes. */
+        // "strictPropertyInitialization": true, /* Enable strict checking of property initialization in classes. */
+        "strictPropertyInitialization": false, //TEMPORARY, /* Enable strict checking of property initialization in classes. */
         "noImplicitThis": true, /* Raise error on 'this' expressions with an implied 'any' type. */
         "alwaysStrict": true, /* Parse in strict mode and emit "use strict" for each source file. */
         /* Additional Checks */
@@ -70,7 +80,6 @@
         "types": [], /* safer to set this explicitly, otherwise npm dependencies can appear */
         // Newest:
         "allowUnusedLabels": false,
-        "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
         // noPropertyAccessFromIndexSignature 
         "noUncheckedIndexedAccess": true,
@@ -87,6 +96,9 @@
         // disableReferencedProjectLoad, disableSolutionSearching, disableSourceOfProjectReferenceRedirect
         // watchFile, watchDirectory, fallbackPolling, synchronousWatchDirectory, excludeDirectories, excludeFiles
         // typeAcquisition, disableFilenameBasedTypeAcquisition 
+        // new in 4.8.4:
+        // moduleSuffixes
+        // moduleDetection (not relevant)
         
     },
     "include": [

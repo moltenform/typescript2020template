@@ -148,7 +148,7 @@ t.test('cast', () => {
         }
     }
     class Child extends Parent {
-        public a() {
+        public override a() {
             return 'child';
         }
     }

@@ -96,3 +96,6 @@ For more scripts, see the "scripts" section of `package.json`.
 * number-to-words, MIT license
 * whatwg-fetch, MIT license
 
+### vscode tips
+
+* hit ctrl-shift-b, then can run the npm scripts

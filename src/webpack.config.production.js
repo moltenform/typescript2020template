@@ -69,7 +69,7 @@ module.exports = {
         hints: false
     },
     optimization: {
-        // Set this to false if you'd rather not minimize code
+        /* set this to false if you'd rather not minimize code */
         minimize: true
     },
 };

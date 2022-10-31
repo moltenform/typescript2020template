@@ -50,7 +50,7 @@ import ExtendableError from 'es6-error';
  * we'll show a message to the user.
  */
  export class Util512Warn extends Util512BaseErr {
-    typeName = 'Util512Warn';
+    override typeName = 'Util512Warn';
   }
 
 
@@ -58,7 +58,7 @@ import ExtendableError from 'es6-error';
  * just a message, not an error case.
  */
  export class Util512Message extends Util512BaseErr {
-    typeName = 'Util512Message';
+    override typeName = 'Util512Message';
   }
 
 /**
