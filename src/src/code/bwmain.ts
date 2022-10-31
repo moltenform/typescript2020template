@@ -3,6 +3,7 @@
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
+import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

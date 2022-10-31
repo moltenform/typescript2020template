@@ -9,8 +9,8 @@
     - doesn't save download time because of gzip transfer
     - but better to make reverse engineering of commercial projects less trivial
     - see `optimization` in webpack config to turn on/off
-- targets es5
-    - default to be conservative to support e.g. old mobile android
+- targets es2016
+    - fine for nearly all cases unless you need to support really old mobile android
 - source maps enabled
     - debugging in chrome+vscode is as easy as pressing F5
     - breakpoints work
@@ -45,7 +45,7 @@
     - and a simple unit test framework
 - `sass`
     - decided to run sass separately, not with webpack's sass-loader
-    - run `npm buildstyle` or `npm buildstylewatch`
+    - run `npm run buildstyle` or `npm run buildstylewatch`
 - `number-to-words` as an example javascript+typescript types dependency
     - npm --save install @types/number-to-words
 - `serializer.ts` as an example typescript dependency

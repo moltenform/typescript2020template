@@ -1,10 +1,12 @@
 
 /* auto */ import { Util512Higher } from './../util/util512Higher';
 /* auto */ import { assertTrue } from './../util/util512Assert';
-/* auto */ import { Util512, assertEq } from './../util/util512';
+/* auto */ import { Util512, assertEq, wrapTypedJson } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync } from './testUtils';
+import  'reflect-metadata';
 import { jsonObject, jsonMember, TypedJSON } from 'typedjson';
 import { O } from '../util/util512Base';
+
 
 let t = new SimpleUtil512TestCollection('testUtilsSerialize');
 export let testCollectionUtilsSerialize = t;
@@ -27,10 +29,10 @@ class DemoSerializable {
  }
 
 t.test('basicSerialize', () => {
-    //~ const objSent = new DemoSerializable()
+    const objSent = new DemoSerializable()
     const serializer = new TypedJSON(DemoSerializable);
-    //~ const json = serializer.stringify(objSent);
-    //~ const objectGot = serializer.parse(json);
+    const json = serializer.stringify(objSent);
+    const objectGot = wrapTypedJson(DemoSerializable, json);
     //~ console.log('aaa')
     throw new Error('finish this')
 })

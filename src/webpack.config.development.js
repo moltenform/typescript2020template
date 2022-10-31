@@ -20,8 +20,8 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].js',
-        publicPath: "/"
+        filename: 'main.js',
+        publicPath: '/'
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({

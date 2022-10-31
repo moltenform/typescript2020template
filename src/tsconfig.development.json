@@ -1,8 +1,9 @@
+// https://www.typescriptlang.org/tsconfig
 {
     "compilerOptions": {
         /* Basic Options */
         "incremental": true, /* Enable incremental compilation */
-        "target": "ES2016", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+        "target": "ES2020", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
         "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
         /* esnext enables uses of import() expressions */
         "lib": [
@@ -15,6 +16,7 @@
         "checkJs": false, /* Report errors in .js files. */
         // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
         // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
+        // "declarationDir"
         // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
         "sourceMap": true, /* Generates corresponding '.map' file. */
         // "outDir": "./",                        /* Redirect output structure to the directory. */
@@ -50,6 +52,7 @@
         // "typeRoots": [],                       /* List of folders to include type definitions from. */
         // "types": [],                           /* Type declaration files to be included in compilation. */
         "allowSyntheticDefaultImports": true, /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+        /* allows import React from "react"; instead of import * as React from "react"; */
         "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
         // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
         "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
@@ -64,7 +67,27 @@
         /* Advanced Options */
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
         // "assumeChangesOnlyAffectDirectDependencies": false,
-        "types": [] /* safer to set this explicitly, otherwise npm dependencies can appear */
+        "types": [], /* safer to set this explicitly, otherwise npm dependencies can appear */
+        // Newest:
+        allowUnusedLabels: false,
+        noFallthroughCasesInSwitch: true,
+        noImplicitOverride: true,
+        // noPropertyAccessFromIndexSignature 
+        noUncheckedIndexedAccess: true,
+        // useUnknownInCatchVariables
+        // emitBOM, emitDeclarationOnly, importHelpers, importsNotUsedAsValues
+        // newLine, noEmit, noEmitHelpers
+        // noEmitOnError
+        preserveConstEnums = true,
+        // preserveValueImports, removeComments
+        // maxNodeModuleJsDepth, disableSizeLimit
+        // jsx, jsxFactory, jsxImportSource, reactNamespace
+        // noLib
+        // useDefineForClassFields
+        // disableReferencedProjectLoad, disableSolutionSearching, disableSourceOfProjectReferenceRedirect
+        // watchFile, watchDirectory, fallbackPolling, synchronousWatchDirectory, excludeDirectories, excludeFiles
+        // typeAcquisition, disableFilenameBasedTypeAcquisition 
+        
     },
     "include": [
         "src/**/*"

@@ -437,7 +437,22 @@ export const Util512 = /* static class */ {
             other.vals = this.vals.slice(0);
             return other;
         }
-    }
+    },
+
+    /**
+         * map-values-deep, applies mapping recursively to an object.
+         * © Kiko Beats, released under the MIT License.
+         * https://www.npmjs.com/package/map-values-deep
+         */
+        mapValuesDeep(obj:any, fn:(o:any, k?:string|number)=>any, key?:string|number):any {
+    return isArray(obj)
+      ? map(obj, (innerObj, idx) => Util512.mapValuesDeep(innerObj, fn, idx))
+      : isPlainObject(obj)
+        ? mapValues(obj, (val, key) => Util512.mapValuesDeep(val, fn, key))
+        : isObject(obj)
+          ? obj
+          : fn(obj, key)
+  }
 };
 
 /**
@@ -977,29 +992,14 @@ export function longstr(s: string, newlinesBecome = ' ') {
 }
 
 /**
- * apply mapping
- * https://www.npmjs.com/package/map-values-deep
- */
-export function mapValuesDeep(obj:any, fn:any, key:any):any {
-  return isArray(obj)
-    ? map(obj, (innerObj, idx) => mapValuesDeep(innerObj, fn, idx))
-    : isPlainObject(obj)
-      ? mapValues(obj, (val, key) => mapValuesDeep(val, fn, key))
-      : isObject(obj)
-        ? obj
-        : fn(obj, key)
-}
-
-
-/**
  * wrapper over TypedJson. converts null into undefined.
  */
  export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
     const serializer = new TypedJSON(cls);
     const objectGot = serializer.parse(json);
-    const replaceWithUndef = (value:unknown, key:string) => {
+    const replaceWithUndef = (value:unknown) => {
         return value===null ? undefined : value
     }
 
-    return mapValuesDeep(objectGot, replaceWithUndef)
+    return Util512.mapValuesDeep(objectGot, replaceWithUndef)
 }
