@@ -9,8 +9,8 @@
     - doesn't save download time because of gzip transfer
     - but better to make reverse engineering of commercial projects less trivial
     - see `optimization` in webpack config to turn on/off
-- targets es2016
-    - fine for nearly all cases unless you need to support really old mobile android
+- targets es2020
+    - doesn't support older mobile android
 - source maps enabled
     - debugging in chrome+vscode is as easy as pressing F5
     - breakpoints work
@@ -27,7 +27,7 @@
     - line numbers in the output are clickable links
     - there's also integration with the SciTE code editor; edit a .ts file and press F5
 - development builds with `npm start` will watch+auto recompiles when source changes
-- es-lint is included and working
+- es-lint is included and working, with curated rules enabled
 - no need for grunt/gulp, just use the scripts referenced in `package.json`
     - if you have a script `foo` and `prefoo`, `npm run foo` will run both.
 - prettier is included and working
@@ -99,3 +99,4 @@ For more scripts, see the "scripts" section of `package.json`.
 ### vscode tips
 
 * hit ctrl-shift-b, then can run the npm scripts
+* can debug, if started in new chrome instance

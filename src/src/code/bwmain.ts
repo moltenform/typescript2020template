@@ -67,6 +67,17 @@ export function runOnLoad() {
         });
     }
 
+    let elBtnTests = document.getElementById('idBtnRunTests');
+    if (elBtnTests) {
+        elBtnTests.addEventListener('click', ()=> {
+            Util512Higher.syncToAsyncTransition(
+                SimpleUtil512Tests.runTests(true),
+                onBtnGoAsync.name,
+                RespondToErr.Alert
+            );
+        });
+    }
+
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
             Util512Higher.syncToAsyncTransition(
