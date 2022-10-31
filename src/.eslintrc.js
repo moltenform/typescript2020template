@@ -1,3 +1,4 @@
+/**@type {import('eslint').Linter.Config} */
 // Useful references:
 // https://www.npmjs.com/package/eslint-config-react-app
 // https://github.com/facebook/create-react-app/blob/master/packages/eslint-config-react-app/index.js
@@ -6,9 +7,11 @@
 // to run it from a shell
 // npm run lint
 
+// eslint-disable-next-line no-undef
 const path = require('path');
 module.exports = {
-    parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+    root: true,
+    parser: '@typescript-eslint/parser',
     plugins: [
         '@typescript-eslint',
         'ban',
@@ -36,6 +39,12 @@ module.exports = {
         }
     },
     rules: {
+        semi: [2, 'always'],
+        '@typescript-eslint/no-unused-vars': 0,
+        '@typescript-eslint/no-explicit-any': 0,
+        '@typescript-eslint/explicit-module-boundary-types': 0,
+        '@typescript-eslint/no-non-null-assertion': 0,
+
         // let's alter rules from the recommendations above
         // turn off ones that typescript does a better job at
         'no-undef': 'off',
@@ -185,8 +194,6 @@ module.exports = {
             {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-        ],
-    },
-    settings: {
+        ]
     }
 };

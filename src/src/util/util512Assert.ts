@@ -33,19 +33,19 @@ import ExtendableError from 'es6-error';
  * browser support is tricky when making a custom JS Error class.
  * previously, I rolled my own by adding properties onto a default Error class,
  * then checking for the existence of those tags.
- * browser support for ES6 is high enough now that I can target it and use npm's es6-error. 
+ * browser support for ES6 is high enough now that I can target it and use npm's es6-error.
  */
- export class Util512BaseErr extends ExtendableError {
-     /* use this instead of .name to protect against minifying */
+export class Util512BaseErr extends ExtendableError {
+    /* use this instead of .name to protect against minifying */
     typeName = 'Util512BaseErr';
-    level = ''
+    level = '';
     constructor(message: string, level: string) {
         super(message);
-        this.level = level
-      }
-  }
+        this.level = level;
+    }
+}
 
-  /**
+/**
  * a warning. execution can continue afterwards, but
  * we'll show a message to the user.
  */
@@ -105,7 +105,7 @@ export function assertTrue(
             callDebuggerIfNotInProduction(msg);
         }
 
-        throw make512Error('assert:', s1, s2, s3)
+        throw make512Error('assert:', s1, s2, s3);
     }
 }
 

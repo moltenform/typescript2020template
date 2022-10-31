@@ -440,19 +440,23 @@ export const Util512 = /* static class */ {
     },
 
     /**
-         * map-values-deep, applies mapping recursively to an object.
-         * © Kiko Beats, released under the MIT License.
-         * https://www.npmjs.com/package/map-values-deep
-         */
-        mapValuesDeep(obj:any, fn:(o:any, k?:string|number)=>any, key?:string|number):any {
-    return isArray(obj)
-      ? map(obj, (innerObj, idx) => Util512.mapValuesDeep(innerObj, fn, idx))
-      : isPlainObject(obj)
-        ? mapValues(obj, (val, key) => Util512.mapValuesDeep(val, fn, key))
-        : isObject(obj)
-          ? obj
-          : fn(obj, key)
-  }
+     * map-values-deep, applies mapping recursively to an object.
+     * © Kiko Beats, released under the MIT License.
+     * https://www.npmjs.com/package/map-values-deep
+     */
+    mapValuesDeep(
+        obj: any,
+        fn: (o: any, k?: string | number) => any,
+        key?: string | number
+    ): any {
+        return isArray(obj)
+            ? map(obj, (innerObj, idx) => Util512.mapValuesDeep(innerObj, fn, idx))
+            : isPlainObject(obj)
+            ? mapValues(obj, (val, key) => Util512.mapValuesDeep(val, fn, key))
+            : isObject(obj)
+            ? obj
+            : fn(obj, key);
+    }
 };
 
 /**
@@ -619,7 +623,7 @@ export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
  */
 export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
     assertTrue(
-        Enm['__isUI512Enum'] !== undefined,
+        Enm['__isUI512Enum' as any] !== undefined,
         '4D|must provide an enum type with __isUI512Enum defined.'
     );
 
@@ -630,7 +634,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__')
         ) {
-            let makeLowercase = Enm['__UI512EnumCapitalize'] !== undefined;
+            let makeLowercase = Enm['__UI512EnumCapitalize' as any] !== undefined;
             return makeLowercase
                 ? enumMember.toString().toLowerCase()
                 : enumMember.toString();
