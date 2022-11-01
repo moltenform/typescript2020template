@@ -7,5 +7,31 @@
   },
   "include": [
     "src/**/*"
-  ],
+  ]
 }
+
+/*
+AggressiveSplittingPlugin 
+
+getScriptRunner()
+    use a dynamic import to get that part of the code
+
+
+Switch to vite?
+    https://vitejs.dev/config/build-options.html
+    https://vitejs.dev/config/build-options.html#build-minify
+    can use terser if needed
+    npm add -D sass to get .scss support
+    getting tests to run quick is important but that can be done with ts-node
+
+doDetectBrowser doesn't work yet
+use tsnode to run tests that would be cool
+get reflectmetadataa to work
+TypedJson
+https://www.npmjs.com/package/ts-json-object
+
+79k, 115k
+so removing lodash did help. unfortunately it didn't treeshake it out.
+
+
+*/

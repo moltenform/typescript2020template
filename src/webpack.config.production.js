@@ -19,7 +19,8 @@ module.exports = {
     },
     output: {
         path: path.join(process.cwd(), 'dist'),
-        filename: '[name].js',
+    "filename": "[name].[hash].min.js",
+   "chunkFilename": "[name].[chunkhash].bundle.js",
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({

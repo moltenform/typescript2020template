@@ -3,7 +3,7 @@
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
-import _ from 'lodash';
+//~ import {sum as lodashSum} from 'lodash';
 //~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -14,7 +14,8 @@ import _ from 'lodash';
 //~ declare const bowser: typeof Bowser;
 
 function getTestString() {
-    let s = 'abc' + _.sum([1,2,3])
+    let s = 'abc' + 5
+    //~ let s = 'abc' + lodashSum([1,2,3])
     //~ let s2 = Util512.range(1, 5);
     //~ let s3 = toWords(13);
     s += checkIsProductionBuild() ? 'release' : 'debug';
@@ -33,7 +34,8 @@ export function setOutputToTestString() {
 async function onBtnGoAsync() {
     let el = document.getElementById('output');
     if (el) {
-        el.innerHTML += '1... ';
+        const lodash = await import('lodash')
+        el.innerHTML += '1... ' + lodash.sum([1,2,3]);
         await Util512Higher.sleep(1000);
         el.innerHTML += '2... ';
         await Util512Higher.sleep(1000);
@@ -53,10 +55,19 @@ function doDetectBrowser() {
     //~ }
 }
 
+function doDemoSave() {
+
+}
+
 export function runOnLoad() {
     let elBtn = document.getElementById('idBtnGo');
     if (elBtn) {
         elBtn.addEventListener('click', setOutputToTestString);
+    }
+    
+    let elBtnDemoSave = document.getElementById('idBtnDemoSave');
+    if (elBtnDemoSave) {
+        elBtnDemoSave.addEventListener('click', doDemoSave);
     }
 
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');

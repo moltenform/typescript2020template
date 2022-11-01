@@ -2,7 +2,7 @@
 /* auto */ import { O, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 //~ import { TypedJSON } from 'typedjson';
-import { map, isArray, isObject, isPlainObject, mapValues } from 'lodash'
+//~ import { map, isArray, isObject, isPlainObject, mapValues } from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -445,17 +445,17 @@ export const Util512 = /* static class */ {
      * https://www.npmjs.com/package/map-values-deep
      */
     mapValuesDeep(
-        obj: any,
-        fn: (o: any, k?: string | number) => any,
-        key?: string | number
+        _obj: any,
+        _fn: (o: any, k?: string | number) => any,
+        _key?: string | number
     ): any {
-        return isArray(obj)
-            ? map(obj, (innerObj, idx) => Util512.mapValuesDeep(innerObj, fn, idx))
-            : isPlainObject(obj)
-            ? mapValues(obj, (val, key) => Util512.mapValuesDeep(val, fn, key))
-            : isObject(obj)
-            ? obj
-            : fn(obj, key);
+        //~ return isArray(obj)
+            //~ ? map(obj, (innerObj, idx) => Util512.mapValuesDeep(innerObj, fn, idx))
+            //~ : isPlainObject(obj)
+            //~ ? mapValues(obj, (val, key) => Util512.mapValuesDeep(val, fn, key))
+            //~ : isObject(obj)
+            //~ ? obj
+            //~ : fn(obj, key);
     }
 };
 
