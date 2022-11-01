@@ -1,7 +1,7 @@
 
 /* auto */ import { bool } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort } from './../util/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 
 /* (c) 2020 moltenform(Ben Fisher) */

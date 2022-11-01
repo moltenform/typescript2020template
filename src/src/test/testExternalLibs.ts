@@ -4,6 +4,7 @@
 /* auto */ import { assertEq, longstr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './testUtils';
 //~ import LRUCache from 'js-lru'
+//~ import * from 'FileSaver'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

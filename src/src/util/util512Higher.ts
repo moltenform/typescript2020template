@@ -1,6 +1,8 @@
 
 /* auto */ import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+import { BowserBrowsers, BowserOS, BowserPlatform, bridgedGetAllBrowserInfo } from './types/bowser.types';
+import { O } from './util512Base';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -403,6 +405,7 @@ export enum BrowserOSInfo {
  */
 export class BrowserInfo {
     os = BrowserOSInfo.Unknown;
+    
     bowserOs = BowserOS.unknown;
     browser = BowserBrowsers.unknown;
     platform = BowserPlatform.unknown;

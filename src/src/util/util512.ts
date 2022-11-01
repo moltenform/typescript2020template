@@ -1,7 +1,7 @@
 
 /* auto */ import { O, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
-import { TypedJSON } from 'typedjson';
+//~ import { TypedJSON } from 'typedjson';
 import { map, isArray, isObject, isPlainObject, mapValues } from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -1012,15 +1012,15 @@ export function longstr(s: string, newlinesBecome = ' ') {
     return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
 }
 
-/**
- * wrapper over TypedJson. converts null into undefined.
- */
- export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
-    const serializer = new TypedJSON(cls);
-    const objectGot = serializer.parse(json);
-    const replaceWithUndef = (value:unknown) => {
-        return value===null ? undefined : value
-    }
+//~ /**
+ //~ * wrapper over TypedJson. converts null into undefined.
+ //~ */
+ //~ export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
+    //~ const serializer = new TypedJSON(cls);
+    //~ const objectGot = serializer.parse(json);
+    //~ const replaceWithUndef = (value:unknown) => {
+        //~ return value===null ? undefined : value
+    //~ }
 
-    return Util512.mapValuesDeep(objectGot, replaceWithUndef)
-}
+    //~ return Util512.mapValuesDeep(objectGot, replaceWithUndef)
+//~ }

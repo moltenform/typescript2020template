@@ -84,9 +84,15 @@ For more scripts, see the "scripts" section of `package.json`.
 
 ### libraries
 
-* bowser, MIT license
-* lz-string, wtfpl license
-* serializer.ts, Apache-2.0 license
+* base64-js
+* bowser
+* es6-error
+* FileSaver
+* js-lru
+* lodash
+* lz-string
+* serializer.ts
+* whatwg-fetch
 * map-values-deep, MIT license (pasted into source)
 
 ### libraries used solely as an example
