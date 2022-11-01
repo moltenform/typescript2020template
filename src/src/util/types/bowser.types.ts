@@ -1,4 +1,3 @@
-//~ import type bowser from 'bowser'
 
 
 /* https://github.com/lancedikson/bowser/blob/master/src/constants.js */
@@ -149,18 +148,22 @@ export async function bridgedGetAllBrowserInfo(
     let rBowserOS = BowserOS.unknown;
     let rBowserPlatform = BowserPlatform.unknown;
     let obj = bowser.parse(s);
+    console.log(obj)
+    console.log(obj?.browser?.name)
+    console.log(obj?.os?.name)
+    console.log(obj?.platform?.type)
 
-    let rawBrowsername = obj?.browser?.name;
+    let rawBrowsername = obj?.browser?.name?.toLowerCase();
     if (rawBrowsername) {
         rBowserBrowsers = mapToBowserBrowsers(rawBrowsername, bowser.BROWSER_MAP);
     }
 
-    let rawOsName = obj?.os?.name;
+    let rawOsName = obj?.os?.name?.toLowerCase();
     if (rawOsName) {
         rBowserOS = mapToBowserOs(rawOsName, bowser.OS_MAP);
     }
 
-    let rawPlatform = obj?.platform?.type;
+    let rawPlatform = obj?.platform?.type?.toLowerCase();
     if (rawPlatform) {
         rBowserPlatform = mapToBowserPlatform(rawPlatform, bowser.PLATFORMS_MAP);
     }

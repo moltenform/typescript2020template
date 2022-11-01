@@ -1,104 +1,58 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../util/util512Higher';
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
-/* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
-import { testFilesaver } from './test-external-modules';
+import { onDemoSave, testExternalModules } from './test-external-modules';
 //~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-//~ import { toWords } from 'number-to-words';
-//~ import type { Bowser } from '../../external/bowser/bowser';
-//~ declare const bowser: typeof Bowser;
 
-function getTestString() {
-    let s = 'abc' + 5
-    //~ let s = 'abc' + lodashSum([1,2,3])
-    //~ let s2 = Util512.range(1, 5);
-    //~ let s3 = toWords(13);
+function setOutput(s: string) {
+    let el = document.getElementById('output');
+    if (el) {
+        el.innerText = s;
+    }
+}
+
+async function onSimpleTest() {
+    let s = 'abc. currently running as:';
     s += checkIsProductionBuild() ? 'release' : 'debug';
-    s += Util512.repeat(4, 'a').join('_');
-    //~ return [s1, s2, s3, s4].join('<br/>');
-    return s
+    setOutput(s)
+    await Util512Higher.sleep(1000);
+    setOutput('1... ');
+    await Util512Higher.sleep(1000);
+    setOutput('2... ');
+    await Util512Higher.sleep(1000);
+    setOutput('3');
 }
 
-export function setOutputToTestString() {
-    let el = document.getElementById('output');
-    if (el) {
-        el.innerHTML = getTestString();
-    }
-}
-
-async function onBtnGoAsync() {
-    let el = document.getElementById('output');
-    if (el) {
-        const lodash = await import('lodash')
-        el.innerHTML += '1... ' + lodash.sum([1,2,3]);
-        await Util512Higher.sleep(1000);
-        el.innerHTML += '2... ';
-        await Util512Higher.sleep(1000);
-        el.innerHTML += '3';
-    }
-}
-
-function doDetectBrowser() {
-    //~ let o = bowser.parse(window.navigator.userAgent);
-    //~ let s = '';
-    //~ s += `<br/>name: ${o.browser.name}`;
-    //~ s += `<br/>v: ${o.browser.version}`;
-    //~ s += `<br/>platform: ${o.platform.type}`;
-    //~ let el = document.getElementById('detectedBrowser');
-    //~ if (el) {
-        //~ el.innerHTML = s;
-    //~ }
+async function onDemoModules() {
+    const s = await testExternalModules()
+    setOutput(s);
 }
 
 export function runOnLoad() {
-    let elBtn = document.getElementById('idBtnGo');
-    if (elBtn) {
-        elBtn.addEventListener('click', setOutputToTestString);
-    }
-    
-    let elBtnDemoSave = document.getElementById('idBtnDemoSave');
-    if (elBtnDemoSave) {
-        elBtnDemoSave.addEventListener('click', testFilesaver);
+    const mapping = {
+        'idBtnSimpleTest': onSimpleTest,
+        'idBtnDemoModules': onDemoModules,
+        'idBtnDemoSave': onDemoSave,
+        'idBtnRunUtil512Tests': SimpleUtil512Tests.runTests,
     }
 
-    let elBtnGoAsync = document.getElementById('idBtnGoAsync');
-    if (elBtnGoAsync) {
-        elBtnGoAsync.addEventListener('click', () => {
-            Util512Higher.syncToAsyncTransition(
-                onBtnGoAsync(),
-                onBtnGoAsync.name,
-                RespondToErr.Alert
-            );
-        });
-    }
-
-    let elBtnTests = document.getElementById('idBtnRunTests');
-    if (elBtnTests) {
-        elBtnTests.addEventListener('click', ()=> {
-            Util512Higher.syncToAsyncTransition(
-                SimpleUtil512Tests.runTests(true),
-                onBtnGoAsync.name,
-                RespondToErr.Alert
-            );
-        });
-    }
-
-    document.body.addEventListener('keydown', evt => {
-        if (evt.code === 'KeyT' && evt.altKey) {
-            Util512Higher.syncToAsyncTransition(
-                SimpleUtil512Tests.runTests(true),
-                onBtnGoAsync.name,
-                RespondToErr.Alert
-            );
+    for (let k in mapping) {
+        let elBtn = document.getElementById(k);
+        if (elBtn) {
+            elBtn.addEventListener('click', () => {
+                Util512Higher.syncToAsyncTransition(
+                    mapping[k](),
+                    'handler for ' + k,
+                    RespondToErr.Alert
+                );
+            });
         }
-    });
-
-    doDetectBrowser();
+    }
 }
 
 runOnLoad();
