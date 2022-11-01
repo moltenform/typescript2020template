@@ -3,7 +3,7 @@
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
-//~ import {sum as lodashSum} from 'lodash';
+import { testFilesaver } from './test-external-modules';
 //~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -55,10 +55,6 @@ function doDetectBrowser() {
     //~ }
 }
 
-function doDemoSave() {
-
-}
-
 export function runOnLoad() {
     let elBtn = document.getElementById('idBtnGo');
     if (elBtn) {
@@ -67,7 +63,7 @@ export function runOnLoad() {
     
     let elBtnDemoSave = document.getElementById('idBtnDemoSave');
     if (elBtnDemoSave) {
-        elBtnDemoSave.addEventListener('click', doDemoSave);
+        elBtnDemoSave.addEventListener('click', testFilesaver);
     }
 
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');

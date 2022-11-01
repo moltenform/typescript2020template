@@ -87,7 +87,7 @@ For more scripts, see the "scripts" section of `package.json`.
 * base64-js
 * bowser
 * es6-error
-* FileSaver
+* file-saver (modern version of FileSaver) 
 * js-lru
 * lodash
 * lz-string
