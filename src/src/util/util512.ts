@@ -968,7 +968,7 @@ export function checkThrowEq<T>(
 ): asserts got is T {
     if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
-        throw new Error(`${msgEq} ${c1} ${c2}`)
+        throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`)
     }
 }
 

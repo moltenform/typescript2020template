@@ -1,7 +1,7 @@
 
 /* auto */ import { RingBuffer, UI512Compress, tostring } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
-/* auto */ import { assertEq, assertWarnEq, checkThrowEq } from './../util/util512';
+/* auto */ import { assertEq, assertWarnEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
 
 /* (c) 2020 moltenform(Ben Fisher) */

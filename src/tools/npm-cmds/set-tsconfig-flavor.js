@@ -8,8 +8,8 @@ function copyTsConfig(isProd) {
     const header = `/* NOTE:: this is a generated file, changes here will be overwritten */`
     let spec = isProd ? 'production' : 'development'
     
-    let src = path.join(__dirname, `../tsconfig.${spec}.json`)
-    let dest = path.join(__dirname, `../tsconfig.json`)
+    let src = path.join(__dirname, `../../tsconfig.${spec}.json`)
+    let dest = path.join(__dirname, `../../tsconfig.json`)
     let text = fs.readFileSync(src, {encoding: "utf8"})
     text = header + os.EOL + os.EOL + text;
     fs.writeFileSync(dest, text, {encoding: "utf8"})

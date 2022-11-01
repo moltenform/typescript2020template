@@ -70,7 +70,9 @@ module.exports = {
     },
     optimization: {
         /* set this to false if you'd rather not minimize code */
-        minimize: true
+        minimize: true,
+        /* into vendors.js */
+        splitChunks: {chunks: 'all' }
     },
 };
 

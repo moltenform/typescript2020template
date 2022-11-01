@@ -405,14 +405,15 @@ export enum BrowserOSInfo {
  */
 export class BrowserInfo {
     os = BrowserOSInfo.Unknown;
-    
     bowserOs = BowserOS.unknown;
     browser = BowserBrowsers.unknown;
     platform = BowserPlatform.unknown;
     static cached: O<BrowserInfo>;
-    static get() {
+    static async get() {
         if (!BrowserInfo.cached) {
-            BrowserInfo.cached = new BrowserInfo();
+            const o = new BrowserInfo();
+            await o.load()
+            BrowserInfo.cached = o;
         }
 
         return BrowserInfo.cached;
@@ -421,10 +422,10 @@ export class BrowserInfo {
     /**
      * use the bowser library to get information
      */
-    constructor(nav?: string) {
+    private async load(nav?: string) {
         nav = nav ?? window.navigator.userAgent;
         try {
-            let [br, os, platform] = bridgedGetAllBrowserInfo(nav);
+            let [br, os, platform] = await bridgedGetAllBrowserInfo(nav);
             this.browser = br;
             this.bowserOs = os;
             this.platform = platform;

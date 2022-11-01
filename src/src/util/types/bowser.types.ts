@@ -1,7 +1,5 @@
-import bowser from 'bowser'
+//~ import type bowser from 'bowser'
 
-/* [Bowser](https://github.com/lancedikson/bowser) */
-/* is bundled into externalmanualbundle.js and exists on globalThis */
 
 /* https://github.com/lancedikson/bowser/blob/master/src/constants.js */
 export enum BowserBrowsers {
@@ -74,7 +72,7 @@ export enum BowserPlatform {
     tv
 }
 
-function mapToBowserBrowsers(s: string): BowserBrowsers {
+function mapToBowserBrowsers(s: string, bowserMap:Record<string, string>): BowserBrowsers {
     let map = Object.create(null);
     let assign = (k: string, v: string) => {
         k = k.toLowerCase();
@@ -86,10 +84,10 @@ function mapToBowserBrowsers(s: string): BowserBrowsers {
         }
     };
 
-    for (let key in bowser.BROWSER_MAP) {
-        if (typeof key === 'string' && typeof bowser.BROWSER_MAP[key] === 'string') {
+    for (let key in bowserMap) {
+        if (typeof key === 'string' && typeof bowserMap[key] === 'string') {
             assign(key, key);
-            assign(bowser.BROWSER_MAP[key], key);
+            assign(bowserMap[key], key);
         }
     }
 
@@ -97,7 +95,7 @@ function mapToBowserBrowsers(s: string): BowserBrowsers {
     return ret ?? BowserBrowsers.unknown;
 }
 
-function mapToBowserOs(s: string): BowserOS {
+function mapToBowserOs(s: string, bowserMap:Record<string, string>): BowserOS {
     let map = Object.create(null);
     let assign = (k: string, v: string) => {
         k = k.toLowerCase();
@@ -109,10 +107,10 @@ function mapToBowserOs(s: string): BowserOS {
         }
     };
 
-    for (let key in bowser.OS_MAP) {
-        if (typeof key === 'string' && typeof bowser.OS_MAP[key] === 'string') {
+    for (let key in bowserMap) {
+        if (typeof key === 'string' && typeof bowserMap[key] === 'string') {
             assign(key, key);
-            assign(bowser.OS_MAP[key], key);
+            assign(bowserMap[key], key);
         }
     }
 
@@ -120,7 +118,7 @@ function mapToBowserOs(s: string): BowserOS {
     return ret ?? BowserOS.unknown;
 }
 
-function mapToBowserPlatform(s: string): BowserPlatform {
+function mapToBowserPlatform(s: string, bowserMap:Record<string, string>): BowserPlatform {
     let map = Object.create(null);
     let assign = (k: string, v: string) => {
         k = k.toLowerCase();
@@ -132,10 +130,10 @@ function mapToBowserPlatform(s: string): BowserPlatform {
         }
     };
 
-    for (let key in bowser.PLATFORMS_MAP) {
-        if (typeof key === 'string' && typeof bowser.PLATFORMS_MAP[key] === 'string') {
+    for (let key in bowserMap) {
+        if (typeof key === 'string' && typeof bowserMap[key] === 'string') {
             assign(key, key);
-            assign(bowser.PLATFORMS_MAP[key], key);
+            assign(bowserMap[key], key);
         }
     }
 
@@ -143,9 +141,10 @@ function mapToBowserPlatform(s: string): BowserPlatform {
     return ret ?? BowserPlatform.unknown;
 }
 
-export function bridgedGetAllBrowserInfo(
+export async function bridgedGetAllBrowserInfo(
     s: string
-): [BowserBrowsers, BowserOS, BowserPlatform] {
+): Promise<[BowserBrowsers, BowserOS, BowserPlatform]> {
+    const bowser = await import('bowser')
     let rBowserBrowsers = BowserBrowsers.unknown;
     let rBowserOS = BowserOS.unknown;
     let rBowserPlatform = BowserPlatform.unknown;
@@ -153,18 +152,19 @@ export function bridgedGetAllBrowserInfo(
 
     let rawBrowsername = obj?.browser?.name;
     if (rawBrowsername) {
-        rBowserBrowsers = mapToBowserBrowsers(rawBrowsername);
+        rBowserBrowsers = mapToBowserBrowsers(rawBrowsername, bowser.BROWSER_MAP);
     }
 
     let rawOsName = obj?.os?.name;
     if (rawOsName) {
-        rBowserOS = mapToBowserOs(rawOsName);
+        rBowserOS = mapToBowserOs(rawOsName, bowser.OS_MAP);
     }
 
     let rawPlatform = obj?.platform?.type;
     if (rawPlatform) {
-        rBowserPlatform = mapToBowserPlatform(rawPlatform);
+        rBowserPlatform = mapToBowserPlatform(rawPlatform, bowser.PLATFORMS_MAP);
     }
 
     return [rBowserBrowsers, rBowserOS, rBowserPlatform];
 }
+

@@ -3,6 +3,7 @@
 /* auto */ import { checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { Util512 } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
+import _ from 'lodash';
 //~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -13,12 +14,13 @@
 //~ declare const bowser: typeof Bowser;
 
 function getTestString() {
-    return 'abc'
-    //~ let s1 = Util512.repeat(4, 'a').join('_');
+    let s = 'abc' + _.sum([1,2,3])
     //~ let s2 = Util512.range(1, 5);
     //~ let s3 = toWords(13);
-    //~ let s4 = checkIsProductionBuild() ? 'release' : 'debug';
+    s += checkIsProductionBuild() ? 'release' : 'debug';
+    s += Util512.repeat(4, 'a').join('_');
     //~ return [s1, s2, s3, s4].join('<br/>');
+    return s
 }
 
 export function setOutputToTestString() {
