@@ -49,8 +49,6 @@
 - `number-to-words` as an example javascript+typescript types dependency
     - npm --save install @types/number-to-words
 - `serializer.ts` as an example typescript dependency
-- `csv.js` as an example manually added javascript dependency
-    - I manually bundle these into `external/external_manual_bundle.js` for faster build times
 - includes my tool to prevent dependency cycles
     - it's useful to have strict layering, modules can only call lower in the list, not higher
     - make sure `layers.cfg` up to date, then

@@ -23,7 +23,8 @@ export async function testExternalModules() {
      const os = guessOs()
      results.push(`isMobile=${isMobile}`)
      results.push(`isChrome=${isChrome}`)
-     results.push(`os=${getEnumToStrOrFallback<BrowserOSInfo>(BrowserOSInfo, os)}`)
+    
+     results.push(`os=${getEnumToStrOrFallback(BrowserOSInfo, os)}`)
     
     // base64-js
     const arr = Base64js.toByteArray('abcd')
@@ -51,6 +52,7 @@ export async function testExternalModules() {
     results.push(`lz-string got ${compressed.charCodeAt(0)}`)
 
     // serializer
+
 
     // whatwg-fetch
     // not yet tested here

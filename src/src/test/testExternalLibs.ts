@@ -28,17 +28,7 @@ t.test('JsLru', () => {
     assertTrue(testmap.has('d'), '25|');
     assertTrue(!testmap.has('a'), '28|');
 })
-t.test('testCsvLib', () => {
-    let encoded = csv.encode([
-        { prop1: 'v1', prop2: 'v2' },
-        { prop1: 'v1b', prop2: 'v2b' }
-    ]);
-    let lines = encoded.split('\n');
-    assertEq(3, lines.length, 'Oq|');
-    assertEq('prop1,prop2', lines[0], 'Op|');
-    assertEq('v1,v2', lines[1], 'Oo|');
-    assertEq('v1b,v2b', lines[2], 'On|');
-});
+
 t.test('testSimpleSerialize', () => {
     let o = new ClassTestSimpleSerialization('id1001');
     o.unimportant = 'not important';
@@ -119,10 +109,6 @@ t.test('testClassSerializationWithNulls', () => {
     assertTrue(got.holding[1] === null, 'OU|expected undefined->null');
     assertTrue(got.holding[2] === 'c', 'OT|');
 });
-
-declare namespace csv {
-    function encode(o: any): string;
-}
 
 class Person {
     constructor(public name: string) {}
