@@ -37,7 +37,7 @@
         "importHelpers": true, /* Import emit helpers from 'tslib'. */
         "downlevelIteration": true, /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
         // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
-        "skipLibCheck": true, /* skips typechecking in d.ts. otherwise get bowser.d.ts:An export assignment cannot be used in a module with other exported elements. */
+        "skipLibCheck": true, /* skips typechecking in d.ts. otherwise get errors like: An export assignment cannot be used in a module with other exported elements. */
         "suppressImplicitAnyIndexErrors": true,
         /* Strict Type-Checking Options */
         //"strict": true, /* Enable all strict type-checking options. */

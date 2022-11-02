@@ -51,8 +51,6 @@
 - `serializer.ts` as an example typescript dependency
 - `csv.js` as an example manually added javascript dependency
     - I manually bundle these into `external/external_manual_bundle.js` for faster build times
-- browser detection via `bowser`
-    - using `bowser/bundle` instead of the default because we don't have a babel polyfill
 - includes my tool to prevent dependency cycles
     - it's useful to have strict layering, modules can only call lower in the list, not higher
     - make sure `layers.cfg` up to date, then
@@ -85,9 +83,9 @@ For more scripts, see the "scripts" section of `package.json`.
 ### libraries
 
 * base64-js
-* bowser
+* browser-detection (more recent than bowser)
 * es6-error
-* file-saver (modern version of FileSaver) 
+* file-saver (more recent than FileSaver) 
 * js-lru
 * lodash
 * lz-string

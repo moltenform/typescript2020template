@@ -1,8 +1,6 @@
 
 /* auto */ import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
-import { BowserBrowsers, BowserOS, BowserPlatform, bridgedGetAllBrowserInfo } from './types/bowser.types';
-import { O } from './util512Base';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -388,58 +386,6 @@ export type AsyncFn = () => Promise<unknown>;
  */
 export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
     return undefined as any as T;
-}
-/**
- * currently just the detected OS
- */
-export enum BrowserOSInfo {
-    __isUI512Enum = 1,
-    Unknown,
-    Windows,
-    Linux,
-    Mac
-}
-
-/**
- * stores browser/platform information
- */
-export class BrowserInfo {
-    os = BrowserOSInfo.Unknown;
-    bowserOs = BowserOS.unknown;
-    browser = BowserBrowsers.unknown;
-    platform = BowserPlatform.unknown;
-    static cached: O<BrowserInfo>;
-    static async get() {
-        if (!BrowserInfo.cached) {
-            const o = new BrowserInfo();
-            await o.load()
-            BrowserInfo.cached = o;
-        }
-
-        return BrowserInfo.cached;
-    }
-
-    /**
-     * use the bowser library to get information
-     */
-    private async load(nav?: string) {
-        nav = nav ?? window.navigator.userAgent;
-        try {
-            let [br, os, platform] = await bridgedGetAllBrowserInfo(nav);
-            this.browser = br;
-            this.bowserOs = os;
-            this.platform = platform;
-            if (os === BowserOS.windows) {
-                this.os = BrowserOSInfo.Windows;
-            } else if (os === BowserOS.macos || os === BowserOS.ios) {
-                this.os = BrowserOSInfo.Mac;
-            } else if (os === BowserOS.linux) {
-                this.os = BrowserOSInfo.Linux;
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }
 }
 
 /**
