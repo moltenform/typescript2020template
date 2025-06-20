@@ -9,13 +9,13 @@
 
 import { Skip, Type } from 'serializer.ts/decorators';
 import { serialize, deserialize } from 'serializer.ts/serializer';
-import { BridgedLRUMap } from '../external/js-lru';
+import { LRUMap } from 'lru_map';
 
 let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 
 t.test('JsLru', () => {
-    let testmap = new (BridgedLRUMap())<string, number>(3);
+    let testmap = new (LRUMap)<string, number>(3);
     testmap.set('a', 1);
     testmap.set('b', 2);
     testmap.set('c', 3);

@@ -8,7 +8,6 @@
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
 /* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
-/* auto */ import { testUtilsSerialize } from './testUtilsSerialize';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -16,8 +15,9 @@
 /**
  * a very simple testing framework.
  */
-export const SimpleUtil512Tests = /* static class */ {
-    async runTests(includeSlow: boolean) {
+export class SimpleUtil512Tests {
+    private constructor() {}
+    static async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
             return;
@@ -32,8 +32,7 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollectionUtil512Assert,
             testCollectionUtil512,
             testCollectionUtil512Class,
-            testCollectionUtil512Higher,
-            testUtilsSerialize
+            testCollectionUtil512Higher
         ];
 
         if (!colls || !colls.length) {
@@ -67,7 +66,7 @@ export const SimpleUtil512Tests = /* static class */ {
             colNamesSeen.set(coll.name.toLowerCase(), true);
             console.log(`Collection: ${coll.name}`);
             if (includeSlow || !coll.slow) {
-                await this.runCollection(coll, countTotal, counter, mapSeen);
+                await SimpleUtil512Tests.runCollection(coll, countTotal, counter, mapSeen);
             } else {
                 console.log('(Skipped)');
             }
@@ -79,12 +78,12 @@ export const SimpleUtil512Tests = /* static class */ {
         } else {
             console.log(`All tests complete.`);
         }
-    },
+    }
 
     /**
      * run a collection of tests
      */
-    async runCollection(
+    static async runCollection(
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,

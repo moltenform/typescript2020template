@@ -1,7 +1,6 @@
 
 /* auto */ import { O, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
-//~ import { TypedJSON } from 'typedjson';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -23,22 +22,15 @@ export class Util512 {
     /**
      * like Python's range()
      */
-    static range(start: number, end: O<number>, inc = 1) {
-        if (end === undefined || end === null) {
-            end = start;
-            start = 0;
+    static range(start: number, end: number, inc = 1) {
+        if (end <= start && inc > 0) {
+            return []
+        } else if (end >= start && inc < 0) {
+            return []
+        } else {
+            return _.range(start, end, inc);
         }
 
-        if ((inc > 0 && start >= end) || (inc < 0 && start <= end)) {
-            return [];
-        }
-
-        let ret: number[] = [];
-        for (let i = start; inc > 0 ? i < end : i > end; i += inc) {
-            ret.push(i);
-        }
-
-        return ret;
     }
 
     /**
@@ -958,13 +950,14 @@ export function assertEq<T>(
 export function assertWarnEq(
     expected: unknown,
     got: unknown,
-    msg: string,
     c1?: unknown,
-    c2?: unknown
+    c2?: unknown,
+    c3?: unknown,
 ) {
     if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
-        assertWarn(false, msg + msgEq, c1, c2);
+        msgEq += c1 ?? '';
+        assertWarn(false, msgEq, c2, c3);
     }
 }
 
@@ -974,7 +967,7 @@ export function assertWarnEq(
 export function checkThrowEq<T>(
     expected: T,
     got: unknown,
-    msg: string,
+    msg: string = '',
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {

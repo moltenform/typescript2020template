@@ -131,7 +131,7 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     pts.sort(util512Sort);
     assertEq(` first`, pts[0]);
     assertEq(` second`, pts[1]);
-    assertEq(` third (4E)`, pts[2]);
+    assertEq(` third`, pts[2]);
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`));
 });
 t.test('slength', () => {

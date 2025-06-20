@@ -51,6 +51,9 @@
 - `number-to-words` as an example javascript+typescript types dependency
     - npm --save install @types/number-to-words
 - `serializer.ts` as an example typescript dependency
+    - considered TypedJSON and @jsonObject (see history of testUtilsSerialize.ts), but
+    - 1) that's overkill safety for small projects, and
+    - 2) modern way is to use zod or yup anyways
 - includes my tool to prevent dependency cycles
     - it's useful to have strict layering, modules can only call lower in the list, not higher
     - make sure `layers.cfg` up to date, then

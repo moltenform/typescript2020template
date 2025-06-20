@@ -52,6 +52,7 @@
     "immer": "^9.0.16",
     "js-lru": "^1.0.0",
     "lodash": "^4.17.21",
+    "lru_map": "^0.4.1",
     "lz-string": "^1.4.4",
     "serializer.ts": "^0.0.12",
     "whatwg-fetch": "^3.6.2"

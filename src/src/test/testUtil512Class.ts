@@ -8,6 +8,7 @@ import {
     guessOs,
     guessOsSimple
 } from '../external/bowser';
+import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
