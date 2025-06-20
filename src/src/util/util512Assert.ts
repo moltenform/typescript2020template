@@ -100,7 +100,7 @@ export function ensureIsError(e: unknown): asserts e is Error {
  */
 export function assertTrue(
     condition: unknown,
-    s1: string,
+    s1?: string,
     s2?: unknown,
     s3?: unknown
 ): asserts condition {

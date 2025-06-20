@@ -38,12 +38,12 @@ t.test('CheckThrow', () => {
     });
 });
 t.test('AssertAsserts', () => {
-    assertTrue(1, 'PQ|');
+    assertTrue(1, );
     assertWarn(1, 'PP|');
     assertEq(2, 1 + 1, 'PO|');
     assertWarnEq(2, 1 + 1, 'PN|');
     assertAsserts('PM|', 'a message', () => {
-        assertTrue(0, 'PL|a message');
+        assertTrue(0, 'a message');
     });
     assertAsserts('PK|', 'a message', () => {
         assertWarn(0, 'PJ|a message');
@@ -234,17 +234,17 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
 });
 t.test('built-in includes', () => {
     t.say(/*——————————*/ 'typical usage');
-    assertTrue('a test string'.includes('e'), 'Nh|');
-    assertTrue('a test string'.includes('test'), 'Ng|');
-    assertTrue('a test string'.includes('a test'), 'Nf|');
-    assertTrue('a test string'.includes('a test string'), 'Ne|');
-    assertTrue(!'a test string'.includes('a test string '), 'Nd|');
-    assertTrue(!'a test string'.includes('x'), 'Nc|');
+    assertTrue('a test string'.includes('e'), );
+    assertTrue('a test string'.includes('test'), );
+    assertTrue('a test string'.includes('a test'), );
+    assertTrue('a test string'.includes('a test string'), );
+    assertTrue(!'a test string'.includes('a test string '), );
+    assertTrue(!'a test string'.includes('x'), );
     t.say(/*——————————*/ 'edge cases');
-    assertTrue('test'.includes('test'), 'Nb|');
-    assertTrue('test'.includes(''), 'Na|');
-    assertTrue(!''.includes('test'), 'NZ|');
-    assertTrue(''.includes(''), 'NY|');
+    assertTrue('test'.includes('test'), );
+    assertTrue('test'.includes(''), );
+    assertTrue(!''.includes('test'), );
+    assertTrue(''.includes(''), );
 });
 t.test('unknownToString', () => {
     class CustomToString {

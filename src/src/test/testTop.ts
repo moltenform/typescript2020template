@@ -61,7 +61,7 @@ export const SimpleUtil512Tests = /* static class */ {
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.exists(coll.name.toLowerCase())) {
-                assertTrue(false, 'O.|duplicate collection name', coll.name);
+                assertTrue(false, 'duplicate collection name', coll.name);
             }
 
             colNamesSeen.set(coll.name.toLowerCase(), true);

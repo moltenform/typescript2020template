@@ -19,14 +19,14 @@ t.test('JsLru', () => {
     testmap.set('a', 1);
     testmap.set('b', 2);
     testmap.set('c', 3);
-    assertTrue(testmap.has('a'), '2B|');
-    assertTrue(testmap.has('b'), '2A|');
-    assertTrue(testmap.has('c'), '29|');
+    assertTrue(testmap.has('a'), );
+    assertTrue(testmap.has('b'), );
+    assertTrue(testmap.has('c'), );
     testmap.set('d', 4);
-    assertTrue(testmap.has('b'), '27|');
-    assertTrue(testmap.has('c'), '26|');
-    assertTrue(testmap.has('d'), '25|');
-    assertTrue(!testmap.has('a'), '28|');
+    assertTrue(testmap.has('b'), );
+    assertTrue(testmap.has('c'), );
+    assertTrue(testmap.has('d'), );
+    assertTrue(!testmap.has('a'), );
 })
 
 t.test('testSimpleSerialize', () => {
@@ -39,7 +39,7 @@ t.test('testSimpleSerialize', () => {
         ClassTestSimpleSerialization,
         gotJson
     );
-    assertTrue(oFromString instanceof ClassTestSimpleSerialization, 'Om|');
+    assertTrue(oFromString instanceof ClassTestSimpleSerialization, );
     assertEq('id1001', oFromString.id, 'Ol|');
     assertEq('content', oFromString.content, 'Ok|');
     assertEq('skipped', oFromString.unimportant, 'Oj|');
@@ -93,8 +93,8 @@ t.test('testClassSerializationWithNulls', () => {
     got = deserialize<Hand>(Hand, JSON.parse(serialized));
     assertEq(expectedS, got.asString(), 'Oc|');
     assertEq(2, got.holding.length, 'Ob|');
-    assertTrue(got.holding[0] === null, 'Oa|expected null->null');
-    assertTrue(got.holding[1] === null, 'OZ|expected undefined->null');
+    assertTrue(got.holding[0] === null, 'expected null->null');
+    assertTrue(got.holding[1] === null, 'expected undefined->null');
 
     t.say(/*——————————*/ 'with array with undefined between values');
     h = new Hand(1, 'test');
@@ -105,9 +105,9 @@ t.test('testClassSerializationWithNulls', () => {
     got = deserialize<Hand>(Hand, JSON.parse(serialized));
     assertEq(expectedS, got.asString(), 'OX|');
     assertEq(3, got.holding.length, 'OW|');
-    assertTrue(got.holding[0] === 'a', 'OV|');
-    assertTrue(got.holding[1] === null, 'OU|expected undefined->null');
-    assertTrue(got.holding[2] === 'c', 'OT|');
+    assertTrue(got.holding[0] === 'a', );
+    assertTrue(got.holding[1] === null, 'expected undefined->null');
+    assertTrue(got.holding[2] === 'c', );
 });
 
 class Person {

@@ -23,7 +23,7 @@ export async function assertThrowsAsync<T>(
         msg = e.message ? e.message : '';
     }
 
-    assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
+    assertTrue(msg !== undefined, `did not throw ${msgWithMark}`);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
         `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
@@ -43,7 +43,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
         msg = e.message ?? '';
     }
 
-    assertTrue(msg !== undefined, `O?|did not throw`, msgWithMark);
+    assertTrue(msg !== undefined, `did not throw`, msgWithMark);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
         `O>|message "${msg}" did not contain "${expectedErr}"`,
@@ -67,7 +67,7 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
         UI512ErrorHandling.silenceAssertMsgs = svd;
     }
 
-    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
+    assertTrue(msg !== undefined, `did not throw`, msgWithMark);
     assertTrue(
         msg.toLowerCase().includes('assert:'),
         `O=|not an assertion exception`,

@@ -62,7 +62,7 @@ export class Util512 {
      * sets an element, expands array if necessary
      */
     static setArr<T>(ar: O<T>[], index: number, val: T, fill: T) {
-        assertTrue(index >= 0, 'Oy|must be >= 0');
+        assertTrue(index >= 0, 'must be >= 0');
         if (index >= ar.length) {
             for (let i = ar.length; i <= index; i++) {
                 ar.push(fill);
@@ -234,23 +234,23 @@ export class Util512 {
         );
 
         let method = me[s];
-        assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
+        assertTrue(args === undefined || Array.isArray(args), 'args not an array');
         if (method && typeof method === 'function') {
             assertTrue(
                 okIfOnParentClass ||
                     me.hasOwnProperty(s) ||
                     me.__proto__.hasOwnProperty(s),
-                '4H|cannot use parent classes',
+                'cannot use parent classes',
                 clsname,
                 s
             );
 
-            assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
+            assertTrue(args.length < 100, 'too many args', clsname, s);
             return method.apply(me, args); /* warn-apply-ok */
         } else if (okIfNotExists) {
             return returnIfNotExists ? returnIfNotExists : undefined;
         } else {
-            checkThrow512(false, `4G|callAsMethodOnClass ${clsname} could not find ${s}`);
+            checkThrow512(false, `callAsMethodOnClass ${clsname} could not find ${s}`);
         }
     }
 
@@ -591,7 +591,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
 export function findStrToEnum<T>(Enm: any, s: string): O<T> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
-        '4F|must provide an enum type with __isUI512Enum defined.'
+        'must provide an enum type with __isUI512Enum defined.'
     );
     if (s.startsWith('__')) {
         return undefined;
@@ -640,7 +640,7 @@ export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
 export function findEnumToStr(Enm: TypeLikeAnEnum, n: number): O<string> {
     assertTrue(
         Enm['__isUI512Enum' as any] !== undefined,
-        '4D|must provide an enum type with __isUI512Enum defined.'
+        'must provide an enum type with __isUI512Enum defined.'
     );
 
     /* using e[n] would work, but it's fragile if enum implementation changes. */
@@ -769,7 +769,7 @@ export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
         if (silent) {
             return 1;
         } else {
-            checkThrow512(false, `4B|could not compare types ${a} and ${b}`);
+            checkThrow512(false, `could not compare types ${a} and ${b}`);
         }
     }
 }
@@ -788,24 +788,24 @@ export class OrderedHash<TValue> {
     }
 
     insertNew(k: string, v: TValue) {
-        assertTrue(k !== null && k !== undefined, '48|invalid key');
-        assertTrue(v !== undefined, '47|invalid val');
-        assertTrue(this.vals[k] === undefined, `46|key ${k} already exists`);
+        assertTrue(k !== null && k !== undefined, 'invalid key');
+        assertTrue(v !== undefined, 'invalid val');
+        assertTrue(this.vals[k] === undefined, `key ${k} already exists`);
         this.keys.push(k);
         this.vals[k] = v;
     }
 
     insertAt(k: string, v: TValue, n: number) {
-        assertTrue(k !== null && k !== undefined, '45|invalid key');
-        assertTrue(v !== undefined, '44|invalid val');
-        assertTrue(this.vals[k] === undefined, `43|key ${k} already exists`);
+        assertTrue(k !== null && k !== undefined, 'invalid key');
+        assertTrue(v !== undefined, 'invalid val');
+        assertTrue(this.vals[k] === undefined, `key ${k} already exists`);
         this.keys.splice(n, 0, k);
         this.vals[k] = v;
     }
 
     getIndex(k: string) {
         let ret = this.keys.indexOf(k);
-        assertTrue(ret !== -1, `42|could not find ${k}`);
+        assertTrue(ret !== -1, `could not find ${k}`);
         return ret;
     }
 
@@ -826,7 +826,7 @@ export class OrderedHash<TValue> {
     }
 
     delete(k: string): boolean {
-        assertTrue(k !== null && k !== undefined, '40|invalid key');
+        assertTrue(k !== null && k !== undefined, 'invalid key');
         let index = this.keys.indexOf(k);
         if (index !== -1) {
             this.keys.splice(index, 1);
@@ -903,7 +903,7 @@ export class MapKeyToObject<T> {
     }
 
     add(key: string, obj: T) {
-        assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
+        assertTrue(slength(key) > 0, `invalid id ${key}`);
         checkThrow512(
             this.objects[key] === undefined,
             `3]|duplicate key, ${key} already exists`
@@ -934,7 +934,7 @@ export class MapKeyToObject<T> {
  */
 export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
     set(key: string, obj: T) {
-        assertTrue(slength(key) > 0, `3[|invalid id ${key}`);
+        assertTrue(slength(key) > 0, `invalid id ${key}`);
         this.objects[key] = obj;
     }
 }
@@ -1009,7 +1009,7 @@ export function checkThrowEq512<T>(
  * get last of an array
  */
 export function arLast<T>(ar: T[]): T {
-    assertTrue(ar.length >= 1, 'Ou|empty array');
+    assertTrue(ar.length >= 1, 'empty array');
     return ar[ar.length - 1];
 }
 

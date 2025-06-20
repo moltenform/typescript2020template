@@ -11,16 +11,16 @@ let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;
 
 t.test('isValidNumber', () => {
-    assertTrue(Util512.isValidNumber(123), 'O9|');
-    assertTrue(Util512.isValidNumber(0), 'O8|');
-    assertTrue(!Util512.isValidNumber(null), 'O7|');
-    assertTrue(!Util512.isValidNumber(undefined), 'O6|');
-    assertTrue(!Util512.isValidNumber(NaN), 'O5|');
-    assertTrue(!Util512.isValidNumber(Infinity), 'O4|');
-    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY), 'O3|');
-    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY), 'O2|');
-    assertTrue(!Util512.isValidNumber('12'), 'O1|');
-    assertTrue(!Util512.isValidNumber(''), 'O0|');
+    assertTrue(Util512.isValidNumber(123), );
+    assertTrue(Util512.isValidNumber(0), );
+    assertTrue(!Util512.isValidNumber(null), );
+    assertTrue(!Util512.isValidNumber(undefined), );
+    assertTrue(!Util512.isValidNumber(NaN), );
+    assertTrue(!Util512.isValidNumber(Infinity), );
+    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY), );
+    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY), );
+    assertTrue(!Util512.isValidNumber('12'), );
+    assertTrue(!Util512.isValidNumber(''), );
 });
 t.test('Range.Upwards', () => {
     assertEq([0], Util512.range(0, 1), 'E`|');
@@ -160,18 +160,18 @@ t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: 'def' };
-    assertTrue(Util512.isMapEmpty(obj0), 'EM|');
-    assertTrue(!Util512.isMapEmpty(obj1), 'EL|');
-    assertTrue(!Util512.isMapEmpty(obj2), 'EK|');
+    assertTrue(Util512.isMapEmpty(obj0), );
+    assertTrue(!Util512.isMapEmpty(obj1), );
+    assertTrue(!Util512.isMapEmpty(obj2), );
 });
 t.test('isMapEmpty.Class', () => {
     let o0 = new TestClsEmpty();
     let o1 = new TestClsOne();
     let o2 = new TestClsOne();
     (o2 as any).aSingleAdded = 1;
-    assertTrue(Util512.isMapEmpty(o0 as any), 'EJ|');
-    assertTrue(!Util512.isMapEmpty(o1 as any), 'EI|');
-    assertTrue(!Util512.isMapEmpty(o2 as any), 'EH|');
+    assertTrue(Util512.isMapEmpty(o0 as any), );
+    assertTrue(!Util512.isMapEmpty(o1 as any), );
+    assertTrue(!Util512.isMapEmpty(o2 as any), );
 });
 t.test('getMapShallowClone.PlainObject', () => {
     let obj0 = {};
@@ -213,7 +213,7 @@ t.test('freezeProperty.Class', () => {
 });
 t.test('freezeRecurse.PlainObject', () => {
     let obj = { a: true, b: true };
-    assertTrue(!Object.isFrozen(obj), 'EG|');
+    assertTrue(!Object.isFrozen(obj), );
     Util512.freezeRecurse(obj);
     assertThrows('Lr|', '', () => {
         obj.a = false;
@@ -226,11 +226,11 @@ t.test('freezeRecurse.Class', () => {
     (cls1 as any).child = cls2;
     (cls2 as any).child = cls3;
     (cls3 as any).nullchild = undefined;
-    assertTrue(!Object.isFrozen(cls1), 'EF|');
+    assertTrue(!Object.isFrozen(cls1), );
     Util512.freezeRecurse(cls1);
-    assertTrue(Object.isFrozen(cls1), 'EE|');
-    assertTrue(Object.isFrozen(cls2), 'ED|');
-    assertTrue(Object.isFrozen(cls3), 'EC|');
+    assertTrue(Object.isFrozen(cls1), );
+    assertTrue(Object.isFrozen(cls2), );
+    assertTrue(Object.isFrozen(cls3), );
     assertThrows('Lq|', '', () => {
         cls1.aSingleProp = false;
     });
@@ -350,12 +350,12 @@ t.test('callAsMethod.ValidMethod', () => {
 });
 t.test('isMethodOnClass', () => {
     let o1 = new TestClsWithMethods();
-    assertTrue(Util512.isMethodOnClass(o1, 'goAbc'), 'D?|');
-    assertTrue(Util512.isMethodOnClass(o1, 'goZ'), 'D>|');
-    assertTrue(!Util512.isMethodOnClass(o1, 'goAbcd'), 'D=|');
-    assertTrue(!Util512.isMethodOnClass(o1, 'calledAbc'), 'D<|');
-    assertTrue(!Util512.isMethodOnClass(o1, 'notPresent'), 'D;|');
-    assertTrue(!Util512.isMethodOnClass(o1, ''), 'D:|');
+    assertTrue(Util512.isMethodOnClass(o1, 'goAbc'), );
+    assertTrue(Util512.isMethodOnClass(o1, 'goZ'), );
+    assertTrue(!Util512.isMethodOnClass(o1, 'goAbcd'), );
+    assertTrue(!Util512.isMethodOnClass(o1, 'calledAbc'), );
+    assertTrue(!Util512.isMethodOnClass(o1, 'notPresent'), );
+    assertTrue(!Util512.isMethodOnClass(o1, ''), );
 });
 t.test('getMapKeys.PlainObject', () => {
     let obj0 = {};

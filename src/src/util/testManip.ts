@@ -4,14 +4,14 @@ export const dfgfdg = 45567
 function abc() {
     let a=456
     const innerFn = () =>{
-        assertTrue(5344, "OZ|abc555");
+        assertTrue(5344, "abc555");
 
     }
     if (3 > 2) {
         while (false) {
-            assertTrue(a, "OZ|abc");
+            assertTrue(a, "abc");
         }
     }
 }
 
-assertTrue(53, "OZ|abc");
+assertTrue(53, "abc");

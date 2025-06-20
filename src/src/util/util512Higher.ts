@@ -28,7 +28,7 @@ export class Util512Higher {
      * slightly an uneven distribution.
      */
     static getRandIntInclusiveWeak(min: number, max: number) {
-        assertTrue(min >= 1 && max >= 1, `4M|invalid min ${min}`);
+        assertTrue(min >= 1 && max >= 1, `invalid min ${min}`);
         if (min === max) {
             return min;
         } else {
@@ -42,13 +42,13 @@ export class Util512Higher {
      * random number between min and max, inclusive
      */
     static getRandIntInclusiveStrong(min: number, max: number) {
-        assertTrue(min >= 1 && max >= 1, 'O)|getRandIntInclusiveStrong must be >= 1');
+        assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,
-            'O(|getRandIntInclusiveStrong too wide range'
+            'getRandIntInclusiveStrong too wide range'
         );
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
@@ -60,7 +60,7 @@ export class Util512Higher {
         while (true) {
             window.crypto.getRandomValues(buf);
             for (let i = 0; i < buf.length; i++) {
-                assertTrue(buf[i] >= 0 && buf[i] < 256, 'O&|out of range');
+                assertTrue(buf[i] >= 0 && buf[i] < 256, 'out of range');
                 let v = buf[i] % nextPowerOf2;
                 if (v <= nRange) {
                     return min + v;
@@ -190,7 +190,7 @@ export class Util512Higher {
     static scriptsAlreadyLoaded: Record<string, boolean> = {};
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            assertTrue(url.startsWith('/'), 'J8|');
+            assertTrue(url.startsWith('/'), );
             if (Util512Higher.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;
