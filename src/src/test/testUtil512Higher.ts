@@ -124,7 +124,7 @@ t.test('LockableArr', () => {
     assertEq(56, ar.at(1), 'OR|');
     assertEq(2, ar.len(), 'OQ|');
     ar.lock();
-    assertThrows('OP|', 'locked', () => {
+    assertThrows('locked', () => {
         ar.set(1, 57);
     });
     t.say(/*——————————*/ "changing the copy won't change original");

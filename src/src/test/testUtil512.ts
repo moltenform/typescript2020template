@@ -175,7 +175,7 @@ t.test('cast', () => {
     o1 = new Child();
     assertEq('child', cast(Parent, o1).a(), 'NB|');
     o1 = new Other();
-    assertThrows('NA|', 'type cast exception', () => {
+    assertThrows('type cast exception|this cast should fail', () => {
         cast(Parent, o1);
     });
 });
@@ -246,52 +246,52 @@ t.test('util512Sort.Number', () => {
 t.test('util512Sort.Nullish', () => {
     assertEq(0, util512Sort(undefined, undefined), 'N1|');
     assertEq(0, util512Sort(null, null), 'N0|');
-    assertThrows('M~|', 'not compare', () => util512Sort(null, undefined));
-    assertThrows('M}|', 'not compare', () => util512Sort(undefined, null));
+    assertThrows('not compare', () => util512Sort(null, undefined));
+    assertThrows('not compare', () => util512Sort(undefined, null));
 });
 t.test('util512Sort.DiffTypesShouldThrow', () => {
-    assertThrows('Le|', 'not compare', () => util512Sort('a', 1));
-    assertThrows('Ld|', 'not compare', () => util512Sort('a', true));
-    assertThrows('Lc|', 'not compare', () => util512Sort('a', undefined));
-    assertThrows('Lb|', 'not compare', () => util512Sort('a', []));
-    assertThrows('La|', 'not compare', () => util512Sort(1, 'a'));
-    assertThrows('LZ|', 'not compare', () => util512Sort(1, true));
-    assertThrows('LY|', 'not compare', () => util512Sort(1, undefined));
-    assertThrows('LX|', 'not compare', () => util512Sort(1, []));
-    assertThrows('LW|', 'not compare', () => util512Sort(true, 'a'));
-    assertThrows('LV|', 'not compare', () => util512Sort(true, 1));
-    assertThrows('LU|', 'not compare', () => util512Sort(true, undefined));
-    assertThrows('LT|', 'not compare', () => util512Sort(true, []));
-    assertThrows('LS|', 'not compare', () => util512Sort(undefined, 'a'));
-    assertThrows('LR|', 'not compare', () => util512Sort(undefined, 1));
-    assertThrows('LQ|', 'not compare', () => util512Sort(undefined, true));
-    assertThrows('LP|', 'not compare', () => util512Sort(undefined, []));
-    assertThrows('LO|', 'not compare', () => util512Sort([], 'a'));
-    assertThrows('LN|', 'not compare', () => util512Sort([], 1));
-    assertThrows('LM|', 'not compare', () => util512Sort([], true));
-    assertThrows('LL|', 'not compare', () => util512Sort([], undefined));
+    assertThrows('not compare', () => util512Sort('a', 1));
+    assertThrows('not compare', () => util512Sort('a', true));
+    assertThrows('not compare', () => util512Sort('a', undefined));
+    assertThrows('not compare', () => util512Sort('a', []));
+    assertThrows('not compare', () => util512Sort(1, 'a'));
+    assertThrows('not compare', () => util512Sort(1, true));
+    assertThrows('not compare', () => util512Sort(1, undefined));
+    assertThrows('not compare', () => util512Sort(1, []));
+    assertThrows('not compare', () => util512Sort(true, 'a'));
+    assertThrows('not compare', () => util512Sort(true, 1));
+    assertThrows('not compare', () => util512Sort(true, undefined));
+    assertThrows('not compare', () => util512Sort(true, []));
+    assertThrows('not compare', () => util512Sort(undefined, 'a'));
+    assertThrows('not compare', () => util512Sort(undefined, 1));
+    assertThrows('not compare', () => util512Sort(undefined, true));
+    assertThrows('not compare', () => util512Sort(undefined, []));
+    assertThrows('not compare', () => util512Sort([], 'a'));
+    assertThrows('not compare', () => util512Sort([], 1));
+    assertThrows('not compare', () => util512Sort([], true));
+    assertThrows('not compare', () => util512Sort([], undefined));
 });
 t.test('util512Sort.DiffTypesInArrayShouldThrow', () => {
-    assertThrows('LK|', 'not compare', () => util512Sort(['a', 'a'], ['a', 1]));
-    assertThrows('LJ|', 'not compare', () => util512Sort(['a', 'a'], ['a', true]));
-    assertThrows('LI|', 'not compare', () => util512Sort(['a', 'a'], ['a', undefined]));
-    assertThrows('LH|', 'not compare', () => util512Sort(['a', 'a'], ['a', []]));
-    assertThrows('LG|', 'not compare', () => util512Sort(['a', 1], ['a', 'a']));
-    assertThrows('LF|', 'not compare', () => util512Sort(['a', 1], ['a', true]));
-    assertThrows('LE|', 'not compare', () => util512Sort(['a', 1], ['a', undefined]));
-    assertThrows('LD|', 'not compare', () => util512Sort(['a', 1], ['a', []]));
-    assertThrows('LC|', 'not compare', () => util512Sort(['a', true], ['a', 'a']));
-    assertThrows('LB|', 'not compare', () => util512Sort(['a', true], ['a', 1]));
-    assertThrows('LA|', 'not compare', () => util512Sort(['a', true], ['a', undefined]));
-    assertThrows('L9|', 'not compare', () => util512Sort(['a', true], ['a', []]));
-    assertThrows('L8|', 'not compare', () => util512Sort(['a', undefined], ['a', 'a']));
-    assertThrows('L7|', 'not compare', () => util512Sort(['a', undefined], ['a', 1]));
-    assertThrows('L6|', 'not compare', () => util512Sort(['a', undefined], ['a', true]));
-    assertThrows('L5|', 'not compare', () => util512Sort(['a', undefined], ['a', []]));
-    assertThrows('L4|', 'not compare', () => util512Sort(['a', []], ['a', 'a']));
-    assertThrows('L3|', 'not compare', () => util512Sort(['a', []], ['a', 1]));
-    assertThrows('L2|', 'not compare', () => util512Sort(['a', []], ['a', true]));
-    assertThrows('L1|', 'not compare', () => util512Sort(['a', []], ['a', undefined]));
+    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', 1]));
+    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', true]));
+    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', undefined]));
+    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', []]));
+    assertThrows('not compare', () => util512Sort(['a', 1], ['a', 'a']));
+    assertThrows('not compare', () => util512Sort(['a', 1], ['a', true]));
+    assertThrows('not compare', () => util512Sort(['a', 1], ['a', undefined]));
+    assertThrows('not compare', () => util512Sort(['a', 1], ['a', []]));
+    assertThrows('not compare', () => util512Sort(['a', true], ['a', 'a']));
+    assertThrows('not compare', () => util512Sort(['a', true], ['a', 1]));
+    assertThrows('not compare', () => util512Sort(['a', true], ['a', undefined]));
+    assertThrows('not compare', () => util512Sort(['a', true], ['a', []]));
+    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', 'a']));
+    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', 1]));
+    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', true]));
+    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', []]));
+    assertThrows('not compare', () => util512Sort(['a', []], ['a', 'a']));
+    assertThrows('not compare', () => util512Sort(['a', []], ['a', 1]));
+    assertThrows('not compare', () => util512Sort(['a', []], ['a', true]));
+    assertThrows('not compare', () => util512Sort(['a', []], ['a', undefined]));
 });
 t.test('util512Sort.ArrayThreeElements', () => {
     assertEq(0, util512Sort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']), '0@|');
@@ -454,10 +454,10 @@ t.test('MapKeyToObjectCanSet', () => {
     t.say(/*——————————*/ 'get');
     assertEq(5, o.get('five'), 'M]|');
     assertEq(6, o.get('six'), 'M[|');
-    assertThrows('M@|', 'not found', () => {
+    assertThrows('not found', () => {
         o.get('seven');
     });
-    assertThrows('M?|', 'not found', () => {
+    assertThrows('not found', () => {
         o.get('');
     });
     t.say(/*——————————*/ 'find');
@@ -475,10 +475,10 @@ t.test('MapKeyToObjectCanSet', () => {
 t.test('checkThrowEq', () => {
     checkThrowEq(1, 1, 'M-|');
     checkThrowEq('abc', 'abc', 'M,|');
-    assertThrows('M+|', 'but got', () => {
+    assertThrows('but got', () => {
         checkThrowEq(1, 2, 'M*|');
     });
-    assertThrows('M)|', 'but got', () => {
+    assertThrows('but got', () => {
         checkThrowEq('abc', 'ABC', 'M(|');
     });
 });

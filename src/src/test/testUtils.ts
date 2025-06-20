@@ -33,7 +33,7 @@ export async function assertThrowsAsync<T>(
 /**
  * assert that an exception is thrown, with a certain message
  */
-export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidFn) {
+export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
     let msg: O<string>;
 
     try {
@@ -43,11 +43,13 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
         msg = e.message ?? '';
     }
 
-    assertTrue(msg !== undefined, `did not throw`, msgWithMark);
+    let expectedErr = expectedErrAndContext.split('|')[0];
+    let context = expectedErrAndContext.split('|')[1] ?? '';
+    assertTrue(msg !== undefined, `did not throw`, context);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `O>|message "${msg}" did not contain "${expectedErr}"`,
-        msgWithMark
+        `message "${msg}" did not contain "${expectedErr}"`,
+        context
     );
 }
 
@@ -101,7 +103,7 @@ export function YetToBeDefinedTestHelper<T>(): T {
  * you will see a lot of false positives
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
-    assertThrows('L||', 'intentionally throw', () => {
+    assertThrows('intentionally throw', () => {
         throw new Error(
             `1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because

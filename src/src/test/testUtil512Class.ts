@@ -205,14 +205,14 @@ t.test('freezeProperty.PlainObject', () => {
     let obj1 = { a: true, b: true };
     Util512.freezeProperty(obj1, 'a');
     obj1.b = false;
-    assertThrows('Lt|', '', () => {
+    assertThrows('', () => {
         obj1.a = false;
     });
 });
 t.test('freezeProperty.Class', () => {
     let cls1 = new TestClsOne();
     Util512.freezeProperty(cls1, 'aSingleProp');
-    assertThrows('Ls|', '', () => {
+    assertThrows('', () => {
         cls1.aSingleProp = false;
     });
 });
@@ -220,7 +220,7 @@ t.test('freezeRecurse.PlainObject', () => {
     let obj = { a: true, b: true };
     assertTrue(!Object.isFrozen(obj));
     Util512.freezeRecurse(obj);
-    assertThrows('Lr|', '', () => {
+    assertThrows('', () => {
         obj.a = false;
     });
 });
@@ -236,11 +236,11 @@ t.test('freezeRecurse.Class', () => {
     assertTrue(Object.isFrozen(cls1));
     assertTrue(Object.isFrozen(cls2));
     assertTrue(Object.isFrozen(cls3));
-    assertThrows('Lq|', '', () => {
+    assertThrows('', () => {
         cls1.aSingleProp = false;
     });
 
-    assertThrows('Lp|', '', () => {
+    assertThrows('', () => {
         (cls1 as any).newProp = true;
     });
 });
@@ -291,39 +291,39 @@ t.test('capitalizeFirst.Alphabet', () => {
 });
 t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
-    assertThrows('Lo|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '', [true, 1], true)
     );
 
-    assertThrows('Ln|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a b', [true, 1], true)
     );
 
-    assertThrows('Lm|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a', [true, 1], true)
     );
 
-    assertThrows('Ll|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '?', [true, 1], true)
     );
 
-    assertThrows('Lk|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '1a', [true, 1], true)
     );
 
-    assertThrows('Lj|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '_c', [true, 1], true)
     );
 
-    assertThrows('Li|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '__c', [true, 1], true)
     );
 
-    assertThrows('Lh|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, '.', [true, 1], true)
     );
 
-    assertThrows('Lg|', 'requires alphanumeric', () =>
+    assertThrows('requires alphanumeric', () =>
         Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'a.b', [true, 1], true)
     );
 });
@@ -333,7 +333,7 @@ t.test('callAsMethod.MissingMethodWhenAllowed', () => {
 });
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
-    assertThrows('Lf|', 'could not find', () =>
+    assertThrows('could not find', () =>
         Util512.callAsMethodOnClass(
             TestClsWithMethods.name,
             o,

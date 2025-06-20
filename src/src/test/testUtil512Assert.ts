@@ -12,11 +12,11 @@ export let testCollectionUtil512Assert = t;
 
 t.test('AssertThrows', () => {
     t.say(/*——————————*/ 'Get Message From Custom Error');
-    assertThrows('L0|', 'mymessage', () => {
+    assertThrows('mymessage', () => {
         throw make512Error('1N|1 mymessage 2');
     });
     t.say(/*——————————*/ 'Get Message From Plain Error');
-    assertThrows('K~|', 'xyz', () => {
+    assertThrows('xyz', () => {
         throw new Error('1 xyz 2');
     });
 });
@@ -25,15 +25,15 @@ t.test('CheckThrow', () => {
     checkThrow512(1, 'K<|should not throw');
     checkThrow512(true, 'K;|should not throw');
     t.say(/*——————————*/ 'False Should Throw');
-    assertThrows('K}|', 'mymessage\ns1, s2', () => {
+    assertThrows('mymessage\ns1, s2', () => {
         checkThrow512(false, 'K:|mymessage', 's1', 's2');
     });
     t.say(/*——————————*/ 'Null Should Throw');
-    assertThrows('K||', 'mymessage\ns1, s2', () => {
+    assertThrows('mymessage\ns1, s2', () => {
         checkThrow512(null, 'K/|mymessage', 's1', 's2');
     });
     t.say(/*——————————*/ 'Undefined Should Throw');
-    assertThrows('K{|', 'mymessage\ns1, s2', () => {
+    assertThrows('mymessage\ns1, s2', () => {
         checkThrow512(undefined, 'K.|mymessage', 's1', 's2');
     });
 });
@@ -62,58 +62,58 @@ t.test('GetAssertMessages', () => {
     //~ checkThrowEq('a', 'a', 'PB|');
     //~ checkThrowInternal(1, 'PA|');
     //~ checkThrowNotifyMsg(1, 'P9|');
-    //~ assertThrows('P8|', 'ui512: a (;0)', () => {
+    //~ assertThrows( 'ui512: a (;0)', () => {
     //~ checkThrow512(false, ';0|a');
     //~ });
-    //~ assertThrows('P7|', 'ui512: a\nb (;1)', () => {
+    //~ assertThrows( 'ui512: a\nb (;1)', () => {
     //~ checkThrow512(false, ';1|a', 'b');
     //~ });
-    //~ assertThrows('P6|', 'ui512: a\nb, c (;2)', () => {
+    //~ assertThrows( 'ui512: a\nb, c (;2)', () => {
     //~ checkThrow512(false, ';2|a', 'b', 'c');
     //~ });
-    //~ assertThrows('P5|', "ui512: a expected 'a' but got 'b'. (;3)", () => {
+    //~ assertThrows( "ui512: a expected 'a' but got 'b'. (;3)", () => {
     //~ checkThrowEq('a', 'b', ';3|a');
     //~ });
-    //~ assertThrows('P4|', "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
+    //~ assertThrows( "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
     //~ checkThrowEq('a', 'b', ';4|a', 'c1');
     //~ });
-    //~ assertThrows('P3|', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
+    //~ assertThrows( "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
     //~ checkThrowEq('a', 'b', ';5|a', 'c1', 'c2');
     //~ });
-    //~ assertThrows('P2|', 'vpc: a (;6)', () => {
+    //~ assertThrows( 'vpc: a (;6)', () => {
     //~ checkThrow(false, ';6|a');
     //~ });
-    //~ assertThrows('P1|', 'vpc: a\nb (;7)', () => {
+    //~ assertThrows( 'vpc: a\nb (;7)', () => {
     //~ checkThrow(false, ';7|a', 'b');
     //~ });
-    //~ assertThrows('P0|', 'vpc: a\nb, c (;8)', () => {
+    //~ assertThrows( 'vpc: a\nb, c (;8)', () => {
     //~ checkThrow(false, ';8|a', 'b', 'c');
     //~ });
-    //~ assertThrows('O~|', "vpc: a expected 'a' but got 'b'. (;9)", () => {
+    //~ assertThrows( "vpc: a expected 'a' but got 'b'. (;9)", () => {
     //~ checkThrowEq('a', 'b', ';9|a');
     //~ });
-    //~ assertThrows('O}|', "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
+    //~ assertThrows( "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
     //~ checkThrowEq('a', 'b', ';a|a', 'c1');
     //~ });
-    //~ assertThrows('O||', "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
+    //~ assertThrows( "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
     //~ checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
     //~ });
-    //~ assertThrows('O{|', 'vpcinternal: a (;c)', () => {
+    //~ assertThrows( 'vpcinternal: a (;c)', () => {
     //~ checkThrowInternal(false, ';c|a');
     //~ });
-    //~ assertThrows('O_|', 'vpcinternal: a\nb (;d)', () => {
+    //~ assertThrows( 'vpcinternal: a\nb (;d)', () => {
     //~ checkThrowInternal(false, ';d|a', 'b');
     //~ });
-    //~ assertThrows('O^|', 'vpcinternal: a\nb, c (;e)', () => {
+    //~ assertThrows( 'vpcinternal: a\nb, c (;e)', () => {
     //~ checkThrowInternal(false, ';e|a', 'b', 'c');
     //~ });
-    //~ assertThrows('O]|', 'vpcmessage: a (;f)', () => {
+    //~ assertThrows( 'vpcmessage: a (;f)', () => {
     //~ checkThrowNotifyMsg(false, ';f|a');
     //~ });
-    //~ assertThrows('O[|', 'vpcmessage: a\nb (;g)', () => {
+    //~ assertThrows( 'vpcmessage: a\nb (;g)', () => {
     //~ checkThrowNotifyMsg(false, ';g|a', 'b');
     //~ });
-    //~ assertThrows('O@|', 'vpcmessage: a\nb, c (;h)', () => {
+    //~ assertThrows( 'vpcmessage: a\nb, c (;h)', () => {
     //~ checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
     //~ });
 });
@@ -139,10 +139,10 @@ t.test('ThrowIfUndefined', () => {
     assertEq(false, b0, 'Cf|');
 
     t.say(/*——————————*/ 'NullAndUndefinedShouldThrow');
-    assertThrows('K`|', 'mymessage, s1, s2', () => {
+    assertThrows('mymessage, s1, s2', () => {
         ensureDefined(null, 'Ce|mymessage', 's1', 's2');
     });
-    assertThrows('K_|', 'mymessage, s1, s2', () => {
+    assertThrows('mymessage, s1, s2', () => {
         ensureDefined(undefined, 'Cd|mymessage', 's1', 's2');
     });
 });
