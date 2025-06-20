@@ -41,81 +41,19 @@ t.test('AssertAsserts', () => {
     assertTrue(1);
     assertWarn(1);
     assertEq(2, 1 + 1);
-    assertWarnEq(2, 1 + 1, 'PN|');
-    assertAsserts('PM|', 'a message', () => {
+    assertWarnEq(2, 1 + 1, );
+    assertAsserts('a message', () => {
         assertTrue(0, 'a message');
     });
-    assertAsserts('PK|', 'a message', () => {
+    assertAsserts('a message', () => {
         assertWarn(0, 'a message');
     });
-    assertAsserts('PI|', 'a message', () => {
+    assertAsserts('a message', () => {
         assertEq(3, 1 + 1, 'a message');
     });
-    assertAsserts('PG|', 'a message', () => {
-        assertWarnEq(3, 1 + 1, 'PF|a message');
+    assertAsserts('a message', () => {
+        assertWarnEq(3, 1 + 1, 'a message');
     });
-});
-t.test('GetAssertMessages', () => {
-    checkThrow512(1);
-    //~ checkThrowEq('a', 'a', 'PD|');
-    //~ checkThrow(1, 'PC|');
-    //~ checkThrowEq('a', 'a', 'PB|');
-    //~ checkThrowInternal(1, 'PA|');
-    //~ checkThrowNotifyMsg(1, 'P9|');
-    //~ assertThrows( 'ui512: a (;0)', () => {
-    //~ checkThrow512(false, ';0|a');
-    //~ });
-    //~ assertThrows( 'ui512: a\nb (;1)', () => {
-    //~ checkThrow512(false, ';1|a', 'b');
-    //~ });
-    //~ assertThrows( 'ui512: a\nb, c (;2)', () => {
-    //~ checkThrow512(false, ';2|a', 'b', 'c');
-    //~ });
-    //~ assertThrows( "ui512: a expected 'a' but got 'b'. (;3)", () => {
-    //~ checkThrowEq('a', 'b', ';3|a');
-    //~ });
-    //~ assertThrows( "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
-    //~ checkThrowEq('a', 'b', ';4|a', 'c1');
-    //~ });
-    //~ assertThrows( "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
-    //~ checkThrowEq('a', 'b', ';5|a', 'c1', 'c2');
-    //~ });
-    //~ assertThrows( 'vpc: a (;6)', () => {
-    //~ checkThrow(false, ';6|a');
-    //~ });
-    //~ assertThrows( 'vpc: a\nb (;7)', () => {
-    //~ checkThrow(false, ';7|a', 'b');
-    //~ });
-    //~ assertThrows( 'vpc: a\nb, c (;8)', () => {
-    //~ checkThrow(false, ';8|a', 'b', 'c');
-    //~ });
-    //~ assertThrows( "vpc: a expected 'a' but got 'b'. (;9)", () => {
-    //~ checkThrowEq('a', 'b', ';9|a');
-    //~ });
-    //~ assertThrows( "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
-    //~ checkThrowEq('a', 'b', ';a|a', 'c1');
-    //~ });
-    //~ assertThrows( "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
-    //~ checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
-    //~ });
-    //~ assertThrows( 'vpcinternal: a (;c)', () => {
-    //~ checkThrowInternal(false, ';c|a');
-    //~ });
-    //~ assertThrows( 'vpcinternal: a\nb (;d)', () => {
-    //~ checkThrowInternal(false, ';d|a', 'b');
-    //~ });
-    //~ assertThrows( 'vpcinternal: a\nb, c (;e)', () => {
-    //~ checkThrowInternal(false, ';e|a', 'b', 'c');
-    //~ });
-    //~ assertThrows( 'vpcmessage: a (;f)', () => {
-    //~ checkThrowNotifyMsg(false, ';f|a');
-    //~ });
-    //~ assertThrows( 'vpcmessage: a\nb (;g)', () => {
-    //~ checkThrowNotifyMsg(false, ';g|a', 'b');
-    //~ });
-    //~ assertThrows( 'vpcmessage: a\nb, c (;h)', () => {
-    //~ checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
-    //~ });
 });
 t.test('ThrowIfUndefined', () => {
     t.say(/*——————————*/ 'Truthy Should Not Throw');
@@ -147,17 +85,8 @@ t.test('ThrowIfUndefined', () => {
     });
 });
 t.test('JoinIntoMessage', () => {
-    t.say(/*——————————*/ 'WithoutMarks');
     let got = joinIntoMessage('without|marks', 'prefix:');
     assertEq('prefix:: without|marks', got);
-
-    t.say(/*——————————*/ 'ShouldMoveMarksToTheEnd');
-    got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
-    assertEq('prefix:: \nc, d, e (ab)', got);
-    got = joinIntoMessage('ab|the message', 'prefix:');
-    assertEq('prefix:: the message (ab)', got);
-    got = joinIntoMessage('the message', 'prefix:', 'ab|c');
-    assertEq('prefix:: the message\nc (ab)', got);
 });
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''));

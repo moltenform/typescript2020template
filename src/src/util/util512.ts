@@ -424,12 +424,12 @@ export class Util512 {
         }
 
         push(v: T) {
-            checkThrowEq(false, this.locked, 'Ow|locked');
+            checkThrowEq(false, this.locked, 'locked');
             this.vals.push(v);
         }
 
         set(i: number, v: T) {
-            checkThrowEq(false, this.locked, '4A|locked');
+            checkThrowEq(false, this.locked, 'locked');
             this.vals[i] = v;
         }
 

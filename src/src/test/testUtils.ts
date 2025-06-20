@@ -11,8 +11,7 @@
  * assert that an exception is thrown, with a certain message
  */
 export async function assertThrowsAsync<T>(
-    msgWithMark: string,
-    expectedErr: string,
+    expectedErrAndContext: string,
     fn: () => Promise<T>
 ) {
     let msg: O<string>;
@@ -23,10 +22,12 @@ export async function assertThrowsAsync<T>(
         msg = e.message ? e.message : '';
     }
 
-    assertTrue(msg !== undefined, `did not throw ${msgWithMark}`);
+    let expectedErr = expectedErrAndContext.split('|')[0];
+    let context = expectedErrAndContext.split('|')[1] ?? '';
+    assertTrue(msg !== undefined, `did not throw ${context}`);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
+        `JB|message "${msg}" did not contain "${expectedErr}" ${context}`
     );
 }
 
@@ -56,7 +57,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
 /**
  * assert that an assertion is thrown
  */
-export function assertAsserts(msgWithMark: string, expectedErr: string, fn: VoidFn) {
+export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
     let msg: O<string>;
     let svd = UI512ErrorHandling.silenceAssertMsgs;
     UI512ErrorHandling.silenceAssertMsgs = true;
@@ -69,16 +70,18 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
         UI512ErrorHandling.silenceAssertMsgs = svd;
     }
 
-    assertTrue(msg !== undefined, `did not throw`, msgWithMark);
+    let expectedErr = expectedErrAndContext.split('|')[0];
+    let context = expectedErrAndContext.split('|')[1] ?? '';
+    assertTrue(msg !== undefined, `did not throw`, context);
     assertTrue(
         msg.toLowerCase().includes('assert:'),
         `O=|not an assertion exception`,
-        msgWithMark
+        context
     );
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
         `9d|message "${msg}" did not contain "${expectedErr}"`,
-        msgWithMark
+        context
     );
 }
 

@@ -108,7 +108,7 @@ t.atest('timesOut', async () => {
     let cb = async () => {
         return Util512Higher.runAsyncWithTimeout(longFn(), 200);
     };
-    await assertThrowsAsync('PS|', 'Timed out', () => cb());
+    await assertThrowsAsync('Timed out', () => cb());
     assertTrue(performance.now() - start < 600, 'too slow');
 });
 

@@ -118,7 +118,7 @@ export function assertTrue(
  * can be ignored/ignore all.
  * if proceeding with execution would be unsafe, use assertTrue instead
  */
-export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: unknown) {
+export function assertWarn(condition: unknown, s1?: string, s2?: unknown, s3?: unknown) {
     if (!condition) {
         if (UI512ErrorHandling.silenceAssertMsgs) {
             /* we are in a assertAsserts test,
