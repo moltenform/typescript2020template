@@ -54,7 +54,8 @@ knownTasks = [s.strip() for s in '''
     autoHelpSetTestCollectionName
     check_tests_referenced
     check_for_null_coalesce
-    additional_checks'''.replace('\r\n', '\n').split('\n') if s]
+    additional_checks
+    shouldWarnHasNewMap'''.replace('\r\n', '\n').split('\n') if s]
 
 def absPathToRelative(p):
     p = p.replace('\\', '/')

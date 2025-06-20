@@ -5,8 +5,8 @@
 import os
 import sys
 import re
-sys.path.append('bn_python_common.zip')
-from bn_python_common import *
+from shinerainsoftsevenutil.standard import * # auto-transitioned
+from shinerainsoftsevenutil.core import *
 
 def getSymbolsFromLine(s):
     # negative lookahead so that we don't include abc| or abc"

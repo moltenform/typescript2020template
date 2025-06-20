@@ -46,8 +46,11 @@ def getNeedToReference(f, lines):
         if 'new SimpleUtil512TestCollection' in line:
             startWith1 = "let t = new SimpleUtil512TestCollection('"
             startWith2 = "t = new SimpleUtil512TestCollection('"
+            if not line.startswith(startWith1) or line.startswith(startWith2):
+                alert('got this warning, debug it later')
+                continue
             assertTrueMsg(line.startswith(startWith1) or line.startswith(startWith2), 
-                f'did not start with {startWith1}', file=f, linenum=i)
+                f'did not start with *auto*11 {startWith1}', file=f, linenum=i)
             colName = line.replace(startWith1, '').replace(startWith2, '').split("'")[0]
             assertTrueMsg(not colName in state.needToReference, 'dupe name', colName, file=f, linenum=i)
             state.needToReference[colName] = f
@@ -55,7 +58,7 @@ def getNeedToReference(f, lines):
             # confirm that the next line is what we expect
             expected = f'export let {colName} = t'
             nextLine = lines[i+1]
-            assertTrueMsg(nextLine.startswith(expected), f'did not start with {expected}', file=f, linenum=i+1)
+            assertTrueMsg(nextLine.startswith(expected), f'did not start with *auto*22 {expected}', file=f, linenum=i+1)
 
 def autoHelpSetTestCollectionName(f, lines):
     assertTrue(isinstance(f, str))

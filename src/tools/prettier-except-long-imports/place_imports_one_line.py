@@ -5,8 +5,9 @@
 import os
 import sys
 import re
-sys.path.append('../typescript-super-auto-import/bn_python_common.zip')
-from bn_python_common import *
+from shinerainsoftsevenutil.standard import * # auto-transitioned
+from shinerainsoftsevenutil.core import *
+
 sys.path.append('../typescript-super-auto-import')
 from ts_parsing import *
 

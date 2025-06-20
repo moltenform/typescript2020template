@@ -42,7 +42,7 @@ def shouldWarnApplyCall(line, silent=False):
         return True
         
 
-def checkText(f, lines):
+def checkText(f, lines, tasksDisabled):
     assertTrue(isinstance(f, str))
     assertTrue(isinstance(lines, list))
     for i, line in enumerate(lines):
@@ -58,7 +58,7 @@ def checkText(f, lines):
             trace(f"we think it's unsafe because there could be max arg limits.")
             trace(f'use /* warn-apply-ok */ if this was intended')
             warn('')
-        if shouldWarnHasNewMap(line):
+        if shouldWarnHasNewMap(line) and not tasksDisabled.shouldWarnHasNewMap:
             showWarningGccStyle(f, i+1, f'''don't use es6 maps, we target es5''')
             warn('')
             

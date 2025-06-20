@@ -120,7 +120,7 @@ def doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierC
         counting[1] += 1
    
     if not tasksDisabled.additional_checks:
-        check_more.checkText(f, lines)
+        check_more.checkText(f, lines, tasksDisabled)
 
 if __name__ == '__main__':
     srcdirectory, prettierCfg, prettierPath, allowLongerLinesOn, tasksDisabled = readconfig.readconfig()
