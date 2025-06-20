@@ -13,13 +13,13 @@ export let testCollectionUtil512 = t;
 t.test('class methods can be called via this', () => {
     class ExampleClass {
         static method1() {
-            return this.method2()
+            return this.method2();
         }
         static method2() {
-            return 'abc'
+            return 'abc';
         }
     }
-    assertEq('abc', ExampleClass.method1(), '')
+    assertEq('abc', ExampleClass.method1(), '');
 });
 
 t.test('ValHolder.param', () => {
@@ -145,7 +145,7 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     assertEq(` first`, pts[0], 'DP|');
     assertEq(` second`, pts[1], 'DO|');
     assertEq(` third (4E)`, pts[2], 'DN|');
-    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), );
+    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`));
 });
 t.test('slength', () => {
     assertEq(0, slength(null), 'NG|');
@@ -180,18 +180,18 @@ t.test('cast', () => {
     });
 });
 t.test('isString', () => {
-    assertTrue(typeof '' === 'string', );
-    assertTrue(typeof 'abc' === 'string', );
-    assertTrue(typeof String('abc') === 'string', );
-    assertTrue(typeof 123 !== 'string', );
-    assertTrue(typeof null !== 'string', );
-    assertTrue(typeof undefined !== 'string', );
-    assertTrue(typeof ['a'] !== 'string', );
+    assertTrue(typeof '' === 'string');
+    assertTrue(typeof 'abc' === 'string');
+    assertTrue(typeof String('abc') === 'string');
+    assertTrue(typeof 123 !== 'string');
+    assertTrue(typeof null !== 'string');
+    assertTrue(typeof undefined !== 'string');
+    assertTrue(typeof ['a'] !== 'string');
     /* ok to disable the warning, intentionally making a Object-style-string.
     we now assume that these will never occur, so it's ok that
     they aren't identified as strings. */
     /* eslint-disable-next-line no-new-wrappers */
-    assertTrue(typeof new String('abc') !== 'string', );
+    assertTrue(typeof new String('abc') !== 'string');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
@@ -447,10 +447,10 @@ t.test('MapKeyToObjectCanSet', () => {
     o.add('five', 5);
     o.add('six', 6);
     t.say(/*——————————*/ 'exists');
-    assertTrue(o.exists('five'), );
-    assertTrue(o.exists('six'), );
-    assertTrue(!o.exists('seven'), );
-    assertTrue(!o.exists(''), );
+    assertTrue(o.exists('five'));
+    assertTrue(o.exists('six'));
+    assertTrue(!o.exists('seven'));
+    assertTrue(!o.exists(''));
     t.say(/*——————————*/ 'get');
     assertEq(5, o.get('five'), 'M]|');
     assertEq(6, o.get('six'), 'M[|');

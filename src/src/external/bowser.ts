@@ -1,33 +1,32 @@
 
-
 export enum BrowserOSInfo {
-        __isUI512Enum = 1,
-        Unknown,
-        Windows,
-        Linux,
-        Mac,
-        WindowsPhone,
-        Android,
-        Ios,
-    }
+    __isUI512Enum = 1,
+    Unknown,
+    Windows,
+    Linux,
+    Mac,
+    WindowsPhone,
+    Android,
+    Ios
+}
 
 // loosely based on https://github.com/lancedikson/bowser/blob/master/src/parser-os.js
-export function guessOs(ua?:string) {
-    ua = ua || window.navigator.userAgent
+export function guessOs(ua?: string) {
+    ua = ua || window.navigator.userAgent;
     if (ua.match(/windows phone/i)) {
-        return BrowserOSInfo.WindowsPhone
+        return BrowserOSInfo.WindowsPhone;
     } else if (ua.match(/windows /i)) {
-        return BrowserOSInfo.Windows
+        return BrowserOSInfo.Windows;
     } else if (ua.match(/macintosh/i) || ua.match(/mac os/i)) {
-        return BrowserOSInfo.Mac
+        return BrowserOSInfo.Mac;
     } else if (ua.match(/(ipod|iphone|ipad)/i)) {
-        return BrowserOSInfo.Ios
+        return BrowserOSInfo.Ios;
     } else if (ua.match(/android/i) && !ua.match(/like android/i)) {
-        return BrowserOSInfo.Android
+        return BrowserOSInfo.Android;
     } else if (ua.match(/linux/i)) {
-        return BrowserOSInfo.Linux
+        return BrowserOSInfo.Linux;
     } else {
-        return BrowserOSInfo.Unknown
+        return BrowserOSInfo.Unknown;
     }
 }
 
@@ -36,23 +35,22 @@ export enum BrowserOSInfoSimple {
     Unknown,
     WindowsOrWinPhone,
     LinuxOrAndroid,
-    MacOrIos,
+    MacOrIos
 }
 
-export function guessOsSimple(ua?:string) {
-    const result = guessOs(ua)
-    const map:Record<number, BrowserOSInfoSimple> = {
+export function guessOsSimple(ua?: string) {
+    const result = guessOs(ua);
+    const map: Record<number, BrowserOSInfoSimple> = {
         [BrowserOSInfo.Windows]: BrowserOSInfoSimple.WindowsOrWinPhone,
         [BrowserOSInfo.Linux]: BrowserOSInfoSimple.LinuxOrAndroid,
         [BrowserOSInfo.Mac]: BrowserOSInfoSimple.MacOrIos,
         [BrowserOSInfo.WindowsPhone]: BrowserOSInfoSimple.WindowsOrWinPhone,
         [BrowserOSInfo.Android]: BrowserOSInfoSimple.LinuxOrAndroid,
-        [BrowserOSInfo.Ios]: BrowserOSInfoSimple.MacOrIos,
-    }
+        [BrowserOSInfo.Ios]: BrowserOSInfoSimple.MacOrIos
+    };
 
-    return map[result] ?? BrowserOSInfoSimple.Unknown
+    return map[result] ?? BrowserOSInfoSimple.Unknown;
 }
-
 
 type BrowserDetectionQuestion =
     | 'isMobile'
@@ -83,8 +81,8 @@ type BrowserDetectionQuestion =
     | 'supportsPopups';
 
 // https://github.com/kaimallea/isMobile
-declare const MSStream:any|undefined;
-function isMobile():{any?:boolean} {
+declare const MSStream: any | undefined;
+function isMobile(): { any?: boolean } {
     var f = {};
     var g = /iPhone/i,
         i = /iPod/i,
@@ -101,7 +99,7 @@ function isMobile():{any?:boolean} {
         s = /Opera Mini/i,
         t = /\b(CriOS|Chrome)(?:.+)Mobile/i,
         u = /Mobile(?:.+)Firefox\b/i,
-        v = function (l:any) {
+        v = function (l: any) {
             return (
                 void 0 !== l &&
                 'MacIntel' === l.platform &&
@@ -110,12 +108,12 @@ function isMobile():{any?:boolean} {
                 'undefined' == typeof MSStream
             );
         };
-    function w(l:any) {
-        return function ($:any) {
+    function w(l: any) {
+        return function ($: any) {
             return $.test(l);
         };
     }
-    function x(l?:any) {
+    function x(l?: any) {
         var $ = { userAgent: '', platform: '', maxTouchPoints: 0 };
         l || 'undefined' == typeof navigator
             ? 'string' == typeof l
@@ -181,8 +179,8 @@ export async function guessBrowserInfo(
     question: BrowserDetectionQuestion
 ): Promise<boolean> {
     if (question === 'isMobile') {
-       const objMobile = isMobile()
-       return objMobile?.any
+        const objMobile = isMobile();
+        return objMobile?.any;
     } else if (question === 'isEdgeOrIE') {
         return (await guessBrowserInfo('isEdge')) || (await guessBrowserInfo('isIe'));
     } else {

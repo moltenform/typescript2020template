@@ -1,17 +1,12 @@
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 
-export const dfgfdg = 45567 
+/* auto */ import { assertTrue, assertEq, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
+
+export const dfgfdg = 45567;
 function abc() {
-    let a=456
-    const innerFn = () =>{
-        assertTrue(5344, "abc555");
-
-    }
+    let a = 456;
     if (3 > 2) {
         while (false) {
-            assertTrue(a, "abc");
+            assertEq(3, 1 + 2, 'ab|cool');
         }
     }
 }
-
-assertTrue(53, "abc");

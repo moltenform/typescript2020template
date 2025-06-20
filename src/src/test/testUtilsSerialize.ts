@@ -7,32 +7,33 @@
 //~ import { jsonObject, jsonMember, TypedJSON } from 'typedjson';
 //~ import { O } from '../util/util512Base';
 
+//~ get a new SimpleUtil512TestCollection('testUtilsSerialize');
 
 let t = new SimpleUtil512TestCollection('testUtilsSerialize');
-export let testCollectionUtilsSerialize = t;
+export let testUtilsSerialize = t;
 
 //~ @jsonObject
 //~ class DemoSerializable {
-        //~ __private = 'not serialized';
+//~ __private = 'not serialized';
 
-        //~ @jsonMember
-        //~ fld1 = 'fld 1';
+//~ @jsonMember
+//~ fld1 = 'fld 1';
 
-        //~ @jsonMember
-        //~ fld2 = 'fld 2 and text';
+//~ @jsonMember
+//~ fld2 = 'fld 2 and text';
 
-        //~ @jsonMember
-        //~ optional_f1: O<string> = 'an optional field';
+//~ @jsonMember
+//~ optional_f1: O<string> = 'an optional field';
 
-        //~ @jsonMember
-        //~ optional_f2: O<string> = 'also optional';
- //~ }
+//~ @jsonMember
+//~ optional_f2: O<string> = 'also optional';
+//~ }
 
-t.test('basicSerialize', () => {
-    //~ const objSent = new DemoSerializable()
-    //~ const serializer = new TypedJSON(DemoSerializable);
-    //~ const json = serializer.stringify(objSent);
-    //~ const objectGot = wrapTypedJson(DemoSerializable, json);
-    console.log('aaa')
-    //~ throw new Error('finish this')
-})
+//~ t.test('basicSerialize', () => {
+//~ const objSent = new DemoSerializable()
+//~ const serializer = new TypedJSON(DemoSerializable);
+//~ const json = serializer.stringify(objSent);
+//~ const objectGot = wrapTypedJson(DemoSerializable, json);
+//~ console.log('aaa');
+//~ throw new Error('finish this')
+//~ });

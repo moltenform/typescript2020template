@@ -1,13 +1,14 @@
+
 /* auto */ import { O, tostring } from './util512Base';
-/* auto */ import {
-    assertTrue,
-    assertWarn,
-    checkThrow512,
-    ensureDefined,
-    make512Error
-} from './util512Assert';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 //~ import { TypedJSON } from 'typedjson';
-import { map as lodashMap, isArray as lodashIsArray, isObject as lodashIsObject, isPlainObject as lodashIsPlainObject, mapValues as lodashMapValues} from 'lodash'
+import {
+    map as lodashMap,
+    isArray as lodashIsArray,
+    isObject as lodashIsObject,
+    isPlainObject as lodashIsPlainObject,
+    mapValues as lodashMapValues
+} from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -194,8 +195,8 @@ export class Util512 {
     /**
      * same as the old substr(), which now deprecated
      */
-     static sliceWithLength(s: string, n:number, len?:number) {
-        return s.substring(n ,n+len)
+    static sliceWithLength(s: string, n: number, len?: number) {
+        return s.substring(n, n + len);
     }
 
     /**
@@ -465,12 +466,12 @@ export class Util512 {
         key?: string | number
     ): any {
         return lodashIsArray(obj)
-        ? lodashMap(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
-        : lodashIsPlainObject(obj)
-        ? lodashMapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
-        : lodashIsObject(obj)
-        ? obj
-        : fn(obj, key);
+            ? lodashMap(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
+            : lodashIsPlainObject(obj)
+            ? lodashMapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
+            : lodashIsObject(obj)
+            ? obj
+            : fn(obj, key);
     }
 }
 
@@ -529,8 +530,8 @@ export class ValHolder<T> {
 }
 
 /**
-* for unused-variable warnings
-*/
+ * for unused-variable warnings
+ */
 export function unused(..._args: unknown[]) {}
 
 /**

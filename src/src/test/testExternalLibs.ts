@@ -19,15 +19,15 @@ t.test('JsLru', () => {
     testmap.set('a', 1);
     testmap.set('b', 2);
     testmap.set('c', 3);
-    assertTrue(testmap.has('a'), );
-    assertTrue(testmap.has('b'), );
-    assertTrue(testmap.has('c'), );
+    assertTrue(testmap.has('a'));
+    assertTrue(testmap.has('b'));
+    assertTrue(testmap.has('c'));
     testmap.set('d', 4);
-    assertTrue(testmap.has('b'), );
-    assertTrue(testmap.has('c'), );
-    assertTrue(testmap.has('d'), );
-    assertTrue(!testmap.has('a'), );
-})
+    assertTrue(testmap.has('b'));
+    assertTrue(testmap.has('c'));
+    assertTrue(testmap.has('d'));
+    assertTrue(!testmap.has('a'));
+});
 
 t.test('testSimpleSerialize', () => {
     let o = new ClassTestSimpleSerialization('id1001');
@@ -39,7 +39,7 @@ t.test('testSimpleSerialize', () => {
         ClassTestSimpleSerialization,
         gotJson
     );
-    assertTrue(oFromString instanceof ClassTestSimpleSerialization, );
+    assertTrue(oFromString instanceof ClassTestSimpleSerialization);
     assertEq('id1001', oFromString.id, 'Ol|');
     assertEq('content', oFromString.content, 'Ok|');
     assertEq('skipped', oFromString.unimportant, 'Oj|');
@@ -105,9 +105,9 @@ t.test('testClassSerializationWithNulls', () => {
     got = deserialize<Hand>(Hand, JSON.parse(serialized));
     assertEq(expectedS, got.asString(), 'OX|');
     assertEq(3, got.holding.length, 'OW|');
-    assertTrue(got.holding[0] === 'a', );
+    assertTrue(got.holding[0] === 'a');
     assertTrue(got.holding[1] === null, 'expected undefined->null');
-    assertTrue(got.holding[2] === 'c', );
+    assertTrue(got.holding[2] === 'c');
 });
 
 class Person {

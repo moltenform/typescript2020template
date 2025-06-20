@@ -38,7 +38,7 @@ t.test('CheckThrow', () => {
     });
 });
 t.test('AssertAsserts', () => {
-    assertTrue(1, );
+    assertTrue(1);
     assertWarn(1, 'PP|');
     assertEq(2, 1 + 1, 'PO|');
     assertWarnEq(2, 1 + 1, 'PN|');
@@ -63,58 +63,58 @@ t.test('GetAssertMessages', () => {
     //~ checkThrowInternal(1, 'PA|');
     //~ checkThrowNotifyMsg(1, 'P9|');
     //~ assertThrows('P8|', 'ui512: a (;0)', () => {
-        //~ checkThrow512(false, ';0|a');
+    //~ checkThrow512(false, ';0|a');
     //~ });
     //~ assertThrows('P7|', 'ui512: a\nb (;1)', () => {
-        //~ checkThrow512(false, ';1|a', 'b');
+    //~ checkThrow512(false, ';1|a', 'b');
     //~ });
     //~ assertThrows('P6|', 'ui512: a\nb, c (;2)', () => {
-        //~ checkThrow512(false, ';2|a', 'b', 'c');
+    //~ checkThrow512(false, ';2|a', 'b', 'c');
     //~ });
     //~ assertThrows('P5|', "ui512: a expected 'a' but got 'b'. (;3)", () => {
-        //~ checkThrowEq('a', 'b', ';3|a');
+    //~ checkThrowEq('a', 'b', ';3|a');
     //~ });
     //~ assertThrows('P4|', "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
-        //~ checkThrowEq('a', 'b', ';4|a', 'c1');
+    //~ checkThrowEq('a', 'b', ';4|a', 'c1');
     //~ });
     //~ assertThrows('P3|', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
-        //~ checkThrowEq('a', 'b', ';5|a', 'c1', 'c2');
+    //~ checkThrowEq('a', 'b', ';5|a', 'c1', 'c2');
     //~ });
     //~ assertThrows('P2|', 'vpc: a (;6)', () => {
-        //~ checkThrow(false, ';6|a');
+    //~ checkThrow(false, ';6|a');
     //~ });
     //~ assertThrows('P1|', 'vpc: a\nb (;7)', () => {
-        //~ checkThrow(false, ';7|a', 'b');
+    //~ checkThrow(false, ';7|a', 'b');
     //~ });
     //~ assertThrows('P0|', 'vpc: a\nb, c (;8)', () => {
-        //~ checkThrow(false, ';8|a', 'b', 'c');
+    //~ checkThrow(false, ';8|a', 'b', 'c');
     //~ });
     //~ assertThrows('O~|', "vpc: a expected 'a' but got 'b'. (;9)", () => {
-        //~ checkThrowEq('a', 'b', ';9|a');
+    //~ checkThrowEq('a', 'b', ';9|a');
     //~ });
     //~ assertThrows('O}|', "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
-        //~ checkThrowEq('a', 'b', ';a|a', 'c1');
+    //~ checkThrowEq('a', 'b', ';a|a', 'c1');
     //~ });
     //~ assertThrows('O||', "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
-        //~ checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
+    //~ checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
     //~ });
     //~ assertThrows('O{|', 'vpcinternal: a (;c)', () => {
-        //~ checkThrowInternal(false, ';c|a');
+    //~ checkThrowInternal(false, ';c|a');
     //~ });
     //~ assertThrows('O_|', 'vpcinternal: a\nb (;d)', () => {
-        //~ checkThrowInternal(false, ';d|a', 'b');
+    //~ checkThrowInternal(false, ';d|a', 'b');
     //~ });
     //~ assertThrows('O^|', 'vpcinternal: a\nb, c (;e)', () => {
-        //~ checkThrowInternal(false, ';e|a', 'b', 'c');
+    //~ checkThrowInternal(false, ';e|a', 'b', 'c');
     //~ });
     //~ assertThrows('O]|', 'vpcmessage: a (;f)', () => {
-        //~ checkThrowNotifyMsg(false, ';f|a');
+    //~ checkThrowNotifyMsg(false, ';f|a');
     //~ });
     //~ assertThrows('O[|', 'vpcmessage: a\nb (;g)', () => {
-        //~ checkThrowNotifyMsg(false, ';g|a', 'b');
+    //~ checkThrowNotifyMsg(false, ';g|a', 'b');
     //~ });
     //~ assertThrows('O@|', 'vpcmessage: a\nb, c (;h)', () => {
-        //~ checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
+    //~ checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
     //~ });
 });
 t.test('ThrowIfUndefined', () => {
@@ -234,17 +234,17 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
 });
 t.test('built-in includes', () => {
     t.say(/*——————————*/ 'typical usage');
-    assertTrue('a test string'.includes('e'), );
-    assertTrue('a test string'.includes('test'), );
-    assertTrue('a test string'.includes('a test'), );
-    assertTrue('a test string'.includes('a test string'), );
-    assertTrue(!'a test string'.includes('a test string '), );
-    assertTrue(!'a test string'.includes('x'), );
+    assertTrue('a test string'.includes('e'));
+    assertTrue('a test string'.includes('test'));
+    assertTrue('a test string'.includes('a test'));
+    assertTrue('a test string'.includes('a test string'));
+    assertTrue(!'a test string'.includes('a test string '));
+    assertTrue(!'a test string'.includes('x'));
     t.say(/*——————————*/ 'edge cases');
-    assertTrue('test'.includes('test'), );
-    assertTrue('test'.includes(''), );
-    assertTrue(!''.includes('test'), );
-    assertTrue(''.includes(''), );
+    assertTrue('test'.includes('test'));
+    assertTrue('test'.includes(''));
+    assertTrue(!''.includes('test'));
+    assertTrue(''.includes(''));
 });
 t.test('unknownToString', () => {
     class CustomToString {

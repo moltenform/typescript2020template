@@ -2,7 +2,12 @@
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq, longstr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
-import { BrowserOSInfo, BrowserOSInfoSimple, guessOs, guessOsSimple } from '../external/bowser';
+import {
+    BrowserOSInfo,
+    BrowserOSInfoSimple,
+    guessOs,
+    guessOsSimple
+} from '../external/bowser';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -11,16 +16,16 @@ let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;
 
 t.test('isValidNumber', () => {
-    assertTrue(Util512.isValidNumber(123), );
-    assertTrue(Util512.isValidNumber(0), );
-    assertTrue(!Util512.isValidNumber(null), );
-    assertTrue(!Util512.isValidNumber(undefined), );
-    assertTrue(!Util512.isValidNumber(NaN), );
-    assertTrue(!Util512.isValidNumber(Infinity), );
-    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY), );
-    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY), );
-    assertTrue(!Util512.isValidNumber('12'), );
-    assertTrue(!Util512.isValidNumber(''), );
+    assertTrue(Util512.isValidNumber(123));
+    assertTrue(Util512.isValidNumber(0));
+    assertTrue(!Util512.isValidNumber(null));
+    assertTrue(!Util512.isValidNumber(undefined));
+    assertTrue(!Util512.isValidNumber(NaN));
+    assertTrue(!Util512.isValidNumber(Infinity));
+    assertTrue(!Util512.isValidNumber(Number.POSITIVE_INFINITY));
+    assertTrue(!Util512.isValidNumber(Number.NEGATIVE_INFINITY));
+    assertTrue(!Util512.isValidNumber('12'));
+    assertTrue(!Util512.isValidNumber(''));
 });
 t.test('Range.Upwards', () => {
     assertEq([0], Util512.range(0, 1), 'E`|');
@@ -132,23 +137,23 @@ t.atest('getBrowserOS', async () => {
         AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a
         Safari/604.1`);
     assertEq(BrowserOSInfo.Mac, guessOs(s), 'N |');
-    assertEq(BrowserOSInfoSimple.MacOrIos, guessOsSimple(s), 'N |'); 
+    assertEq(BrowserOSInfoSimple.MacOrIos, guessOsSimple(s), 'N |');
     s = longstr(`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
         (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246`);
     assertEq(BrowserOSInfo.Windows, guessOs(s), 'Nz|');
-    assertEq(BrowserOSInfoSimple.WindowsOrWinPhone, guessOsSimple(s), 'N |'); 
+    assertEq(BrowserOSInfoSimple.WindowsOrWinPhone, guessOsSimple(s), 'N |');
     s = longstr(`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9
         (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9`);
     assertEq(BrowserOSInfo.Mac, guessOs(s), 'Ny|');
-    assertEq(BrowserOSInfoSimple.MacOrIos, guessOsSimple(s), 'N |'); 
+    assertEq(BrowserOSInfoSimple.MacOrIos, guessOsSimple(s), 'N |');
     s = longstr(`Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML,
         like Gecko) Chrome/47.0.2526.111 Safari/537.36`);
     assertEq(BrowserOSInfo.Windows, guessOs(s), 'Nx|');
-    assertEq(BrowserOSInfoSimple.WindowsOrWinPhone, guessOsSimple(s), 'N |'); 
+    assertEq(BrowserOSInfoSimple.WindowsOrWinPhone, guessOsSimple(s), 'N |');
     s = longstr(`Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101
         Firefox/15.0.1`);
     assertEq(BrowserOSInfo.Linux, guessOs(s), 'Nw|');
-    assertEq(BrowserOSInfoSimple.LinuxOrAndroid, guessOsSimple(s), 'N |'); 
+    assertEq(BrowserOSInfoSimple.LinuxOrAndroid, guessOsSimple(s), 'N |');
     /*
         The previous version also looked for
         Windows
@@ -160,18 +165,18 @@ t.test('isMapEmpty.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: 'def' };
-    assertTrue(Util512.isMapEmpty(obj0), );
-    assertTrue(!Util512.isMapEmpty(obj1), );
-    assertTrue(!Util512.isMapEmpty(obj2), );
+    assertTrue(Util512.isMapEmpty(obj0));
+    assertTrue(!Util512.isMapEmpty(obj1));
+    assertTrue(!Util512.isMapEmpty(obj2));
 });
 t.test('isMapEmpty.Class', () => {
     let o0 = new TestClsEmpty();
     let o1 = new TestClsOne();
     let o2 = new TestClsOne();
     (o2 as any).aSingleAdded = 1;
-    assertTrue(Util512.isMapEmpty(o0 as any), );
-    assertTrue(!Util512.isMapEmpty(o1 as any), );
-    assertTrue(!Util512.isMapEmpty(o2 as any), );
+    assertTrue(Util512.isMapEmpty(o0 as any));
+    assertTrue(!Util512.isMapEmpty(o1 as any));
+    assertTrue(!Util512.isMapEmpty(o2 as any));
 });
 t.test('getMapShallowClone.PlainObject', () => {
     let obj0 = {};
@@ -213,7 +218,7 @@ t.test('freezeProperty.Class', () => {
 });
 t.test('freezeRecurse.PlainObject', () => {
     let obj = { a: true, b: true };
-    assertTrue(!Object.isFrozen(obj), );
+    assertTrue(!Object.isFrozen(obj));
     Util512.freezeRecurse(obj);
     assertThrows('Lr|', '', () => {
         obj.a = false;
@@ -226,11 +231,11 @@ t.test('freezeRecurse.Class', () => {
     (cls1 as any).child = cls2;
     (cls2 as any).child = cls3;
     (cls3 as any).nullchild = undefined;
-    assertTrue(!Object.isFrozen(cls1), );
+    assertTrue(!Object.isFrozen(cls1));
     Util512.freezeRecurse(cls1);
-    assertTrue(Object.isFrozen(cls1), );
-    assertTrue(Object.isFrozen(cls2), );
-    assertTrue(Object.isFrozen(cls3), );
+    assertTrue(Object.isFrozen(cls1));
+    assertTrue(Object.isFrozen(cls2));
+    assertTrue(Object.isFrozen(cls3));
     assertThrows('Lq|', '', () => {
         cls1.aSingleProp = false;
     });
@@ -350,12 +355,12 @@ t.test('callAsMethod.ValidMethod', () => {
 });
 t.test('isMethodOnClass', () => {
     let o1 = new TestClsWithMethods();
-    assertTrue(Util512.isMethodOnClass(o1, 'goAbc'), );
-    assertTrue(Util512.isMethodOnClass(o1, 'goZ'), );
-    assertTrue(!Util512.isMethodOnClass(o1, 'goAbcd'), );
-    assertTrue(!Util512.isMethodOnClass(o1, 'calledAbc'), );
-    assertTrue(!Util512.isMethodOnClass(o1, 'notPresent'), );
-    assertTrue(!Util512.isMethodOnClass(o1, ''), );
+    assertTrue(Util512.isMethodOnClass(o1, 'goAbc'));
+    assertTrue(Util512.isMethodOnClass(o1, 'goZ'));
+    assertTrue(!Util512.isMethodOnClass(o1, 'goAbcd'));
+    assertTrue(!Util512.isMethodOnClass(o1, 'calledAbc'));
+    assertTrue(!Util512.isMethodOnClass(o1, 'notPresent'));
+    assertTrue(!Util512.isMethodOnClass(o1, ''));
 });
 t.test('getMapKeys.PlainObject', () => {
     let obj0 = {};

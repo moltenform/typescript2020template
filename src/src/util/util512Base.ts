@@ -1,5 +1,5 @@
 
-import LzString from 'lz-string'
+import LzString from 'lz-string';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -178,4 +178,3 @@ export class UI512Compress {
         return LzString.decompressFromUTF16(s) ?? '';
     }
 }
-

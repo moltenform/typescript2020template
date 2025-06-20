@@ -13,7 +13,7 @@ export let testCollectionUtil512Higher = t;
 t.test('WeakUuid', () => {
     let uid1 = Util512Higher.weakUuid();
     let uid2 = Util512Higher.weakUuid();
-    assertTrue(uid1 !== uid2, );
+    assertTrue(uid1 !== uid2);
 
     let uid = Util512Higher.weakUuid();
     assertEq(36, uid.length, 'EZ|');
@@ -22,7 +22,7 @@ t.test('WeakUuid', () => {
         if (i === 23 || i === 18 || i === 13 || i === 8) {
             assertEq('-', c, 'EY|');
         } else {
-            assertTrue('0123456789abcdef'.includes(c), );
+            assertTrue('0123456789abcdef'.includes(c));
         }
     }
 });
@@ -33,21 +33,19 @@ t.test('getRandIntInclusiveWeak.OKIfBoundsEqual', () => {
 });
 t.test('getRandIntInclusiveWeak', () => {
     let got = Util512Higher.getRandIntInclusiveWeak(1, 3);
-    assertTrue(got >= 1 && got <= 3, );
+    assertTrue(got >= 1 && got <= 3);
     got = Util512Higher.getRandIntInclusiveWeak(4, 6);
-    assertTrue(got >= 4 && got <= 6, );
+    assertTrue(got >= 4 && got <= 6);
     got = Util512Higher.getRandIntInclusiveWeak(7, 9);
-    assertTrue(got >= 7 && got <= 9, );
+    assertTrue(got >= 7 && got <= 9);
 });
 t.test('generateUniqueBase64UrlSafe', () => {
     let generated1 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
     let generated2 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
-    assertTrue(generated1 !== generated2, );
+    assertTrue(generated1 !== generated2);
     assertEq('!', Util512.fromBase64UrlSafe(generated1)[0], 'D&|');
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
-
-
 
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */

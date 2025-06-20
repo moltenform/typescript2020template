@@ -1,6 +1,6 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
-import  ExtendableError from 'es6-error';
+import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -10,7 +10,7 @@ import  ExtendableError from 'es6-error';
  * they're enabled in production, and throw exceptions on failure.
  * Failures that arise from mistaken user input should use check(),
  * whereas failures that arise from faulty logic should use assert().
- * 
+ *
  * EXCEPTION HANDLING STRATEGY:
  *
  * We don't want any exception to be accidentally swallowed silently.
@@ -32,7 +32,7 @@ import  ExtendableError from 'es6-error';
  *              use syncToAsyncTransition
  *          placeCallbackInQueue
  *              already ok because it's under the drawframe event.
- * 
+ *
  */
 
 /**
@@ -55,17 +55,16 @@ export class Util512BaseErr extends ExtendableError {
  * a warning. execution can continue afterwards, but
  * we'll show a message to the user.
  */
- export class Util512Warn extends Util512BaseErr {
+export class Util512Warn extends Util512BaseErr {
     override typeName = 'Util512Warn';
-  }
-
+}
 
 /**
  * just a message, not an error case.
  */
- export class Util512Message extends Util512BaseErr {
+export class Util512Message extends Util512BaseErr {
     override typeName = 'Util512Message';
-  }
+}
 
 /**
  * helper for making a Util512BaseErr, at any level
@@ -167,7 +166,6 @@ export function checkThrow512(
         throw make512Error(msg, s1, s2);
     }
 }
-
 
 /* see also: assertEq, assertWarnEq, checkThrowEq in util512.ts */
 
@@ -299,8 +297,6 @@ export function joinIntoMessage(
     s3?: unknown
 ) {
     let markers: string[] = [];
-    c0 = findMarkers(c0, markers) ?? '';
-    s1 = findMarkers(s1, markers);
     let message = level + ': ' + c0;
     message += s1 ? '\n' + tostring(s1) : '';
     message += s2 ? ', ' + tostring(s2) : '';
@@ -310,22 +306,6 @@ export function joinIntoMessage(
     }
 
     return message;
-}
-
-/**
- * we add two-digit markers to most asserts, so that if a bug report comes in,
- * we have more context about the site of failure.
- * assert markers are in the form xx|; this fn extracts them from a string.
- */
-function findMarkers(s: unknown, markers: string[]): O<string> {
-    if (s && typeof s === 'string' && s[2] === '|') {
-        markers.push(s.slice(0, 2));
-        return s.slice(3);
-    } else if (!s) {
-        return undefined;
-    } else {
-        return tostring(s);
-    }
 }
 
 /**

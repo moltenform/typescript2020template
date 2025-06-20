@@ -8,7 +8,7 @@
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
 /* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
-import { testCollectionUtilsSerialize } from './testUtilsSerialize';
+/* auto */ import { testUtilsSerialize } from './testUtilsSerialize';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -33,7 +33,7 @@ export const SimpleUtil512Tests = /* static class */ {
             testCollectionUtil512,
             testCollectionUtil512Class,
             testCollectionUtil512Higher,
-            testCollectionUtilsSerialize
+            testUtilsSerialize
         ];
 
         if (!colls || !colls.length) {

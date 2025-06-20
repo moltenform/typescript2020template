@@ -190,7 +190,7 @@ export class Util512Higher {
     static scriptsAlreadyLoaded: Record<string, boolean> = {};
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            assertTrue(url.startsWith('/'), );
+            assertTrue(url.startsWith('/'));
             if (Util512Higher.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;

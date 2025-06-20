@@ -8,7 +8,6 @@ import { onDemoSave, testExternalModules } from './test-external-modules';
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-
 function setOutput(s: string) {
     let el = document.getElementById('output');
     if (el) {
@@ -19,7 +18,7 @@ function setOutput(s: string) {
 async function onSimpleTest() {
     let s = 'abc. currently running as:';
     s += checkIsProductionBuild() ? 'release' : 'debug';
-    setOutput(s)
+    setOutput(s);
     await Util512Higher.sleep(1000);
     setOutput('1... ');
     await Util512Higher.sleep(1000);
@@ -29,17 +28,17 @@ async function onSimpleTest() {
 }
 
 async function onDemoModules() {
-    const s = await testExternalModules()
+    const s = await testExternalModules();
     setOutput(s);
 }
 
 export function runOnLoad() {
     const mapping = {
-        'idBtnSimpleTest': onSimpleTest,
-        'idBtnDemoModules': onDemoModules,
-        'idBtnDemoSave': onDemoSave,
-        'idBtnRunUtil512Tests': SimpleUtil512Tests.runTests,
-    }
+        idBtnSimpleTest: onSimpleTest,
+        idBtnDemoModules: onDemoModules,
+        idBtnDemoSave: onDemoSave,
+        idBtnRunUtil512Tests: SimpleUtil512Tests.runTests
+    };
 
     for (let k in mapping) {
         let elBtn = document.getElementById(k);
