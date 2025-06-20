@@ -1,11 +1,16 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
-import  ExtendableError  from 'es6-error';
+import  ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
 /**
+ * Note that these asserts are "strong" asserts not to be ignored,
+ * they're enabled in production, and throw exceptions on failure.
+ * Failures that arise from mistaken user input should use check(),
+ * whereas failures that arise from faulty logic should use assert().
+ * 
  * EXCEPTION HANDLING STRATEGY:
  *
  * We don't want any exception to be accidentally swallowed silently.
@@ -27,6 +32,7 @@ import  ExtendableError  from 'es6-error';
  *              use syncToAsyncTransition
  *          placeCallbackInQueue
  *              already ok because it's under the drawframe event.
+ * 
  */
 
 /**

@@ -55,24 +55,24 @@ t.test('Repeat', () => {
     assertEq([4], Util512.repeat(1, 4), 'F0|');
     assertEq([], Util512.repeat(0, 4), 'E~|');
 });
-t.test('setarr', () => {
+t.test('setArr', () => {
     let ar1: number[] = [];
-    Util512.setarr(ar1, 0, 12, 0);
+    Util512.setArr(ar1, 0, 12, 0);
     assertEq([12], ar1, 'N~|');
     let ar2: number[] = [];
-    Util512.setarr(ar2, 1, 12, 0);
+    Util512.setArr(ar2, 1, 12, 0);
     assertEq([0, 12], ar2, 'N}|');
     let ar3: number[] = [];
-    Util512.setarr(ar3, 3, 12, 0);
+    Util512.setArr(ar3, 3, 12, 0);
     assertEq([0, 0, 0, 12], ar3, 'N||');
     let ar: number[] = [1, 2];
-    Util512.setarr(ar, 0, 12, 0);
+    Util512.setArr(ar, 0, 12, 0);
     assertEq([12, 2], ar, 'N{|');
     ar = [1, 2];
-    Util512.setarr(ar, 2, 12, 0);
+    Util512.setArr(ar, 2, 12, 0);
     assertEq([1, 2, 12], ar, 'N_|');
     ar = [1, 2];
-    Util512.setarr(ar, 3, 12, 0);
+    Util512.setArr(ar, 3, 12, 0);
     assertEq([1, 2, 0, 12], ar, 'N^|');
 });
 t.test('extendArray', () => {
