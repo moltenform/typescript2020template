@@ -292,7 +292,7 @@ export class Util512Higher {
         let ps = [fn, fTimeout()];
         let ret = await Promise.race(ps);
         if (ret instanceof SentinelClass) {
-            checkThrow512(false, 'RX|Timed out.');
+            checkThrow512(false, 'Timed out.');
         } else {
             return ret;
         }

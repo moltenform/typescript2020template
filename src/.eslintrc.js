@@ -187,6 +187,8 @@ module.exports = {
         '@typescript-eslint/consistent-generic-constructors': 'error',
         '@typescript-eslint/no-unsafe-declaration-merging': 'error',
         '@typescript-eslint/no-duplicate-enum-values': 'error',
+        '@typescript-eslint/no-unsafe-enum-comparison': 'error',
+        '@typescript-eslint/no-unsafe-enum-asssignment': 'error',
 
         // checks locals, not fn params.
         // annoying to leave this on while editing, so we'll use typescript 6133 instead
@@ -206,6 +208,7 @@ module.exports = {
             {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
             {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": ["*", "substr"], "message": "substr is deprecated."},
         ]
     }
 };

@@ -5,6 +5,7 @@
 - release builds are bundled to a single file
     - better because there are fewer network roundtrips, unless there's HTTP/2
     - better because some browsers like old mobile android don't yet support es6 modules
+    - better because can import node_modules without manually copying in the src
 - release builds are minifed
     - doesn't save download time because of gzip transfer
     - but better to make reverse engineering of commercial projects less trivial

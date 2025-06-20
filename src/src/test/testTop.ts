@@ -93,7 +93,7 @@ export const SimpleUtil512Tests = /* static class */ {
         notifyUserIfDebuggerIsSetToAllExceptions();
         assertWarn(
             coll.tests.length > 0 || coll.atests.length > 0,
-            'O-|no tests in collection'
+            'no tests in collection'
         );
 
         /* note that some tests require async tests to be done first. */
@@ -102,7 +102,7 @@ export const SimpleUtil512Tests = /* static class */ {
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.exists(tstname.toLowerCase())) {
-                assertWarn(false, 'Or|duplicate test name', tstname);
+                assertWarn(false, 'duplicate test name', tstname);
             }
 
             /* it's totally fine to await on a synchronous fn. */

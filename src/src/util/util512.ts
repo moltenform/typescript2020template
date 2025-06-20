@@ -2,13 +2,7 @@
 /* auto */ import { O, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 //~ import { TypedJSON } from 'typedjson';
-import {
-    map as lodashMap,
-    isArray as lodashIsArray,
-    isObject as lodashIsObject,
-    isPlainObject as lodashIsPlainObject,
-    mapValues as lodashMapValues
-} from 'lodash';
+import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -230,7 +224,7 @@ export class Util512 {
     ): unknown {
         checkThrow512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
-            'K@|callAsMethodOnClass requires alphanumeric no spaces',
+            'callAsMethodOnClass requires alphanumeric no spaces',
             s
         );
 
@@ -465,11 +459,11 @@ export class Util512 {
         fn: (o: any, k?: string | number) => any,
         key?: string | number
     ): any {
-        return lodashIsArray(obj)
-            ? lodashMap(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
-            : lodashIsPlainObject(obj)
-            ? lodashMapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
-            : lodashIsObject(obj)
+        return _.isArray(obj)
+            ? _.map(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
+            : _.isPlainObject(obj)
+            ? _.mapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
+            : _.isObject(obj)
             ? obj
             : fn(obj, key);
     }
@@ -700,7 +694,7 @@ export function cast<T>(
         return instance;
     }
 
-    checkThrow512(false, 'J7|type cast exception', context);
+    checkThrow512(false, 'type cast exception', context);
 }
 
 /**
@@ -711,7 +705,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('type cast exception', context);
 }
 
 /**
@@ -722,7 +716,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('type cast exception', context);
 }
 
 /**
@@ -823,7 +817,7 @@ export class OrderedHash<TValue> {
     }
 
     get(k: string): TValue {
-        return ensureDefined(this.find(k), '41|could not find ', k);
+        return ensureDefined(this.find(k), 'could not find ', k);
     }
 
     delete(k: string): boolean {
@@ -887,7 +881,7 @@ export class MapKeyToObject<T> {
     }
 
     get(key: string) {
-        return ensureDefined(this.objects[key], '3_|id not found', key);
+        return ensureDefined(this.objects[key], 'id not found', key);
     }
 
     getOrFallback(key: string, fallback: T) {
@@ -947,13 +941,14 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
 export function assertEq<T>(
     expected: T,
     got: unknown,
-    msg: string,
-    c1?: unknown,
-    c2?: unknown
+    c1?: string,
+    c2?: unknown,
+    c3?: unknown
 ): asserts got is T {
     if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
-        assertTrue(false, msg + msgEq, c1, c2);
+        msgEq += c1 ?? '';
+        assertTrue(false, msgEq, c2, c3);
     }
 }
 

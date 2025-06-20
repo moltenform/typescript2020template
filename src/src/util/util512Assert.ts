@@ -287,7 +287,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
 }
 
 /**
- * combine strings, and move all 'markers' to the end
+ * combine strings
  */
 export function joinIntoMessage(
     c0: string,
@@ -296,15 +296,10 @@ export function joinIntoMessage(
     s2?: unknown,
     s3?: unknown
 ) {
-    let markers: string[] = [];
     let message = level + ': ' + c0;
     message += s1 ? '\n' + tostring(s1) : '';
     message += s2 ? ', ' + tostring(s2) : '';
     message += s3 ? ', ' + tostring(s3) : '';
-    if (markers.length) {
-        message += ' (' + markers.join(',') + ')';
-    }
-
     return message;
 }
 

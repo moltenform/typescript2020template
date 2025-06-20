@@ -13,7 +13,7 @@ export let testCollectionUtil512Assert = t;
 t.test('AssertThrows', () => {
     t.say(/*——————————*/ 'Get Message From Custom Error');
     assertThrows('mymessage', () => {
-        throw make512Error('1N|1 mymessage 2');
+        throw make512Error('1 mymessage 2');
     });
     t.say(/*——————————*/ 'Get Message From Plain Error');
     assertThrows('xyz', () => {
@@ -22,31 +22,31 @@ t.test('AssertThrows', () => {
 });
 t.test('CheckThrow', () => {
     t.say(/*——————————*/ 'Should Not Throw');
-    checkThrow512(1, 'K<|should not throw');
-    checkThrow512(true, 'K;|should not throw');
+    checkThrow512(1, 'should not throw');
+    checkThrow512(true, 'should not throw');
     t.say(/*——————————*/ 'False Should Throw');
     assertThrows('mymessage\ns1, s2', () => {
-        checkThrow512(false, 'K:|mymessage', 's1', 's2');
+        checkThrow512(false, 'mymessage', 's1', 's2');
     });
     t.say(/*——————————*/ 'Null Should Throw');
     assertThrows('mymessage\ns1, s2', () => {
-        checkThrow512(null, 'K/|mymessage', 's1', 's2');
+        checkThrow512(null, 'mymessage', 's1', 's2');
     });
     t.say(/*——————————*/ 'Undefined Should Throw');
     assertThrows('mymessage\ns1, s2', () => {
-        checkThrow512(undefined, 'K.|mymessage', 's1', 's2');
+        checkThrow512(undefined, 'mymessage', 's1', 's2');
     });
 });
 t.test('AssertAsserts', () => {
     assertTrue(1);
-    assertWarn(1, 'PP|');
+    assertWarn(1);
     assertEq(2, 1 + 1);
     assertWarnEq(2, 1 + 1, 'PN|');
     assertAsserts('PM|', 'a message', () => {
         assertTrue(0, 'a message');
     });
     assertAsserts('PK|', 'a message', () => {
-        assertWarn(0, 'PJ|a message');
+        assertWarn(0, 'a message');
     });
     assertAsserts('PI|', 'a message', () => {
         assertEq(3, 1 + 1, 'a message');
@@ -56,7 +56,7 @@ t.test('AssertAsserts', () => {
     });
 });
 t.test('GetAssertMessages', () => {
-    checkThrow512(1, 'PE|');
+    checkThrow512(1);
     //~ checkThrowEq('a', 'a', 'PD|');
     //~ checkThrow(1, 'PC|');
     //~ checkThrowEq('a', 'a', 'PB|');
@@ -119,31 +119,31 @@ t.test('GetAssertMessages', () => {
 });
 t.test('ThrowIfUndefined', () => {
     t.say(/*——————————*/ 'Truthy Should Not Throw');
-    let n1 = ensureDefined(1, 'Cq|should not throw');
+    let n1 = ensureDefined(1, 'should not throw');
     assertEq(1, n1);
 
-    let s1 = ensureDefined('abc', 'Co|should not throw');
+    let s1 = ensureDefined('abc', 'should not throw');
     assertEq('abc', s1);
 
-    let b1 = ensureDefined(true, 'Cm|should not throw');
+    let b1 = ensureDefined(true, 'should not throw');
     assertEq(b1, true);
 
     t.say(/*——————————*/ 'Falsy Should Not Throw');
-    let n0 = ensureDefined(0, 'Ck|should not throw');
+    let n0 = ensureDefined(0, 'should not throw');
     assertEq(0, n0);
 
-    let s0 = ensureDefined('', 'Ci|should not throw');
+    let s0 = ensureDefined('', 'should not throw');
     assertEq('', s0);
 
-    let b0 = ensureDefined(false, 'Cg|should not throw');
+    let b0 = ensureDefined(false, 'should not throw');
     assertEq(false, b0);
 
     t.say(/*——————————*/ 'NullAndUndefinedShouldThrow');
     assertThrows('mymessage, s1, s2', () => {
-        ensureDefined(null, 'Ce|mymessage', 's1', 's2');
+        ensureDefined(null, 'mymessage', 's1', 's2');
     });
     assertThrows('mymessage, s1, s2', () => {
-        ensureDefined(undefined, 'Cd|mymessage', 's1', 's2');
+        ensureDefined(undefined, 'mymessage', 's1', 's2');
     });
 });
 t.test('JoinIntoMessage', () => {
