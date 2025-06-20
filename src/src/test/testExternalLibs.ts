@@ -40,9 +40,9 @@ t.test('testSimpleSerialize', () => {
         gotJson
     );
     assertTrue(oFromString instanceof ClassTestSimpleSerialization);
-    assertEq('id1001', oFromString.id, 'Ol|');
-    assertEq('content', oFromString.content, 'Ok|');
-    assertEq('skipped', oFromString.unimportant, 'Oj|');
+    assertEq('id1001', oFromString.id);
+    assertEq('content', oFromString.content);
+    assertEq('skipped', oFromString.unimportant);
 });
 t.test('testClassSerialization', () => {
     let hl = new Hand(1, 'left');
@@ -60,39 +60,39 @@ t.test('testClassSerialization', () => {
         id=12nm=[fr2],id=13nm=[fr3]]]`,
         ''
     );
-    assertEq(expectedS, person.asString(), 'Oi|');
+    assertEq(expectedS, person.asString());
 
     let serialized = JSON.stringify(serialize(person));
     let got = deserialize<Person>(Person, JSON.parse(serialized));
 
     // o was marked as skip, so it should return to the default value
     let expectedDeser = expectedS.replace(/,o=dn,/, ',o=up,');
-    assertEq(expectedDeser, got.asString(), 'Oh|');
+    assertEq(expectedDeser, got.asString());
 
     // round trip it
     let serialized2 = JSON.stringify(serialize(got));
     let got2 = deserialize<Person>(Person, JSON.parse(serialized2));
-    assertEq(expectedDeser, got2.asString(), 'Og|');
+    assertEq(expectedDeser, got2.asString());
 });
 t.test('testClassSerializationWithNulls', () => {
     t.say(/*——————————*/ 'with empty array');
     let h = new Hand(1, 'test');
     h.holding = [];
     let expectedS = 'hid=1,hnm=test,hol=,o=up,f=[]';
-    assertEq(expectedS, h.asString(), 'Of|');
+    assertEq(expectedS, h.asString());
     let serialized = JSON.stringify(serialize(h));
     let got = deserialize<Hand>(Hand, JSON.parse(serialized));
-    assertEq(expectedS, got.asString(), 'Oe|');
+    assertEq(expectedS, got.asString());
 
     t.say(/*——————————*/ 'with array with null and undefined');
     h = new Hand(1, 'test');
     h.holding = [null as any, undefined as any];
     expectedS = 'hid=1,hnm=test,hol=|,o=up,f=[]';
-    assertEq(expectedS, h.asString(), 'Od|');
+    assertEq(expectedS, h.asString());
     serialized = JSON.stringify(serialize(h));
     got = deserialize<Hand>(Hand, JSON.parse(serialized));
-    assertEq(expectedS, got.asString(), 'Oc|');
-    assertEq(2, got.holding.length, 'Ob|');
+    assertEq(expectedS, got.asString());
+    assertEq(2, got.holding.length);
     assertTrue(got.holding[0] === null, 'expected null->null');
     assertTrue(got.holding[1] === null, 'expected undefined->null');
 
@@ -100,11 +100,11 @@ t.test('testClassSerializationWithNulls', () => {
     h = new Hand(1, 'test');
     h.holding = ['a', undefined, 'c'];
     expectedS = 'hid=1,hnm=test,hol=a||c,o=up,f=[]';
-    assertEq(expectedS, h.asString(), 'OY|');
+    assertEq(expectedS, h.asString());
     serialized = JSON.stringify(serialize(h));
     got = deserialize<Hand>(Hand, JSON.parse(serialized));
-    assertEq(expectedS, got.asString(), 'OX|');
-    assertEq(3, got.holding.length, 'OW|');
+    assertEq(expectedS, got.asString());
+    assertEq(3, got.holding.length);
     assertTrue(got.holding[0] === 'a');
     assertTrue(got.holding[1] === null, 'expected undefined->null');
     assertTrue(got.holding[2] === 'c');

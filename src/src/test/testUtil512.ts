@@ -29,7 +29,7 @@ t.test('ValHolder.param', () => {
 
     let v = new ValHolder(0);
     increment(v);
-    assertEq(1, v.val, 'NR|');
+    assertEq(1, v.val);
 });
 t.test('ValHolder.closure', () => {
     function increment() {
@@ -38,85 +38,72 @@ t.test('ValHolder.closure', () => {
 
     let v = new ValHolder(0);
     increment();
-    assertEq(1, v.val, 'NQ|');
+    assertEq(1, v.val);
 });
 t.test('findStrToEnum.FoundPrimary', () => {
-    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dz|');
-    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'), 'Dy|');
-    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Third'), 'Dx|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
+    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'));
+    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Third'));
 });
 t.test('findStrToEnum.NotFound', () => {
-    assertEq(undefined, findStrToEnum(TestEnum, ''), 'Dw|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'F'), 'Dv|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Du|');
+    assertEq(undefined, findStrToEnum(TestEnum, ''));
+    assertEq(undefined, findStrToEnum(TestEnum, 'F'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'));
 });
 t.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
-    assertEq(undefined, findStrToEnum(TestEnum, '__isUI512Enum'), 'Dt|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__foo'), 'Dr|');
+    assertEq(undefined, findStrToEnum(TestEnum, '__isUI512Enum'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__UI512EnumCapitalize'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__foo'));
 });
 t.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'), 'NP|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'), 'NO|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'), 'NN|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'), 'NM|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'), 'NL|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'), 'NK|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'), 'NJ|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Scnd'), 'Dp|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Foo'), 'Do|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'), 'NI|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'), 'NH|');
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'), 'Dq|');
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Scnd'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Foo'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'));
+    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'));
 });
 t.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
-    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dn|');
-    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'first'), 'Dm|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'firsT'), 'Dl|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'FirsT'), 'Dk|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'First '), 'Dj|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'), 'Di|');
-    assertEq(undefined, findStrToEnum(TestEnum, 'Firs'), 'Dh|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'first'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'firsT'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'FirsT'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'First '));
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'));
+    assertEq(undefined, findStrToEnum(TestEnum, 'Firs'));
 });
 t.test('findStrToEnum.UseAlts', () => {
-    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'), 'Dg|');
-    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'TheFirst'), 'Df|');
-    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Scnd'), 'De|');
-    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'), 'Dd|');
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
+    assertEq(TestEnum.First, findStrToEnum(TestEnum, 'TheFirst'));
+    assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Scnd'));
+    assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'));
 });
 t.test('getEnumToStr.FoundPrimary', () => {
-    assertEq('first', getEnumToStrOrFallback(TestEnum, TestEnum.First), 'Dc|');
-    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.Second), 'Db|');
-    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.Third), 'Da|');
+    assertEq('first', getEnumToStrOrFallback(TestEnum, TestEnum.First));
+    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.Second));
+    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.Third));
 });
 t.test('getEnumToStr.AlternatesHaveSameVal', () => {
     assertEq(
         'first',
-        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__TheFirst),
-        'DZ|'
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__TheFirst)
     );
-    assertEq(
-        'second',
-        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Scnd),
-        'DY|'
-    );
-    assertEq(
-        'third',
-        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Thd),
-        'DX|'
-    );
+    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Scnd));
+    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Thd));
 });
 t.test('getEnumToStr.NotFound', () => {
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, -1), 'DW|');
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, 999), 'DV|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, -1));
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, 999));
 });
 t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__isUI512Enum), 'DU|');
-    assertEq(
-        'Unknown',
-        getEnumToStrOrFallback(TestEnum, TestEnum.__UI512EnumCapitalize),
-        'DT|'
-    );
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__isUI512Enum));
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__UI512EnumCapitalize));
 });
 t.test('getStrToEnum.HasExpectedReturnType', () => {
     /* check that the return value is the correct type.
@@ -127,9 +114,9 @@ t.test('getStrToEnum.HasExpectedReturnType', () => {
     takesEnumVal(r);
 });
 t.test('getStrToEnum.FoundPrimary', () => {
-    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'), 'DS|');
-    assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'), 'DR|');
-    assertEq(TestEnum.Third, getStrToEnum(TestEnum, 'TestEnum', 'Third'), 'DQ|');
+    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'));
+    assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'));
+    assertEq(TestEnum.Third, getStrToEnum(TestEnum, 'TestEnum', 'Third'));
 });
 t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     let excMessage = '';
@@ -142,16 +129,16 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
 
     let pts = excMessage.split(',');
     pts.sort(util512Sort);
-    assertEq(` first`, pts[0], 'DP|');
-    assertEq(` second`, pts[1], 'DO|');
-    assertEq(` third (4E)`, pts[2], 'DN|');
+    assertEq(` first`, pts[0]);
+    assertEq(` second`, pts[1]);
+    assertEq(` third (4E)`, pts[2]);
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`));
 });
 t.test('slength', () => {
-    assertEq(0, slength(null), 'NG|');
-    assertEq(0, slength(undefined), 'NF|');
-    assertEq(0, slength(''), 'NE|');
-    assertEq(3, slength('abc'), 'ND|');
+    assertEq(0, slength(null));
+    assertEq(0, slength(undefined));
+    assertEq(0, slength(''));
+    assertEq(3, slength('abc'));
 });
 t.test('cast', () => {
     class Parent {
@@ -171,9 +158,9 @@ t.test('cast', () => {
     }
 
     let o1: unknown = new Parent();
-    assertEq('parent', cast(Parent, o1).a(), 'NC|');
+    assertEq('parent', cast(Parent, o1).a());
     o1 = new Child();
-    assertEq('child', cast(Parent, o1).a(), 'NB|');
+    assertEq('child', cast(Parent, o1).a());
     o1 = new Other();
     assertThrows('type cast exception|this cast should fail', () => {
         cast(Parent, o1);
@@ -194,58 +181,54 @@ t.test('isString', () => {
     assertTrue(typeof new String('abc') !== 'string');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
-    assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
-    assertEq(1, fitIntoInclusive(1, 1, 3), 'DK|');
-    assertEq(2, fitIntoInclusive(2, 1, 3), 'DJ|');
-    assertEq(3, fitIntoInclusive(3, 1, 3), 'DI|');
+    assertEq(1, fitIntoInclusive(1, 1, 1));
+    assertEq(1, fitIntoInclusive(1, 1, 3));
+    assertEq(2, fitIntoInclusive(2, 1, 3));
+    assertEq(3, fitIntoInclusive(3, 1, 3));
 });
 t.test('fitIntoInclusive.NeedToTruncate', () => {
-    assertEq(1, fitIntoInclusive(0, 1, 1), 'DH|');
-    assertEq(1, fitIntoInclusive(2, 1, 1), 'DG|');
-    assertEq(1, fitIntoInclusive(0, 1, 3), 'DF|');
-    assertEq(3, fitIntoInclusive(4, 1, 3), 'DE|');
+    assertEq(1, fitIntoInclusive(0, 1, 1));
+    assertEq(1, fitIntoInclusive(2, 1, 1));
+    assertEq(1, fitIntoInclusive(0, 1, 3));
+    assertEq(3, fitIntoInclusive(4, 1, 3));
 });
 t.test('util512Sort.String', () => {
-    assertEq(0, util512Sort('', ''), '1M|');
-    assertEq(0, util512Sort('a', 'a'), '1L|');
-    assertEq(1, util512Sort('abc', 'abb'), '1K|');
-    assertEq(-1, util512Sort('abb', 'abc'), '1J|');
-    assertEq(1, util512Sort('abcd', 'abc'), '1I|');
-    assertEq(-1, util512Sort('abc', 'abcd'), '1H|');
+    assertEq(0, util512Sort('', ''));
+    assertEq(0, util512Sort('a', 'a'));
+    assertEq(1, util512Sort('abc', 'abb'));
+    assertEq(-1, util512Sort('abb', 'abc'));
+    assertEq(1, util512Sort('abcd', 'abc'));
+    assertEq(-1, util512Sort('abc', 'abcd'));
 });
 t.test('util512Sort.StringWithNonAscii', () => {
-    assertEq(0, util512Sort('aunicode\u2666char', 'aunicode\u2666char'), '1G|');
-    assertEq(1, util512Sort('aunicode\u2667char', 'aunicode\u2666char'), '1F|');
-    assertEq(-1, util512Sort('aunicode\u2666char', 'aunicode\u2667char'), '1E|');
-    assertEq(0, util512Sort('accented\u00e9letter', 'accented\u00e9letter'), '1D|');
-    assertEq(1, util512Sort('accented\u00e9letter', 'accented\u0065\u0301letter'), '1C|');
-    assertEq(
-        -1,
-        util512Sort('accented\u0065\u0301letter', 'accented\u00e9letter'),
-        '1B|'
-    );
+    assertEq(0, util512Sort('aunicode\u2666char', 'aunicode\u2666char'));
+    assertEq(1, util512Sort('aunicode\u2667char', 'aunicode\u2666char'));
+    assertEq(-1, util512Sort('aunicode\u2666char', 'aunicode\u2667char'));
+    assertEq(0, util512Sort('accented\u00e9letter', 'accented\u00e9letter'));
+    assertEq(1, util512Sort('accented\u00e9letter', 'accented\u0065\u0301letter'));
+    assertEq(-1, util512Sort('accented\u0065\u0301letter', 'accented\u00e9letter'));
 });
 t.test('util512Sort.Bool', () => {
-    assertEq(0, util512Sort(false, false), '1A|');
-    assertEq(0, util512Sort(true, true), '19|');
-    assertEq(1, util512Sort(true, false), '18|');
-    assertEq(-1, util512Sort(false, true), '17|');
+    assertEq(0, util512Sort(false, false));
+    assertEq(0, util512Sort(true, true));
+    assertEq(1, util512Sort(true, false));
+    assertEq(-1, util512Sort(false, true));
 });
 t.test('util512Sort.Number', () => {
-    assertEq(0, util512Sort(0, 0), '16|');
-    assertEq(0, util512Sort(1, 1), '15|');
-    assertEq(0, util512Sort(12345, 12345), '14|');
-    assertEq(0, util512Sort(-11.15, -11.15), '13|');
-    assertEq(-1, util512Sort(0, 1), '12|');
-    assertEq(1, util512Sort(1, 0), '11|');
-    assertEq(1, util512Sort(1.4, 1.3), '10|');
-    assertEq(1, util512Sort(0, -1), '0~|');
-    assertEq(1, util512Sort(Number.POSITIVE_INFINITY, 12345), '0}|');
-    assertEq(-1, util512Sort(Number.NEGATIVE_INFINITY, -12345), '0||');
+    assertEq(0, util512Sort(0, 0));
+    assertEq(0, util512Sort(1, 1));
+    assertEq(0, util512Sort(12345, 12345));
+    assertEq(0, util512Sort(-11.15, -11.15));
+    assertEq(-1, util512Sort(0, 1));
+    assertEq(1, util512Sort(1, 0));
+    assertEq(1, util512Sort(1.4, 1.3));
+    assertEq(1, util512Sort(0, -1));
+    assertEq(1, util512Sort(Number.POSITIVE_INFINITY, 12345));
+    assertEq(-1, util512Sort(Number.NEGATIVE_INFINITY, -12345));
 });
 t.test('util512Sort.Nullish', () => {
-    assertEq(0, util512Sort(undefined, undefined), 'N1|');
-    assertEq(0, util512Sort(null, null), 'N0|');
+    assertEq(0, util512Sort(undefined, undefined));
+    assertEq(0, util512Sort(null, null));
     assertThrows('not compare', () => util512Sort(null, undefined));
     assertThrows('not compare', () => util512Sort(undefined, null));
 });
@@ -294,31 +277,31 @@ t.test('util512Sort.DiffTypesInArrayShouldThrow', () => {
     assertThrows('not compare', () => util512Sort(['a', []], ['a', undefined]));
 });
 t.test('util512Sort.ArrayThreeElements', () => {
-    assertEq(0, util512Sort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']), '0@|');
-    assertEq(1, util512Sort([5, 'a', 'abc'], [5, 'a', 'abb']), '0?|');
-    assertEq(-1, util512Sort([5, 'a', 'abb'], [5, 'a', 'abc']), '0>|');
+    assertEq(0, util512Sort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']));
+    assertEq(1, util512Sort([5, 'a', 'abc'], [5, 'a', 'abb']));
+    assertEq(-1, util512Sort([5, 'a', 'abb'], [5, 'a', 'abc']));
 });
 t.test('util512Sort.ArraySameLength', () => {
-    assertEq(0, util512Sort([], []), '0{|');
-    assertEq(0, util512Sort([5, 'a'], [5, 'a']), '0`|');
-    assertEq(1, util512Sort([5, 'a', 7], [5, 'a', 6]), '0_|');
-    assertEq(-1, util512Sort([5, 'a', 6], [5, 'a', 7]), '0^|');
-    assertEq(1, util512Sort([5, 7, 'a'], [5, 6, 'a']), '0]|');
-    assertEq(1, util512Sort([5, 7, 'a', 600], [5, 6, 'a', 700]), '0[|');
+    assertEq(0, util512Sort([], []));
+    assertEq(0, util512Sort([5, 'a'], [5, 'a']));
+    assertEq(1, util512Sort([5, 'a', 7], [5, 'a', 6]));
+    assertEq(-1, util512Sort([5, 'a', 6], [5, 'a', 7]));
+    assertEq(1, util512Sort([5, 7, 'a'], [5, 6, 'a']));
+    assertEq(1, util512Sort([5, 7, 'a', 600], [5, 6, 'a', 700]));
 });
 t.test('util512Sort.ArrayDifferentLength', () => {
-    assertEq(1, util512Sort([1], []), '0=|');
-    assertEq(-1, util512Sort([], [1]), '0<|');
-    assertEq(1, util512Sort([10, 20], [10]), '0;|');
-    assertEq(-1, util512Sort([10], [10, 20]), '0:|');
+    assertEq(1, util512Sort([1], []));
+    assertEq(-1, util512Sort([], [1]));
+    assertEq(1, util512Sort([10, 20], [10]));
+    assertEq(-1, util512Sort([10], [10, 20]));
 });
 t.test('util512Sort.ArrayNested', () => {
-    assertEq(0, util512Sort([[]], [[]]), '0/|');
-    assertEq(0, util512Sort([[], []], [[], []]), '0.|');
-    assertEq(0, util512Sort([[1, 2], []], [[1, 2], []]), '0-|');
-    assertEq(0, util512Sort([[10, 20], [30]], [[10, 20], [30]]), '0,|');
-    assertEq(1, util512Sort([[10, 20], [30]], [[10, 20], [-30]]), '0+|');
-    assertEq(-1, util512Sort([[10, 20], [-30]], [[10, 20], [30]]), '0*|');
+    assertEq(0, util512Sort([[]], [[]]));
+    assertEq(0, util512Sort([[], []], [[], []]));
+    assertEq(0, util512Sort([[1, 2], []], [[1, 2], []]));
+    assertEq(0, util512Sort([[10, 20], [30]], [[10, 20], [30]]));
+    assertEq(1, util512Sort([[10, 20], [30]], [[10, 20], [-30]]));
+    assertEq(-1, util512Sort([[10, 20], [-30]], [[10, 20], [30]]));
     assertEq(
         1,
         util512Sort(
@@ -330,8 +313,7 @@ t.test('util512Sort.ArrayNested', () => {
                 [10, 20],
                 [1, -30]
             ]
-        ),
-        '0)|'
+        )
     );
     assertEq(
         -1,
@@ -344,8 +326,7 @@ t.test('util512Sort.ArrayNested', () => {
                 [10, 20],
                 [1, 30]
             ]
-        ),
-        '0(|'
+        )
     );
     assertEq(
         1,
@@ -355,8 +336,7 @@ t.test('util512Sort.ArrayNested', () => {
                 [30, 31]
             ],
             [[10, 20], [30]]
-        ),
-        '0&|'
+        )
     );
     assertEq(
         -1,
@@ -366,12 +346,11 @@ t.test('util512Sort.ArrayNested', () => {
                 [10, 20],
                 [30, 31]
             ]
-        ),
-        '0%|'
+        )
     );
-    assertEq(0, util512Sort([[10, 20], 50, [30]], [[10, 20], 50, [30]]), '0$|');
-    assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]), '0#|');
-    assertEq(-1, util512Sort([[10, 20], 50, [30]], [[10, 20], 60, [30]]), '0!|');
+    assertEq(0, util512Sort([[10, 20], 50, [30]], [[10, 20], 50, [30]]));
+    assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]));
+    assertEq(-1, util512Sort([[10, 20], 50, [30]], [[10, 20], 60, [30]]));
 });
 t.test('forOf', () => {
     let ar = [11, 22, 33];
@@ -380,7 +359,7 @@ t.test('forOf', () => {
         result.push(item);
     }
 
-    assertEq([11, 22, 33], result, '0t|');
+    assertEq([11, 22, 33], result);
 });
 t.test('forOfEmpty', () => {
     let ar: number[] = [];
@@ -389,7 +368,7 @@ t.test('forOfEmpty', () => {
         result.push(item);
     }
 
-    assertEq([], result, 'DD|');
+    assertEq([], result);
 });
 t.test('forOfGenerator', () => {
     function* myGenerator() {
@@ -404,7 +383,7 @@ t.test('forOfGenerator', () => {
         result.push(item);
     }
 
-    assertEq([10, 20, 30, 40], result, '0s|');
+    assertEq([10, 20, 30, 40], result);
 });
 t.test('OrderedHash.IterKeys', () => {
     let h = new OrderedHash<number>();
@@ -416,7 +395,7 @@ t.test('OrderedHash.IterKeys', () => {
         result.push(item);
     }
 
-    assertEq(['ccc', 'ccb', 'cca'], result, '0q|');
+    assertEq(['ccc', 'ccb', 'cca'], result);
 });
 t.test('OrderedHash.IterVals', () => {
     let h = new OrderedHash<number>();
@@ -428,7 +407,7 @@ t.test('OrderedHash.IterVals', () => {
         result.push(item);
     }
 
-    assertEq([30, 29, 28], result, '0p|');
+    assertEq([30, 29, 28], result);
 });
 t.test('OrderedHash.IterReversed', () => {
     let h = new OrderedHash<number>();
@@ -440,7 +419,7 @@ t.test('OrderedHash.IterReversed', () => {
         result.push(item);
     }
 
-    assertEq([28, 29, 30], result, '0o|');
+    assertEq([28, 29, 30], result);
 });
 t.test('MapKeyToObjectCanSet', () => {
     let o = new MapKeyToObjectCanSet<number>();
@@ -452,8 +431,8 @@ t.test('MapKeyToObjectCanSet', () => {
     assertTrue(!o.exists('seven'));
     assertTrue(!o.exists(''));
     t.say(/*——————————*/ 'get');
-    assertEq(5, o.get('five'), 'M]|');
-    assertEq(6, o.get('six'), 'M[|');
+    assertEq(5, o.get('five'));
+    assertEq(6, o.get('six'));
     assertThrows('not found', () => {
         o.get('seven');
     });
@@ -461,16 +440,16 @@ t.test('MapKeyToObjectCanSet', () => {
         o.get('');
     });
     t.say(/*——————————*/ 'find');
-    assertEq(5, o.find('five'), 'M>|');
-    assertEq(6, o.find('six'), 'M=|');
-    assertEq(undefined, o.find('seven'), 'M<|');
-    assertEq(undefined, o.find(''), 'M;|');
+    assertEq(5, o.find('five'));
+    assertEq(6, o.find('six'));
+    assertEq(undefined, o.find('seven'));
+    assertEq(undefined, o.find(''));
     t.say(/*——————————*/ 'getKeys');
-    assertEq(['five', 'six'], sorted(o.getKeys()), 'M:|');
-    assertEq([5, 6], sorted(o.getVals()), 'M/|');
+    assertEq(['five', 'six'], sorted(o.getKeys()));
+    assertEq([5, 6], sorted(o.getVals()));
     t.say(/*——————————*/ 'remove');
     o.remove('five');
-    assertEq(undefined, o.find('five'), 'M.|');
+    assertEq(undefined, o.find('five'));
 });
 t.test('checkThrowEq', () => {
     checkThrowEq(1, 1, 'M-|');
@@ -483,34 +462,34 @@ t.test('checkThrowEq', () => {
     });
 });
 t.test('last', () => {
-    assertEq(3, arLast([1, 2, 3]), 'M&|');
-    assertEq(1, arLast([1]), 'M%|');
+    assertEq(3, arLast([1, 2, 3]));
+    assertEq(1, arLast([1]));
 });
 t.test('bool', () => {
-    assertEq(true, bool(true), 'M#|');
-    assertEq(true, bool(['abc']), 'M!|');
-    assertEq(true, bool('abc'), 'M |');
-    assertEq(true, bool(123), 'Mz|');
-    assertEq(false, bool(false), 'My|');
-    assertEq(false, bool(''), 'Mx|');
-    assertEq(false, bool(0), 'Mw|');
-    assertEq(true, bool([]), 'Mv|');
-    assertEq(false, bool(null), 'Mu|');
-    assertEq(false, bool(undefined), 'Mt|');
-    assertEq(false, bool(NaN), 'Ms|');
+    assertEq(true, bool(true));
+    assertEq(true, bool(['abc']));
+    assertEq(true, bool('abc'));
+    assertEq(true, bool(123));
+    assertEq(false, bool(false));
+    assertEq(false, bool(''));
+    assertEq(false, bool(0));
+    assertEq(true, bool([]));
+    assertEq(false, bool(null));
+    assertEq(false, bool(undefined));
+    assertEq(false, bool(NaN));
 });
 t.test('longstr', () => {
     let s = longstr(`a long
         string across
         a few lines`);
-    assertEq('a long string across a few lines', s, 'Mr|');
+    assertEq('a long string across a few lines', s);
     s = `a long
     string across
     a few lines`;
     let sUnix = Util512.normalizeNewlines(s);
-    assertEq('a long string across a few lines', longstr(sUnix), 'Mq|');
+    assertEq('a long string across a few lines', longstr(sUnix));
     let sWindows = Util512.normalizeNewlines(s).replace(/\n/g, '\r\n');
-    assertEq('a long string across a few lines', longstr(sWindows), 'Mp|');
+    assertEq('a long string across a few lines', longstr(sWindows));
 });
 
 /**

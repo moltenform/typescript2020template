@@ -35,7 +35,7 @@ def runPrettier(args):
         search = r'\[error\] ([^ ]+\.ts): ([\w]+Error: [^\n]+)'
         s = re.sub(search, getReplaced, s)
         trace(s)
-        assertTrueMsg(False, "prettier returned failure", file=os.path.abspath(__file__), linenum=4)
+        assertTrueMsg(False, "prettier returned failure", args, file=os.path.abspath(__file__), linenum=4)
 
 def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     # we used to run prettier individually for each file,

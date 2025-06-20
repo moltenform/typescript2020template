@@ -16,20 +16,20 @@ t.test('WeakUuid', () => {
     assertTrue(uid1 !== uid2);
 
     let uid = Util512Higher.weakUuid();
-    assertEq(36, uid.length, 'EZ|');
+    assertEq(36, uid.length);
     for (let i = 0; i < uid.length; i++) {
         let c = uid.charAt(i);
         if (i === 23 || i === 18 || i === 13 || i === 8) {
-            assertEq('-', c, 'EY|');
+            assertEq('-', c);
         } else {
             assertTrue('0123456789abcdef'.includes(c));
         }
     }
 });
 t.test('getRandIntInclusiveWeak.OKIfBoundsEqual', () => {
-    assertEq(1, Util512Higher.getRandIntInclusiveWeak(1, 1), 'EW|');
-    assertEq(2, Util512Higher.getRandIntInclusiveWeak(2, 2), 'EV|');
-    assertEq(3, Util512Higher.getRandIntInclusiveWeak(3, 3), 'EU|');
+    assertEq(1, Util512Higher.getRandIntInclusiveWeak(1, 1));
+    assertEq(2, Util512Higher.getRandIntInclusiveWeak(2, 2));
+    assertEq(3, Util512Higher.getRandIntInclusiveWeak(3, 3));
 });
 t.test('getRandIntInclusiveWeak', () => {
     let got = Util512Higher.getRandIntInclusiveWeak(1, 3);
@@ -43,15 +43,15 @@ t.test('generateUniqueBase64UrlSafe', () => {
     let generated1 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
     let generated2 = Util512Higher.generateUniqueBase64UrlSafe(8, '!');
     assertTrue(generated1 !== generated2);
-    assertEq('!', Util512.fromBase64UrlSafe(generated1)[0], 'D&|');
-    assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
+    assertEq('!', Util512.fromBase64UrlSafe(generated1)[0]);
+    assertEq('!', Util512.fromBase64UrlSafe(generated2)[0]);
 });
 
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
     t.say(/*——————————*/ 'adding numbers');
-    assertEq(4, 2 + 2, 'OA|');
+    assertEq(4, 2 + 2);
 });
 t.atest('canAwaitACall', async () => {
     t.say(/*——————————*/ '0...');
@@ -76,7 +76,7 @@ t.atest('minimumTimeSlowsDown', async () => {
     };
     let start = performance.now();
     let result = await Util512Higher.runAsyncWithMinimumTime(shortFn(), 500);
-    assertEq(123, result, 'PY|');
+    assertEq(123, result);
     assertTrue(performance.now() - start > 400, 'too fast');
 });
 t.atest('minimumTimeStaysSame', async () => {
@@ -86,7 +86,7 @@ t.atest('minimumTimeStaysSame', async () => {
     };
     let start = performance.now();
     let result = await Util512Higher.runAsyncWithMinimumTime(longFn(), 100);
-    assertEq(123, result, 'PW|');
+    assertEq(123, result);
     assertTrue(performance.now() - start > 400, 'too fast');
 });
 t.atest('doesNotTimeOut', async () => {
@@ -96,7 +96,7 @@ t.atest('doesNotTimeOut', async () => {
     };
     let start = performance.now();
     let result = await Util512Higher.runAsyncWithTimeout(shortFn(), 800);
-    assertEq(123, result, 'PU|');
+    assertEq(123, result);
     assertTrue(performance.now() - start < 600, 'too slow');
 });
 t.atest('timesOut', async () => {
@@ -120,34 +120,33 @@ t.test('LockableArr', () => {
     let ar = new Util512.LockableArr<number>();
     ar.set(0, 55);
     ar.set(1, 56);
-    assertEq(55, ar.at(0), 'OS|');
-    assertEq(56, ar.at(1), 'OR|');
-    assertEq(2, ar.len(), 'OQ|');
+    assertEq(55, ar.at(0));
+    assertEq(56, ar.at(1));
+    assertEq(2, ar.len());
     ar.lock();
     assertThrows('locked', () => {
         ar.set(1, 57);
     });
     t.say(/*——————————*/ "changing the copy won't change original");
     let copy = ar.getUnlockedCopy();
-    assertEq(55, copy.at(0), 'OO|');
-    assertEq(56, copy.at(1), 'ON|');
-    assertEq(2, copy.len(), 'OM|');
+    assertEq(55, copy.at(0));
+    assertEq(56, copy.at(1));
+    assertEq(2, copy.len());
     copy.set(1, 57);
-    assertEq(57, copy.at(1), 'OL|');
-    assertEq(56, ar.at(1), 'OK|');
+    assertEq(57, copy.at(1));
+    assertEq(56, ar.at(1));
 });
 t.test('keepOnlyUnique', () => {
-    assertEq([], Util512.keepOnlyUnique([]), 'OJ|');
-    assertEq(['1'], Util512.keepOnlyUnique(['1']), 'OI|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']), 'OH|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']), 'OG|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']), 'OF|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']), 'OE|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']), 'OD|');
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']), 'OC|');
+    assertEq([], Util512.keepOnlyUnique([]));
+    assertEq(['1'], Util512.keepOnlyUnique(['1']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']));
     assertEq(
         ['11', '12', '13', '14', '15'],
-        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
-        'OB|'
+        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15'])
     );
 });

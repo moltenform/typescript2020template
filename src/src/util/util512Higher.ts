@@ -82,7 +82,7 @@ export class Util512Higher {
      * generate random string, first byte is specified
      */
     static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
-        assertEq(1, charPrefix.length, 'O%|expected one char');
+        assertEq(1, charPrefix.length, 'expected one char');
         let buf = new Uint8Array(nBytes + 1);
         window.crypto.getRandomValues(buf);
         buf[0] = charPrefix.charCodeAt(0);

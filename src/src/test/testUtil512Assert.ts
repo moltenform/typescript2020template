@@ -40,7 +40,7 @@ t.test('CheckThrow', () => {
 t.test('AssertAsserts', () => {
     assertTrue(1);
     assertWarn(1, 'PP|');
-    assertEq(2, 1 + 1, 'PO|');
+    assertEq(2, 1 + 1);
     assertWarnEq(2, 1 + 1, 'PN|');
     assertAsserts('PM|', 'a message', () => {
         assertTrue(0, 'a message');
@@ -49,7 +49,7 @@ t.test('AssertAsserts', () => {
         assertWarn(0, 'PJ|a message');
     });
     assertAsserts('PI|', 'a message', () => {
-        assertEq(3, 1 + 1, 'PH|a message');
+        assertEq(3, 1 + 1, 'a message');
     });
     assertAsserts('PG|', 'a message', () => {
         assertWarnEq(3, 1 + 1, 'PF|a message');
@@ -120,23 +120,23 @@ t.test('GetAssertMessages', () => {
 t.test('ThrowIfUndefined', () => {
     t.say(/*——————————*/ 'Truthy Should Not Throw');
     let n1 = ensureDefined(1, 'Cq|should not throw');
-    assertEq(1, n1, 'Cp|');
+    assertEq(1, n1);
 
     let s1 = ensureDefined('abc', 'Co|should not throw');
-    assertEq('abc', s1, 'Cn|');
+    assertEq('abc', s1);
 
     let b1 = ensureDefined(true, 'Cm|should not throw');
-    assertEq(b1, true, 'Cl|');
+    assertEq(b1, true);
 
     t.say(/*——————————*/ 'Falsy Should Not Throw');
     let n0 = ensureDefined(0, 'Ck|should not throw');
-    assertEq(0, n0, 'Cj|');
+    assertEq(0, n0);
 
     let s0 = ensureDefined('', 'Ci|should not throw');
-    assertEq('', s0, 'Ch|');
+    assertEq('', s0);
 
     let b0 = ensureDefined(false, 'Cg|should not throw');
-    assertEq(false, b0, 'Cf|');
+    assertEq(false, b0);
 
     t.say(/*——————————*/ 'NullAndUndefinedShouldThrow');
     assertThrows('mymessage, s1, s2', () => {
@@ -149,52 +149,40 @@ t.test('ThrowIfUndefined', () => {
 t.test('JoinIntoMessage', () => {
     t.say(/*——————————*/ 'WithoutMarks');
     let got = joinIntoMessage('without|marks', 'prefix:');
-    assertEq('prefix:: without|marks', got, 'Cc|');
+    assertEq('prefix:: without|marks', got);
 
     t.say(/*——————————*/ 'ShouldMoveMarksToTheEnd');
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
-    assertEq('prefix:: \nc, d, e (ab)', got, 'Cb|');
+    assertEq('prefix:: \nc, d, e (ab)', got);
     got = joinIntoMessage('ab|the message', 'prefix:');
-    assertEq('prefix:: the message (ab)', got, 'Ca|');
+    assertEq('prefix:: the message (ab)', got);
     got = joinIntoMessage('the message', 'prefix:', 'ab|c');
-    assertEq('prefix:: the message\nc (ab)', got, 'CZ|');
+    assertEq('prefix:: the message\nc (ab)', got);
 });
 t.test('CompressString', () => {
-    assertEq('\u2020 ', UI512Compress.compressString(''), 'CY|');
-    assertEq('\u10E8 ', UI512Compress.compressString('a'), 'CX|');
-    assertEq(
-        '\u10E6\u4866\u4AEA  ',
-        UI512Compress.compressString('aaaaaaaabbbbbbbb'),
-        'CW|'
-    );
+    assertEq('\u2020 ', UI512Compress.compressString(''));
+    assertEq('\u10E8 ', UI512Compress.compressString('a'));
+    assertEq('\u10E6\u4866\u4AEA  ', UI512Compress.compressString('aaaaaaaabbbbbbbb'));
     assertEq(
         '\u10E6\u4866\u4AE8\u31B0 ',
-        UI512Compress.compressString('aaaaaaaabbbbbbbbc'),
-        'CV|'
+        UI512Compress.compressString('aaaaaaaabbbbbbbbc')
     );
     assertEq(
         '\u10E6\u7070\u0256\u4CF0 ',
-        UI512Compress.compressString('aaaaaaa\nbbbbbbbbb'),
-        'CU|'
+        UI512Compress.compressString('aaaaaaa\nbbbbbbbbb')
     );
 });
 t.test('DecompressString', () => {
-    assertEq('', UI512Compress.decompressString('\u2020 '), 'CT|');
-    assertEq('a', UI512Compress.decompressString('\u10E8 '), 'CS|');
-    assertEq(
-        'aaaaaaaabbbbbbbb',
-        UI512Compress.decompressString('\u10E6\u4866\u4AEA  '),
-        'CR|'
-    );
+    assertEq('', UI512Compress.decompressString('\u2020 '));
+    assertEq('a', UI512Compress.decompressString('\u10E8 '));
+    assertEq('aaaaaaaabbbbbbbb', UI512Compress.decompressString('\u10E6\u4866\u4AEA  '));
     assertEq(
         'aaaaaaaabbbbbbbbc',
-        UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 '),
-        'CQ|'
+        UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 ')
     );
     assertEq(
         'aaaaaaa\nbbbbbbbbb',
-        UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 '),
-        'CP|'
+        UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 ')
     );
 });
 t.test('RingBufferSizeRemainsConstant', () => {
@@ -205,32 +193,32 @@ t.test('RingBufferSizeRemainsConstant', () => {
     buf.append('d');
     buf.append('e');
     buf.append('f');
-    assertEq(['f'], buf.retrieve(1), 'CO|');
-    assertEq(['f', 'e'], buf.retrieve(2), 'CN|');
-    assertEq(['f', 'e', 'd'], buf.retrieve(3), 'CM|');
-    assertEq('d', buf.getAt(0), 'CL|');
-    assertEq('e', buf.getAt(1), 'CK|');
-    assertEq('f', buf.getAt(2), 'CJ|');
-    assertEq('c', buf.getAt(3), 'CI|');
-    assertEq('', buf.getAt(5), 'CH|');
+    assertEq(['f'], buf.retrieve(1));
+    assertEq(['f', 'e'], buf.retrieve(2));
+    assertEq(['f', 'e', 'd'], buf.retrieve(3));
+    assertEq('d', buf.getAt(0));
+    assertEq('e', buf.getAt(1));
+    assertEq('f', buf.getAt(2));
+    assertEq('c', buf.getAt(3));
+    assertEq('', buf.getAt(5));
 });
 t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     let buf = new RingBufferArray(4);
-    assertEq(['', ''], buf.retrieve(2), 'CG|');
+    assertEq(['', ''], buf.retrieve(2));
     buf.append('a');
-    assertEq(['a', ''], buf.retrieve(2), 'CF|');
+    assertEq(['a', ''], buf.retrieve(2));
     buf.append('b');
-    assertEq(['b', 'a'], buf.retrieve(2), 'CE|');
+    assertEq(['b', 'a'], buf.retrieve(2));
     buf.append('c');
-    assertEq(['c', 'b'], buf.retrieve(2), 'CD|');
+    assertEq(['c', 'b'], buf.retrieve(2));
     buf.append('d');
-    assertEq(['d', 'c'], buf.retrieve(2), 'CC|');
+    assertEq(['d', 'c'], buf.retrieve(2));
     buf.append('e');
-    assertEq(['e', 'd'], buf.retrieve(2), 'CB|');
+    assertEq(['e', 'd'], buf.retrieve(2));
     buf.append('f');
-    assertEq(['f', 'e'], buf.retrieve(2), 'CA|');
+    assertEq(['f', 'e'], buf.retrieve(2));
     buf.append('g');
-    assertEq(['g', 'f'], buf.retrieve(2), 'C9|');
+    assertEq(['g', 'f'], buf.retrieve(2));
 });
 t.test('built-in includes', () => {
     t.say(/*——————————*/ 'typical usage');
@@ -259,12 +247,12 @@ t.test('unknownToString', () => {
     let d: unknown = undefined;
     let e: unknown = null;
     let f: unknown = false;
-    assertEq('abc', tostring(a), 'NX|');
-    assertEq('a string', tostring(b), 'NW|');
-    assertEq('123', tostring(c), 'NV|');
-    assertEq('undefined', tostring(d), 'NU|');
-    assertEq('null', tostring(e), 'NT|');
-    assertEq('false', tostring(f), 'NS|');
+    assertEq('abc', tostring(a));
+    assertEq('a string', tostring(b));
+    assertEq('123', tostring(c));
+    assertEq('undefined', tostring(d));
+    assertEq('null', tostring(e));
+    assertEq('false', tostring(f));
 });
 
 /**

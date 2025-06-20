@@ -6,7 +6,7 @@ function abc() {
     let a = 456;
     if (3 > 2) {
         while (false) {
-            assertEq(3, 1 + 2, 'ab|cool');
+            assertEq(3, 1 + 2, 'cool');
         }
     }
 }
