@@ -1,0 +1,7 @@
+No need for assert tags:
+
+1) tell vite to produce source maps in production
+2) console.log out the stack trace... might be good to json.stringify it first in case chrome tries to do some mapping on its own
+3) go to https://sourcemap.tools/ and see the real stack trace
+
+for each prod upload we should keep the stack trace and the source code around.

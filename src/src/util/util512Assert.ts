@@ -181,7 +181,7 @@ export class UI512ErrorHandling {
     static store = new RingBufferLocalStorage(UI512ErrorHandling.maxLinesKept);
 
     protected static encodeErrMsg(s: string) {
-        s = s.substr(0, UI512ErrorHandling.maxEntryLength);
+        s = s.substring(0, UI512ErrorHandling.maxEntryLength);
         return UI512Compress.compressString(s);
     }
 

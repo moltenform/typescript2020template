@@ -1,8 +1,13 @@
-
 /* auto */ import { O, tostring } from './util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
+/* auto */ import {
+    assertTrue,
+    assertWarn,
+    checkThrow512,
+    ensureDefined,
+    make512Error
+} from './util512Assert';
 //~ import { TypedJSON } from 'typedjson';
-//~ import { map, isArray, isObject, isPlainObject, mapValues } from 'lodash'
+import { map as lodashMap, isArray as lodashIsArray, isObject as lodashIsObject, isPlainObject as lodashIsPlainObject, mapValues as lodashMapValues} from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -23,7 +28,7 @@ export class Util512 {
     /**
      * like Python's range()
      */
-     static range(start: number, end: O<number>, inc = 1) {
+    static range(start: number, end: O<number>, inc = 1) {
         if (end === undefined || end === null) {
             end = start;
             start = 0;
@@ -44,7 +49,7 @@ export class Util512 {
     /**
      * like Python's [x] * y
      */
-     static repeat<T>(amount: number, item: T) {
+    static repeat<T>(amount: number, item: T) {
         let ret: T[] = [];
         for (let i = 0; i < amount; i++) {
             ret.push(item);
@@ -56,7 +61,7 @@ export class Util512 {
     /**
      * sets an element, expands array if necessary
      */
-     static  setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
+    static setArr<T>(ar: O<T>[], index: number, val: T, fill: T) {
         assertTrue(index >= 0, 'Oy|must be >= 0');
         if (index >= ar.length) {
             for (let i = ar.length; i <= index; i++) {
@@ -71,7 +76,7 @@ export class Util512 {
      * as distinct from Array.concat which returns a new object
      * don't use splice+apply, might run into issues with max-args-pased
      */
-     static    extendArray<T>(ar: T[], added: T[]) {
+    static extendArray<T>(ar: T[], added: T[]) {
         for (let i = 0; i < added.length; i++) {
             ar.push(added[i]);
         }
@@ -80,7 +85,7 @@ export class Util512 {
     /*
      * plain parseInt allows trailing text
      */
-    static  parseIntStrict(s: O<string>): O<number> {
+    static parseIntStrict(s: O<string>): O<number> {
         if (!s) {
             return undefined;
         }
@@ -94,9 +99,9 @@ export class Util512 {
     }
 
     /*
-     * use this, not parseInt where you might forget to specify base 10
+     * this enforces base10 unlike builtin parseInt
      */
-    static  parseInt(s: O<string>): O<number> {
+    static parseInt(s: O<string>): O<number> {
         let ret = 0;
         if (s) {
             /* ok to use, we remembered to say base 10 */
@@ -112,7 +117,7 @@ export class Util512 {
     /**
      * ensure that the string is <= maxLen
      */
-     static  truncateWithEllipsis(s: string, maxLen: number) {
+    static truncateWithEllipsis(s: string, maxLen: number) {
         if (s.length <= maxLen) {
             return s;
         } else {
@@ -126,21 +131,16 @@ export class Util512 {
     }
 
     /**
-     * for unused-variable warnings
-     */
-     static  unused(..._args: unknown[]) {}
-
-    /**
      * useful for map/reduce
      */
-     static add(n1: number, n2: number) {
+    static add(n1: number, n2: number) {
         return n1 + n2;
     }
 
     /**
      * is map empty
      */
-     static isMapEmpty<U>(map: Record<string, U>) {
+    static isMapEmpty<U>(map: Record<string, U>) {
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
                 return false;
@@ -153,14 +153,14 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-     static shallowClone<T extends unknown>(o: unknown): T {
+    static shallowClone<T extends unknown>(o: unknown): T {
         return Object.assign({}, o) as T;
     }
 
     /**
      * freeze a property on an object
      */
-     static freezeProperty(o: any, propName: string) {
+    static freezeProperty(o: any, propName: string) {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     }
@@ -169,7 +169,7 @@ export class Util512 {
      * https://github.com/substack/deep-freeze
      * public domain
      */
-     static freezeRecurse(o: any) {
+    static freezeRecurse(o: any) {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -187,15 +187,22 @@ export class Util512 {
     /**
      * like Python's re.escape.
      */
-     static  escapeForRegex(s: string) {
+    static escapeForRegex(s: string) {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+
+    /**
+     * same as the old substr(), which now deprecated
+     */
+     static sliceWithLength(s: string, n:number, len?:number) {
+        return s.substring(n ,n+len)
     }
 
     /**
      * make the first character uppercase.
      */
-     static capitalizeFirst(s: string) {
-        return s.substr(0, 1).toLocaleUpperCase() + s.substr(1);
+    static capitalizeFirst(s: string) {
+        return s.substring(0, 1).toLocaleUpperCase() + s.substring(1);
     }
 
     /**
@@ -211,7 +218,7 @@ export class Util512 {
      * let method = 'goAbc'
      * callAsMethodOnClass(MyClass.name, inst, method, [], true)
      */
-     static  callAsMethodOnClass(
+    static callAsMethodOnClass(
         clsname: string,
         me: any,
         s: string,
@@ -250,14 +257,14 @@ export class Util512 {
     /**
      * for use with callAsMethodOnClass
      */
-     static  isMethodOnClass(me: any, s: string) {
+    static isMethodOnClass(me: any, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
     }
 
     /**
      * returns list of keys.
      */
-     static getMapKeys(map: any): string[] {
+    static getMapKeys(map: any): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -271,7 +278,7 @@ export class Util512 {
     /**
      * returns list of vals.
      */
-     static  getMapVals<T>(map: Record<string, T>): T[] {
+    static getMapVals<T>(map: Record<string, T>): T[] {
         let ret: T[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -286,7 +293,7 @@ export class Util512 {
      * padStart, from reference implementation on mozilla.org
      * from 1 to 001.
      */
-     static  padStart(sIn: string | number, targetLength: number, padString: string) {
+    static padStart(sIn: string | number, targetLength: number, padString: string) {
         let s = tostring(sIn);
         padString = typeof padString !== 'undefined' ? padString : ' ';
         if (s.length > targetLength) {
@@ -305,7 +312,7 @@ export class Util512 {
     /**
      * to base64 with / and + characters
      */
-     static  arrayToBase64(b: number[] | Uint8Array) {
+    static arrayToBase64(b: number[] | Uint8Array) {
         let s = '';
         for (let i = 0, len = b.length; i < len; i++) {
             s += String.fromCharCode(b[i]);
@@ -318,7 +325,7 @@ export class Util512 {
      * to base64 with _ and - characters.
      * note: strips off final = padding
      */
-     static  toBase64UrlSafe(s: string) {
+    static toBase64UrlSafe(s: string) {
         return btoa(s).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '');
     }
 
@@ -326,7 +333,7 @@ export class Util512 {
      * from base64 with _ and - characters.
      * re-adds final = padding if needed.
      */
-     static  fromBase64UrlSafe(s: string) {
+    static fromBase64UrlSafe(s: string) {
         if (s.length % 4 !== 0) {
             s += '==='.slice(0, 4 - (s.length % 4));
         }
@@ -337,7 +344,7 @@ export class Util512 {
      * split by character. decided not to use the
      * Array.prototype.map.call trick.
      */
-     static   stringToCharArray(s: string) {
+    static stringToCharArray(s: string) {
         let ar: string[] = [];
         for (let i = 0; i < s.length; i++) {
             ar.push(s[i]);
@@ -350,7 +357,7 @@ export class Util512 {
      * split to bytes. decided not to use the
      * Array.prototype.map.call trick.
      */
-     static   stringToByteArray(s: string) {
+    static stringToByteArray(s: string) {
         let ar: number[] = [];
         for (let i = 0; i < s.length; i++) {
             ar.push(s.charCodeAt(i));
@@ -365,7 +372,7 @@ export class Util512 {
      * we know we are sorting strings. our util512 sort is
      * usually better though because it checks types at runtime.
      */
-     static   sortStringArray(arr: string[]) {
+    static sortStringArray(arr: string[]) {
         /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
         arr.sort();
     }
@@ -375,7 +382,7 @@ export class Util512 {
      * like Python's sort(key=fn)
      * often more efficient than passing a comparison function.
      */
-     static  sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
+    static sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
         /* 1) decorate */
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
         /* 2) sort */
@@ -387,14 +394,14 @@ export class Util512 {
     /**
      * normalize newlines to \n
      */
-     static   normalizeNewlines(s: string) {
+    static normalizeNewlines(s: string) {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     }
 
     /**
      * filter a list, keeping only unique values.
      */
-     static  keepOnlyUnique(ar: string[]) {
+    static keepOnlyUnique(ar: string[]) {
         let ret: string[] = [];
         let seen: Record<string, boolean> = {};
         for (let i = 0; i < ar.length; i++) {
@@ -410,56 +417,62 @@ export class Util512 {
     /**
      * array that can be locked
      */
-      static LockableArr = class<T> {
+    static LockableArr = class<T> {
         protected vals: T[] = [];
         protected locked = false;
         constructor(vals: T[] = []) {
             this.vals = vals;
         }
+
         lock() {
             this.locked = true;
         }
+
         push(v: T) {
             checkThrowEq(false, this.locked, 'Ow|locked');
             this.vals.push(v);
         }
+
         set(i: number, v: T) {
             checkThrowEq(false, this.locked, '4A|locked');
             this.vals[i] = v;
         }
+
         len() {
             return this.vals.length;
         }
+
         at(i: number) {
             return this.vals[i];
         }
+
         getUnlockedCopy() {
             let other = new Util512.LockableArr<T>();
             other.locked = false;
             other.vals = this.vals.slice(0);
             return other;
         }
-    }
+    };
 
     /**
      * map-values-deep, applies mapping recursively to an object.
      * © Kiko Beats, released under the MIT License.
      * https://www.npmjs.com/package/map-values-deep
      */
-     static mapValuesDeep(
-        _obj: any,
-        _fn: (o: any, k?: string | number) => any,
-        _key?: string | number
+    static mapValuesDeep(
+        obj: any,
+        fn: (o: any, k?: string | number) => any,
+        key?: string | number
     ): any {
-        //~ return isArray(obj)
-            //~ ? map(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
-            //~ : isPlainObject(obj)
-            //~ ? mapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
-            //~ : isObject(obj)
-            //~ ? obj
-            //~ : fn(obj, key);
+        return lodashIsArray(obj)
+        ? lodashMap(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
+        : lodashIsPlainObject(obj)
+        ? lodashMapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
+        : lodashIsObject(obj)
+        ? obj
+        : fn(obj, key);
     }
-};
+}
 
 /**
  * polyfill for String.includes, from http://developer.mozilla.org
@@ -516,12 +529,17 @@ export class ValHolder<T> {
 }
 
 /**
+* for unused-variable warnings
+*/
+export function unused(..._args: unknown[]) {}
+
+/**
  * indicates that the value is a plain JS object
  */
 export type AnyUnshapedJson = any;
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
-export type TypeLikeAnEnum = {__isUI512Enum: number}
+export type TypeLikeAnEnum = { __isUI512Enum: number };
 
 /**
  * list enum vals
@@ -536,7 +554,7 @@ export function listEnumValsIncludingAlternates<T>(Enm: T) {
         ) {
             let s = enumMember.toString();
             if (s.startsWith('__AlternateForm__')) {
-                s = s.substr('__AlternateForm__'.length);
+                s = s.substring('__AlternateForm__'.length);
             }
 
             ret.push(s);
@@ -966,7 +984,7 @@ export function checkThrowEq<T>(
 ): asserts got is T {
     if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
-        throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`)
+        throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`);
     }
 }
 
@@ -1011,14 +1029,14 @@ export function longstr(s: string, newlinesBecome = ' ') {
 }
 
 //~ /**
- //~ * wrapper over TypedJson. converts null into undefined.
- //~ */
- //~ export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
-    //~ const serializer = new TypedJSON(cls);
-    //~ const objectGot = serializer.parse(json);
-    //~ const replaceWithUndef = (value:unknown) => {
-        //~ return value===null ? undefined : value
-    //~ }
+//~ * wrapper over TypedJson. converts null into undefined.
+//~ */
+//~ export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
+//~ const serializer = new TypedJSON(cls);
+//~ const objectGot = serializer.parse(json);
+//~ const replaceWithUndef = (value:unknown) => {
+//~ return value===null ? undefined : value
+//~ }
 
-    //~ return Util512.mapValuesDeep(objectGot, replaceWithUndef)
+//~ return Util512.mapValuesDeep(objectGot, replaceWithUndef)
 //~ }

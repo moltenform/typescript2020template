@@ -11,3 +11,5 @@ go to typescript-eslint on github,
 go to releases,
 download the desired version zip file,
 look in the packages/eslint-plugin/docs/rules directory
+
+https://www.typescriptlang.org/tsconfig/

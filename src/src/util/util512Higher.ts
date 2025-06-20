@@ -314,7 +314,7 @@ export class Util512Higher {
     /**
      * get date as month day hh mm
      */
-    static getdatestring(includeSeconds = false) {
+    static getDateString(includeSeconds = false) {
         let d = new Date();
         let hours = d.getHours();
         if (hours > 12) {

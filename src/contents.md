@@ -10,7 +10,7 @@
     - but better to make reverse engineering of commercial projects less trivial
     - see `optimization` in webpack config to turn on/off
 - targets es2020
-    - doesn't support older mobile android
+    - doesn't support very old mobile android
 - source maps enabled
     - debugging in chrome+vscode is as easy as pressing F5
     - breakpoints work
@@ -46,6 +46,7 @@
 - `sass`
     - decided to run sass separately, not with webpack's sass-loader
     - run `npm run buildstyle` or `npm run buildstylewatch`
+    - css variables make sass less necessary.
 - `number-to-words` as an example javascript+typescript types dependency
     - npm --save install @types/number-to-words
 - `serializer.ts` as an example typescript dependency
@@ -99,21 +100,4 @@ For more scripts, see the "scripts" section of `package.json`.
 
 * hit ctrl-shift-b, then can run the npm scripts
 * can debug, if started in new chrome instance
-
-no longer need: html-webpack-plugin - do need this after all
-no longer need: install module?
-no longer need: csv.js, BSD-3-Clause license
-no longer need: number-to-words, MIT license
-
-might need   "uglifyjs-webpack-plugin": "^2.2.0",
-todo:   "reflect-metadata": "^0.1.13",
-todo: typedjson
-might want core-js-bundled, then can do
-import 'core-js/actual'; // <- at the top of your entry point
-    and get polyfills i guess
-    Array.from(new Set([1, 2, 3, 2, 1]));          // => [1, 2, 3]
-    [1, 2, 3, 4, 5].group(it => it % 2);           // => { 1: [1, 3, 5], 0: [2, 4] }
-    Promise.resolve(42).then(x => console.log(x)); // => 42
-    structuredClone(new Set([1, 2, 3]));           // => new Set([1, 2, 3])
-    queueMicrotask(() => console.log('called as microtask'));
 
