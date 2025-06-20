@@ -624,7 +624,7 @@ export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
             msgContext += 'try one of' + listEnumVals(Enm, makeLowercase);
         }
 
-        checkThrow512(false, msgContext, '4E|');
+        checkThrow512(false, msgContext);
     }
 }
 
@@ -901,7 +901,7 @@ export class MapKeyToObject<T> {
         assertTrue(slength(key) > 0, `invalid id ${key}`);
         checkThrow512(
             this.objects[key] === undefined,
-            `3]|duplicate key, ${key} already exists`
+            `duplicate key, ${key} already exists`
         );
 
         this.objects[key] = obj;

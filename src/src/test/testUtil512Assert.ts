@@ -41,7 +41,7 @@ t.test('AssertAsserts', () => {
     assertTrue(1);
     assertWarn(1);
     assertEq(2, 1 + 1);
-    assertWarnEq(2, 1 + 1, );
+    assertWarnEq(2, 1 + 1);
     assertAsserts('a message', () => {
         assertTrue(0, 'a message');
     });

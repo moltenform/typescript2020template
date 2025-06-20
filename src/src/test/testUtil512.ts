@@ -452,13 +452,13 @@ t.test('MapKeyToObjectCanSet', () => {
     assertEq(undefined, o.find('five'));
 });
 t.test('checkThrowEq', () => {
-    checkThrowEq(1, 1, );
-    checkThrowEq('abc', 'abc', );
+    checkThrowEq(1, 1);
+    checkThrowEq('abc', 'abc');
     assertThrows('but got', () => {
-        checkThrowEq(1, 2, );
+        checkThrowEq(1, 2);
     });
     assertThrows('but got', () => {
-        checkThrowEq('abc', 'ABC', );
+        checkThrowEq('abc', 'ABC');
     });
 });
 t.test('last', () => {

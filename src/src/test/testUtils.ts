@@ -27,7 +27,7 @@ export async function assertThrowsAsync<T>(
     assertTrue(msg !== undefined, `did not throw ${context}`);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `JB|message "${msg}" did not contain "${expectedErr}" ${context}`
+        `message "${msg}" did not contain "${expectedErr}" ${context}`
     );
 }
 
@@ -75,12 +75,12 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
     assertTrue(msg !== undefined, `did not throw`, context);
     assertTrue(
         msg.toLowerCase().includes('assert:'),
-        `O=|not an assertion exception`,
+        `not an assertion exception`,
         context
     );
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        `message "${msg}" did not contain "${expectedErr}"`,
         context
     );
 }
@@ -108,7 +108,7 @@ export function YetToBeDefinedTestHelper<T>(): T {
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('intentionally throw', () => {
         throw new Error(
-            `1!|It looks like the debugger is set to break
+            `It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
             many tests intentionally throw exceptions.`
         );
