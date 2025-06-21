@@ -75,7 +75,7 @@ t.test('testClassSerialization', () => {
     assertEq(expectedDeser, got2.asString());
 });
 t.test('testClassSerializationWithNulls', () => {
-    t.say(/*——————————*/ 'with empty array');
+    // test with empty array
     let h = new Hand(1, 'test');
     h.holding = [];
     let expectedS = 'hid=1,hnm=test,hol=,o=up,f=[]';
@@ -84,7 +84,7 @@ t.test('testClassSerializationWithNulls', () => {
     let got = deserialize<Hand>(Hand, JSON.parse(serialized));
     assertEq(expectedS, got.asString());
 
-    t.say(/*——————————*/ 'with array with null and undefined');
+    // test with array with null and undefined
     h = new Hand(1, 'test');
     h.holding = [null as any, undefined as any];
     expectedS = 'hid=1,hnm=test,hol=|,o=up,f=[]';
@@ -96,7 +96,7 @@ t.test('testClassSerializationWithNulls', () => {
     assertTrue(got.holding[0] === null, 'expected null->null');
     assertTrue(got.holding[1] === null, 'expected undefined->null');
 
-    t.say(/*——————————*/ 'with array with undefined between values');
+    // test with array with undefined between values
     h = new Hand(1, 'test');
     h.holding = ['a', undefined, 'c'];
     expectedS = 'hid=1,hnm=test,hol=a||c,o=up,f=[]';

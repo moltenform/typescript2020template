@@ -1,5 +1,5 @@
 
-/* auto */ import { O, tostring, UI512StaticClass } from './util512Base';
+/* auto */ import { O, tostring, Util512StaticClass } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 import _ from 'lodash';
 
@@ -9,9 +9,9 @@ import _ from 'lodash';
 /**
  * typescript utilities
  */
-export const Util512 = new class Util512 extends UI512StaticClass {
+export const Util512 = new class Util512 extends Util512StaticClass {
     /**
-     * checks for NaN and Infinity
+     * checks for number type, and not NaN / Infinity
      */
     isValidNumber=(value: unknown)=> {
         return typeof value === 'number' && Number.isFinite(value);
@@ -32,6 +32,7 @@ export const Util512 = new class Util512 extends UI512StaticClass {
 
     /**
      * like Python's [x] * y
+     * not in lodash as of 2025
      */
     repeat = <T>(amount: number, item: T) => {
         let ret: T[] = [];
@@ -57,7 +58,8 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * as distinct from Array.concat which returns a new object
+     * like Python's extend()
+     * distinct from Array.concat which returns a new object
      * don't use splice+apply, might run into issues with max-args-pased
      */
     extendArray = <T>(ar: T[], added: T[]) =>{
@@ -67,7 +69,8 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /*
-     * plain parseInt allows trailing text
+     * parseInt allows trailing text, this doesn't.
+     * also only accepts non-negative numbers.
      */
     parseIntStrict = (s: O<string>): O<number>=> {
         if (!s) {
@@ -83,7 +86,8 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /*
-     * this enforces base10 unlike builtin parseInt
+     * this enforces base10 unlike builtin parseInt,
+     * and uses undefined instead of NaN
      */
     parseInt = (s: O<string>): O<number> =>{
         let ret = 0;
@@ -99,7 +103,7 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * ensure that the string is <= maxLen
+     * ensures that the string is <= maxLen
      */
     truncateWithEllipsis = (s: string, maxLen: number)=> {
         if (s.length <= maxLen) {
@@ -115,14 +119,17 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * useful for map/reduce
+     * useful for map/reduce,
+     * although _.sum is preferred
      */
     add = (n1: number, n2: number)=> {
         return n1 + n2;
     }
 
     /**
-     * is map empty
+     * is a 'map' empty.
+     * this codebase used to target es5 so we
+     * often say {} instead of new Map()
      */
     isMapEmpty = <U>(map: Record<string, U>)=> {
         for (let key in map) {
@@ -132,13 +139,6 @@ export const Util512 = new class Util512 extends UI512StaticClass {
         }
 
         return true;
-    }
-
-    /**
-     * shallow clone of an object
-     */
-    shallowClone = <T extends unknown>(o: unknown): T=> {
-        return Object.assign({}, o) as T;
     }
 
     /**
@@ -170,16 +170,10 @@ export const Util512 = new class Util512 extends UI512StaticClass {
 
     /**
      * like Python's re.escape.
+     * it's in the latest ES standards but not evereywhere yet.
      */
     escapeForRegex = (s: string) => {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    }
-
-    /**
-     * same as the old substr(), which now deprecated
-     */
-    sliceWithLength = (s: string, n: number, len?: number) => {
-        return s.substring(n, n + len);
     }
 
     /**
@@ -274,23 +268,12 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * padStart, from reference implementation on mozilla.org
+     * padStart, accepts integers as well.
      * from 1 to 001.
      */
     padStart = (sIn: string | number, targetLength: number, padString: string) => {
         let s = tostring(sIn);
-        padString = typeof padString !== 'undefined' ? padString : ' ';
-        if (s.length > targetLength) {
-            return s;
-        } else {
-            targetLength = targetLength - s.length;
-            if (targetLength > padString.length) {
-                /* append to original to ensure we are longer than needed */
-                padString += padString.repeat(targetLength / padString.length);
-            }
-
-            return padString.slice(0, targetLength) + s;
-        }
+        return _.padStart(s, targetLength, padString);
     }
 
     /**
@@ -325,54 +308,14 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * split by character. decided not to use the
-     * Array.prototype.map.call trick.
-     */
-    stringToCharArray = (s: string) => {
-        let ar: string[] = [];
-        for (let i = 0; i < s.length; i++) {
-            ar.push(s[i]);
-        }
-
-        return ar;
-    }
-
-    /**
-     * split to bytes. decided not to use the
-     * Array.prototype.map.call trick.
-     */
-    stringToByteArray = (s: string) => {
-        let ar: number[] = [];
-        for (let i = 0; i < s.length; i++) {
-            ar.push(s.charCodeAt(i));
-        }
-
-        return ar;
-    }
-
-    /**
      * javascript's default sort is dangerous because it's
      * always a string sort, but we can use this for cases where
      * we know we are sorting strings. our util512 sort is
      * usually better though because it checks types at runtime.
      */
-    sortStringArray = (arr: string[]) => {
+    sortStringArray = (arr: string[]):void => {
         /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
         arr.sort();
-    }
-
-    /**
-     * use the function to provide sort order
-     * like Python's sort(key=fn)
-     * often more efficient than passing a comparison function.
-     */
-    sortDecorated = <T>(ar: T[], fn: (a: T) => unknown): T[] => {
-        /* 1) decorate */
-        let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
-        /* 2) sort */
-        decorated.sort((a, b) => util512Sort(a[0], b[0]));
-        /* 3) undecorate */
-        return decorated.map(val => val[1]);
     }
 
     /**
@@ -399,47 +342,6 @@ export const Util512 = new class Util512 extends UI512StaticClass {
     }
 
     /**
-     * array that can be locked
-     */
-    LockableArr = class<T> {
-        protected vals: T[] = [];
-        protected locked = false;
-        constructor(vals: T[] = []) {
-            this.vals = vals;
-        }
-
-        lock() {
-            this.locked = true;
-        }
-
-        push(v: T) {
-            checkThrowEq(false, this.locked, 'locked');
-            this.vals.push(v);
-        }
-
-        set(i: number, v: T) {
-            checkThrowEq(false, this.locked, 'locked');
-            this.vals[i] = v;
-        }
-
-        len() {
-            return this.vals.length;
-        }
-
-        at(i: number) {
-            return this.vals[i];
-        }
-
-        getUnlockedCopy() {
-            return undefined as any
-            //~ let other = new this.constructor<T>();
-            //~ other.locked = false;
-            //~ other.vals = this.vals.slice(0);
-            //~ return other;
-        }
-    };
-
-    /**
      * map-values-deep, applies mapping recursively to an object.
      * © Kiko Beats, released under the MIT License.
      * https://www.npmjs.com/package/map-values-deep
@@ -458,6 +360,46 @@ export const Util512 = new class Util512 extends UI512StaticClass {
             : fn(obj, key);
     }
 }
+
+/**
+     * array that can be locked
+     */
+export class LockableArr<T> {
+    protected vals: T[] = [];
+    protected locked = false;
+    constructor(vals: T[] = []) {
+        this.vals = vals;
+    }
+
+    lock() {
+        this.locked = true;
+    }
+
+    push(v: T) {
+        checkThrowEq(false, this.locked, 'locked');
+        this.vals.push(v);
+    }
+
+    set(i: number, v: T) {
+        checkThrowEq(false, this.locked, 'locked');
+        this.vals[i] = v;
+    }
+
+    len() {
+        return this.vals.length;
+    }
+
+    at(i: number) {
+        return this.vals[i];
+    }
+
+    getUnlockedCopy() {
+        let other = new LockableArr<T>();
+        other.locked = false;
+        other.vals = this.vals.slice(0);
+        return other;
+    }
+};
 
 /**
  * polyfill for String.includes, from http://developer.mozilla.org
@@ -935,7 +877,7 @@ export function assertEq<T>(
     c2?: unknown,
     c3?: unknown
 ): asserts got is T {
-    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+    if (!_.isEqual(expected, got)) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         msgEq += c1 ?? '';
         assertTrue(false, msgEq, c2, c3);
@@ -1015,15 +957,4 @@ export function longstr(s: string, newlinesBecome = ' ') {
     return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
 }
 
-//~ /**
-//~ * wrapper over TypedJson. converts null into undefined.
-//~ */
-//~ export function wrapTypedJson<T>(cls:AnyParameterCtor<T>, json:string) {
-//~ const serializer = new TypedJSON(cls);
-//~ const objectGot = serializer.parse(json);
-//~ const replaceWithUndef = (value:unknown) => {
-//~ return value===null ? undefined : value
-//~ }
 
-//~ return Util512.mapValuesDeep(objectGot, replaceWithUndef)
-//~ }

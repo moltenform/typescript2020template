@@ -58,11 +58,11 @@ t.test('Range.None', () => {
     assertEq([], Util512.range(2, 2, -1));
 });
 t.test('Repeat', () => {
-    t.say(/*——————————*/ 'strings');
+    // test strings
     assertEq(['a', 'a', 'a'], Util512.repeat(3, 'a'));
     assertEq(['a'], Util512.repeat(1, 'a'));
     assertEq([], Util512.repeat(0, 'a'));
-    t.say(/*——————————*/ 'numbers');
+    // test numbers
     assertEq([4, 4, 4], Util512.repeat(3, 4));
     assertEq([4], Util512.repeat(1, 4));
     assertEq([], Util512.repeat(0, 4));
@@ -88,15 +88,15 @@ t.test('setArr', () => {
     assertEq([1, 2, 0, 12], ar);
 });
 t.test('extendArray', () => {
-    t.say(/*——————————*/ 'AppendNothing');
+    // test AppendNothing
     let ar = [1, 2, 3];
     Util512.extendArray(ar, []);
     assertEq([1, 2, 3], ar);
-    t.say(/*——————————*/ 'AppendOneElem');
+    // test AppendOneElem
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4]);
     assertEq([1, 2, 3, 4], ar);
-    t.say(/*——————————*/ 'AppendThreeElems');
+    // test AppendThreeElems
     ar = [1, 2, 3];
     Util512.extendArray(ar, [4, 5, 6]);
     assertEq([1, 2, 3, 4, 5, 6], ar);
@@ -118,7 +118,30 @@ t.test('parseIntStrict', () => {
     assertEq(undefined, Util512.parseIntStrict('abc'));
     assertEq(12, Util512.parseIntStrict('012'));
     assertEq(12, Util512.parseIntStrict('0012'));
+    // intentionally doesn't support negative numbers
+    assertEq(undefined, Util512.parseIntStrict('-12'));
+    assertEq(undefined, Util512.parseIntStrict('-0'));
 });
+t.test('parseInt', () => {
+    assertEq(0, Util512.parseInt('0'));
+    assertEq(9, Util512.parseInt('9'));
+    assertEq(12, Util512.parseInt('12'));
+    assertEq(12, Util512.parseInt(' 12'));
+    assertEq(12, Util512.parseInt('12 '));
+    assertEq(12, Util512.parseInt(' 12 '));
+    assertEq(undefined, Util512.parseInt(''));
+    assertEq(undefined, Util512.parseInt(undefined));
+    assertEq(1, Util512.parseInt('1more'));
+    assertEq(1, Util512.parseInt('1 more'));
+    assertEq(1, Util512.parseInt('1.1'));
+    assertEq(12, Util512.parseInt('12a'));
+    assertEq(undefined, Util512.parseInt('a12'));
+    assertEq(undefined, Util512.parseInt('abc'));
+    assertEq(12, Util512.parseInt('012'));
+    assertEq(12, Util512.parseInt('0012'));
+    assertEq(-12, Util512.parseInt('-12'));
+    assertEq(0, Util512.parseInt('-0'));
+})
 t.test('truncateWithEllipsis', () => {
     assertEq('', Util512.truncateWithEllipsis('', 2));
     assertEq('a', Util512.truncateWithEllipsis('a', 2));
@@ -138,6 +161,8 @@ t.test('add', () => {
     assertEq(6, [1, 2, 3].reduce(Util512.add));
     assertEq(9, [1, 2, 3].reduce(Util512.add, 3));
     assertEq(0, [].reduce(Util512.add, 0));
+    assertEq(6, _.sum([1, 2, 3]));
+    assertEq(0, _.sum([]));
 });
 t.atest('getBrowserOS', async () => {
     let s = longstr(`Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X)
@@ -185,25 +210,25 @@ t.test('isMapEmpty.Class', () => {
     assertTrue(!Util512.isMapEmpty(o1 as any));
     assertTrue(!Util512.isMapEmpty(o2 as any));
 });
-t.test('getMapShallowClone.PlainObject', () => {
+t.test('Clone.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: '_def' };
-    let clone0 = Util512.shallowClone(obj0);
-    let clone1 = Util512.shallowClone(obj1);
-    let clone2 = Util512.shallowClone(obj2);
+    let clone0 = _.clone(obj0);
+    let clone1 = _.clone(obj1);
+    let clone2 = _.clone(obj2);
     assertEq([], sorted(Util512.getMapKeys(clone0)));
     assertEq(['a'], sorted(Util512.getMapKeys(clone1)));
     assertEq(['abc', 'def'], sorted(Util512.getMapKeys(clone2)));
 });
-t.test('getMapShallowClone.Class', () => {
+t.test('Clone.Class', () => {
     let cls0 = new TestClsEmpty();
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
     (cls2 as any).aSingleAdded = 1;
-    let clone0 = Util512.shallowClone(cls0);
-    let clone1 = Util512.shallowClone(cls1);
-    let clone2 = Util512.shallowClone(cls2);
+    let clone0 = _.clone(cls0);
+    let clone1 = _.clone(cls1);
+    let clone2 = _.clone(cls2);
     assertEq([], sorted(Util512.getMapKeys(clone0)));
     assertEq(['aSingleProp'], sorted(Util512.getMapKeys(clone1)));
     assertEq(['aSingleAdded', 'aSingleProp'], sorted(Util512.getMapKeys(clone2)));
@@ -296,6 +321,16 @@ t.test('capitalizeFirst.Alphabet', () => {
     assertEq('ABC', Util512.capitalizeFirst('ABC'));
     assertEq('DEF ghi', Util512.capitalizeFirst('DEF ghi'));
 });
+t.test('callAsMethod.ValidMethod', () => {
+    let o1 = new TestClsWithMethods();
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false);
+    assertEq(true, o1.calledAbc);
+    assertEq(false, o1.calledZ);
+    let o2 = new TestClsWithMethods();
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false);
+    assertEq(false, o2.calledAbc);
+    assertEq(true, o2.calledZ);
+});
 t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
     assertThrows('requires alphanumeric', () =>
@@ -350,16 +385,6 @@ t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
         )
     );
 });
-t.test('callAsMethod.ValidMethod', () => {
-    let o1 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false);
-    assertEq(true, o1.calledAbc);
-    assertEq(false, o1.calledZ);
-    let o2 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false);
-    assertEq(false, o2.calledAbc);
-    assertEq(true, o2.calledZ);
-});
 t.test('isMethodOnClass', () => {
     let o1 = new TestClsWithMethods();
     assertTrue(Util512.isMethodOnClass(o1, 'goAbc'));
@@ -404,22 +429,27 @@ t.test('getMapVals.Class', () => {
     assertEq([false, true], sorted(Util512.getMapVals(cls2 as any)));
 });
 t.test('padStart', () => {
+    // test with numbers
     assertEq('123', Util512.padStart(123, 2, '0'));
     assertEq('123', Util512.padStart(123, 3, '0'));
     assertEq('0123', Util512.padStart(123, 4, '0'));
     assertEq('00123', Util512.padStart(123, 5, '0'));
+    // test with strings
+    assertEq('123', Util512.padStart('123', 2, '0'));
+    assertEq('123', Util512.padStart('123', 3, '0'));
+    assertEq('0123', Util512.padStart('123', 4, '0'));
 });
 t.test('arrayToBase64.arrayOfNumbers', () => {
-    let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
+    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
     assertEq('aGVsbG8=', Util512.arrayToBase64(nums));
 });
 t.test('arrayToBase64.Uint8Array', () => {
-    let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
+    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
     let uint8 = new Uint8Array(nums);
     assertEq('aGVsbG8=', Util512.arrayToBase64(uint8));
 });
 t.test('arrayToBase64.ArrayBuffer', () => {
-    let nums: any = Array.prototype.map.call('hello', (x: string) => x.charCodeAt(0));
+    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
     let buffer = new ArrayBuffer(nums.length);
     let view = new Uint8Array(buffer);
     for (let i = 0; i < nums.length; i++) {
@@ -454,31 +484,30 @@ t.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
     roundTrip('\x01\x05\xf8\xffXYZ<>', 'AQX4_1hZWjw-');
 });
 t.test('stringToCharArray', () => {
-    assertEq([], Util512.stringToCharArray(''));
-    assertEq(['a'], Util512.stringToCharArray('a'));
-    assertEq(['a', 'b', ' ', 'c', 'd'], Util512.stringToCharArray('ab cd'));
-});
-t.test('stringToByteArray', () => {
-    assertEq([], Util512.stringToByteArray(''));
-    assertEq([97], Util512.stringToByteArray('a'));
-    assertEq([97, 98, 32, 99, 100], Util512.stringToByteArray('ab cd'));
+    // better than the Array.prototype.map.call trick.
+    assertEq([], _.split('', ''));
+    assertEq(['a'], _.split('a', ''));
+    assertEq(['a', 'b', ' ', 'c', 'd'], _.split('ab cd', ''));
+    assertEq([97, 98, 32, 99, 100], _.split('ab cd', '').map(c => c.charCodeAt(0)));
 });
 t.test('sortDecorated', () => {
     class MyClass {
         constructor(public a: string) {}
     }
 
-    t.say(/*——————————*/ 'typical usage');
+    // test typical usage
     let input: string[] = ['abc', 'dba', 'aab', 'ffd'];
-    let ret = Util512.sortDecorated(input, s => s.charAt(2));
+    let ret = _.sortBy(input, s => s.charAt(2));
     assertEq('dba;aab;abc;ffd', ret.join(';'));
-    t.say(/*——————————*/ 'with class');
+
+    // test with class
     let inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('cc')];
-    let retCl = Util512.sortDecorated(inputCl, o => o.a);
+    let retCl = _.sortBy(inputCl, o => o.a);
     assertEq('aa;bb;cc', retCl.map(o => o.a).join(';'));
-    t.say(/*——————————*/ 'with class and ties');
+
+    // test with class and ties
     inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('bb')];
-    retCl = Util512.sortDecorated(inputCl, o => o.a);
+    retCl = _.sortBy(inputCl, o => o.a);
     assertEq('aa;bb;bb', retCl.map(o => o.a).join(';'));
 });
 t.test('normalizeNewlines', () => {
@@ -488,6 +517,29 @@ t.test('normalizeNewlines', () => {
     assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r'));
     assertEq('a\nb\n', Util512.normalizeNewlines('a\rb\r\n'));
     assertEq('a\nb\n', Util512.normalizeNewlines('a\r\nb\n'));
+});
+t.test('keepOnlyUnique', () => {
+    assertEq([], Util512.keepOnlyUnique([]));
+    assertEq(['1'], Util512.keepOnlyUnique(['1']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']));
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']));
+    assertEq(
+        ['11', '12', '13', '14', '15'],
+        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15'])
+    );
+});
+t.test('mapValuesDeep', () => {
+    assertEq({}, Util512.mapValuesDeep({}, v => v + 1));
+    assertEq({a:2}, Util512.mapValuesDeep({a:1}, v => v + 1));
+    assertEq({a:2, b:{c:3,d:4}}, Util512.mapValuesDeep({a:1, b:{c:2,d:3}}, v => v + 1));
+    assertEq({a:2, b:{c:3,d:[4,5]}}, Util512.mapValuesDeep({a:1, b:{c:2,d:[3, 4]}}, v => v + 1));
+    
+    const ignoreObj = new TestClsOne()
+    assertEq({a:2, b:{c:3,d:ignoreObj}}, Util512.mapValuesDeep({a:1, b:{c:2,d:ignoreObj}}, v => v + 1));
 });
 
 /**

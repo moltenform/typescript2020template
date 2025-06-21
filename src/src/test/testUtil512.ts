@@ -1,7 +1,7 @@
 
 /* auto */ import { bool } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq } from './../util/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq, LockableArr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -9,6 +9,31 @@
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
 export let testCollectionUtil512 = t;
+
+/**
+ * test some less useful classes
+ */
+t.test('LockableArr', () => {
+    // test standard use
+    let ar = new LockableArr<number>();
+    ar.set(0, 55);
+    ar.set(1, 56);
+    assertEq(55, ar.at(0));
+    assertEq(56, ar.at(1));
+    assertEq(2, ar.len());
+    ar.lock();
+    assertThrows('locked', () => {
+        ar.set(1, 57);
+    });
+    // test changing the copy won't change original
+    let copy = ar.getUnlockedCopy();
+    assertEq(55, copy.at(0));
+    assertEq(56, copy.at(1));
+    assertEq(2, copy.len());
+    copy.set(1, 57);
+    assertEq(57, copy.at(1));
+    assertEq(56, ar.at(1));
+});
 
 t.test('ValHolder.param', () => {
     function increment(vv: ValHolder<number>) {
@@ -413,12 +438,12 @@ t.test('MapKeyToObjectCanSet', () => {
     let o = new MapKeyToObjectCanSet<number>();
     o.add('five', 5);
     o.add('six', 6);
-    t.say(/*——————————*/ 'exists');
+    // test exists
     assertTrue(o.exists('five'));
     assertTrue(o.exists('six'));
     assertTrue(!o.exists('seven'));
     assertTrue(!o.exists(''));
-    t.say(/*——————————*/ 'get');
+    // test get
     assertEq(5, o.get('five'));
     assertEq(6, o.get('six'));
     assertThrows('not found', () => {
@@ -427,15 +452,15 @@ t.test('MapKeyToObjectCanSet', () => {
     assertThrows('not found', () => {
         o.get('');
     });
-    t.say(/*——————————*/ 'find');
+    // test find
     assertEq(5, o.find('five'));
     assertEq(6, o.find('six'));
     assertEq(undefined, o.find('seven'));
     assertEq(undefined, o.find(''));
-    t.say(/*——————————*/ 'getKeys');
+    // test getKeys
     assertEq(['five', 'six'], sorted(o.getKeys()));
     assertEq([5, 6], sorted(o.getVals()));
-    t.say(/*——————————*/ 'remove');
+    // test remove
     o.remove('five');
     assertEq(undefined, o.find('five'));
 });

@@ -192,19 +192,19 @@ export type O<T> = T | undefined;
  * 
  * See automated tests for an example usage.
  */
-export class UI512StaticClass {
+export class Util512StaticClass {
     // Freezing is optional, it's unlikely that someone would call (this as any).state = 1
-    // Can't use a constructor that calls Object.freeze(this)
-    // but that would prevent method=()=>{} style methods from being added.
-    private static instancesToFreeze: UI512StaticClass[] = [];
+    // (Can't use a constructor that calls Object.freeze(this)
+    // but that would stop our method=()=>{} style methods from being added.)
+    private static instancesToFreeze: Util512StaticClass[] = [];
     
     constructor() {
-        UI512StaticClass.instancesToFreeze.push(this);
+        Util512StaticClass.instancesToFreeze.push(this);
     }
 
-    static freezeAll() {
-        for (let i = 0; i < UI512StaticClass.instancesToFreeze.length; i++) {
-            Object.freeze(UI512StaticClass.instancesToFreeze[i]);
+    static callAfterAppLoad() {
+        for (let i = 0; i < Util512StaticClass.instancesToFreeze.length; i++) {
+            Object.freeze(Util512StaticClass.instancesToFreeze[i]);
         }
     }
 }
@@ -214,7 +214,7 @@ export class UI512StaticClass {
  * I use compressToUTF16() instead of compress() to use only valid utf sequences.
  */
 
-export const UI512Compress = new class UI512Compress extends UI512StaticClass {
+export const UI512Compress = new class UI512Compress extends Util512StaticClass {
     protected stringEscapeNewline = '##Newline##';
     protected reEscapeNewline = new RegExp(this.stringEscapeNewline, 'g');
     protected reNewline = /\n/g;

@@ -51,9 +51,10 @@
 - `number-to-words` as an example javascript+typescript types dependency
     - npm --save install @types/number-to-words
 - `serializer.ts` as an example typescript dependency
-    - considered TypedJSON and @jsonObject (see history of testUtilsSerialize.ts), but
+    - considered TypedJSON/jsonObject/ts-json-object (see history of testUtilsSerialize.ts), but
     - 1) that's overkill safety for small projects, and
     - 2) modern way is to use zod or yup anyways
+    - ideally reflectmetadataa would help here
 - includes my tool to prevent dependency cycles
     - it's useful to have strict layering, modules can only call lower in the list, not higher
     - make sure `layers.cfg` up to date, then
@@ -93,12 +94,8 @@ For more scripts, see the "scripts" section of `package.json`.
 * lodash
 * lz-string
 * serializer.ts
-* whatwg-fetch
+* no longer need whatwg-fetch polyfill
 * map-values-deep, MIT license (pasted into source)
-
-### libraries used solely as an example
-
-* whatwg-fetch, MIT license
 
 ### vscode tips
 

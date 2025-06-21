@@ -1,5 +1,5 @@
 
-/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring, UI512StaticClass } from './util512Base';
+/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring, Util512StaticClass } from './util512Base';
 import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -172,7 +172,7 @@ export function checkThrow512(
 /**
  * store logs. user can choose "send err report" to send us error context.
  */
-export const UI512ErrorHandling = new class UI512ErrorHandling extends UI512StaticClass {
+export const UI512ErrorHandling = new class UI512ErrorHandling extends Util512StaticClass {
     shouldRecordErrors = true;
     runningTests = false;
     silenceAssertMsgs = false;

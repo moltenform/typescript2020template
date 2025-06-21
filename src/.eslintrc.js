@@ -51,7 +51,7 @@ module.exports = {
         'no-redeclare': 'off',
 
         // won't let you do myList.reduce(Util512.add)
-        '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/unbound-method': 'error',
 
         // don't needlessly have a call() or apply()
         'no-useless-call': 'warn', 

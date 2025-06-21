@@ -50,13 +50,13 @@ t.test('generateUniqueBase64UrlSafe', () => {
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
-    t.say(/*——————————*/ 'adding numbers');
+    // test adding numbers
     assertEq(4, 2 + 2);
 });
 t.atest('canAwaitACall', async () => {
-    t.say(/*——————————*/ '0...');
+    // test 0...
     await exampleAsyncFn();
-    t.say(/*——————————*/ '3');
+    // test 3
 });
 /* note that we're intentionally returning a promise */
 t.atest('canChainACall', async () => {
@@ -65,9 +65,9 @@ t.atest('canChainACall', async () => {
 
 /* an example async function */
 async function exampleAsyncFn() {
-    t.say(/*——————————*/ '1...');
+    // test 1...
     await Util512Higher.sleep(100);
-    t.say(/*——————————*/ '2...');
+    // test 2...
 }
 t.atest('minimumTimeSlowsDown', async () => {
     let shortFn = async () => {
@@ -112,41 +112,4 @@ t.atest('timesOut', async () => {
     assertTrue(performance.now() - start < 600, 'too slow');
 });
 
-/**
- * test some less useful classes
- */
-t.test('LockableArr', () => {
-    t.say(/*——————————*/ 'standard use');
-    let ar = new Util512.LockableArr<number>();
-    ar.set(0, 55);
-    ar.set(1, 56);
-    assertEq(55, ar.at(0));
-    assertEq(56, ar.at(1));
-    assertEq(2, ar.len());
-    ar.lock();
-    assertThrows('locked', () => {
-        ar.set(1, 57);
-    });
-    //~ t.say(/*——————————*/ "changing the copy won't change original");
-    //~ let copy = ar.getUnlockedCopy();
-    //~ assertEq(55, copy.at(0));
-    //~ assertEq(56, copy.at(1));
-    //~ assertEq(2, copy.len());
-    //~ copy.set(1, 57);
-    //~ assertEq(57, copy.at(1));
-    //~ assertEq(56, ar.at(1));
-});
-t.test('keepOnlyUnique', () => {
-    assertEq([], Util512.keepOnlyUnique([]));
-    assertEq(['1'], Util512.keepOnlyUnique(['1']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']));
-    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']));
-    assertEq(
-        ['11', '12', '13', '14', '15'],
-        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15'])
-    );
-});
+

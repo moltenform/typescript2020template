@@ -27,8 +27,6 @@ Switch to vite?
 doDetectBrowser doesn't work yet
 use tsnode to run tests that would be cool
 get reflectmetadataa to work
-TypedJson
-https://www.npmjs.com/package/ts-json-object
 
 79k, 115k
 so removing lodash did help. unfortunately it didn't treeshake it out.

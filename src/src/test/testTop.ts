@@ -14,7 +14,9 @@
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
 /* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
-import { UI512StaticClass } from '../util/util512Base';
+import { Util512StaticClass } from '../util/util512Base';
+import { testCollectionUtil512Base } from './testUtil512Base';
+import _ from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -22,7 +24,7 @@ import { UI512StaticClass } from '../util/util512Base';
 /**
  * a very simple testing framework.
  */
-export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends UI512StaticClass {
+export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512StaticClass {
     async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
@@ -36,6 +38,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends UI512Sta
         let colls: SimpleUtil512TestCollection[] = [
             testCollectionExternalLibs,
             testCollectionUtil512Assert,
+            testCollectionUtil512Base,
             testCollectionUtil512,
             testCollectionUtil512Class,
             testCollectionUtil512Higher
@@ -55,14 +58,10 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends UI512Sta
         let slowTests = colls.filter(item => item.slow);
         let fastTests = colls.filter(item => !item.slow);
         colls = fastTests.concat(slowTests);
-        let countTotal = colls
+        let testsIncluded = colls
             .filter(item => includeSlow || !item.slow)
-            .map(item => item.tests.length)
-            .reduce(Util512.add);
-        countTotal += colls
-            .filter(item => includeSlow || !item.slow)
-            .map(item => item.atests.length)
-            .reduce(Util512.add);
+        let countTotal = _.sum(
+            testsIncluded.map(item => item.tests.length + item.atests.length));
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.exists(coll.name.toLowerCase())) {

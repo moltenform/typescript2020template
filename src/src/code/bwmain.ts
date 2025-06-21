@@ -1,6 +1,6 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../util/util512Higher';
-/* auto */ import { checkIsProductionBuild, UI512StaticClass } from './../util/util512Base';
+/* auto */ import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
 //~ import  'reflect-metadata';
@@ -33,7 +33,7 @@ async function onDemoModules() {
 }
 
 export function runOnLoad() {
-    UI512StaticClass.freezeAll();
+    Util512StaticClass.callAfterAppLoad();
     const mapping = {
         idBtnSimpleTest: onSimpleTest,
         idBtnDemoModules: onDemoModules,
