@@ -30,7 +30,6 @@ export class Util512 {
         } else {
             return _.range(start, end, inc);
         }
-
     }
 
     /**

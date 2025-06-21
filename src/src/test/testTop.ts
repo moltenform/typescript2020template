@@ -1,13 +1,20 @@
-
 /* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
+/* auto */ import {
+    UI512ErrorHandling,
+    assertTrue,
+    assertWarn
+} from './../util/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, ValHolder } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import {
+    SimpleUtil512TestCollection,
+    notifyUserIfDebuggerIsSetToAllExceptions
+} from './testUtils';
 /* auto */ import { testCollectionUtil512Higher } from './testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
 /* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
+import { UI512StaticClass } from '../util/util512Base';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -15,9 +22,8 @@
 /**
  * a very simple testing framework.
  */
-export class SimpleUtil512Tests {
-    private constructor() {}
-    static async runTests(includeSlow: boolean) {
+export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends UI512StaticClass {
+    async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
             return;
@@ -66,7 +72,7 @@ export class SimpleUtil512Tests {
             colNamesSeen.set(coll.name.toLowerCase(), true);
             console.log(`Collection: ${coll.name}`);
             if (includeSlow || !coll.slow) {
-                await SimpleUtil512Tests.runCollection(coll, countTotal, counter, mapSeen);
+                await this.runCollection(coll, countTotal, counter, mapSeen);
             } else {
                 console.log('(Skipped)');
             }
@@ -83,7 +89,7 @@ export class SimpleUtil512Tests {
     /**
      * run a collection of tests
      */
-    static async runCollection(
+    async runCollection(
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
@@ -99,7 +105,7 @@ export class SimpleUtil512Tests {
         let tests: [string, VoidFn | AsyncFn][] = coll.atests;
         tests = tests.concat(coll.tests);
         for (let i = 0; i < tests.length; i++) {
-            let [tstname, tstfn] = tests[i];
+            let [tstname, fnTest] = tests[i];
             if (mapSeen.exists(tstname.toLowerCase())) {
                 assertWarn(false, 'duplicate test name', tstname);
             }
@@ -107,8 +113,8 @@ export class SimpleUtil512Tests {
             /* it's totally fine to await on a synchronous fn. */
             mapSeen.set(tstname.toLowerCase(), true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
-            await tstfn();
+            await fnTest();
             counter.val += 1;
         }
     }
-};
+})();

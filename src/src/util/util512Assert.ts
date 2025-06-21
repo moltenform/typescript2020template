@@ -1,5 +1,5 @@
 
-/* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
 import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */

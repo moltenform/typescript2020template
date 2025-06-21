@@ -161,6 +161,54 @@ export class RingBufferLocalStorage extends RingBuffer {
  */
 export type O<T> = T | undefined;
 
+
+/**
+ * Helper for creating a 'static class' that has no state.
+ * By using freeze we ensure state won't accidentally be attached.
+ * 
+ * Why not static methods on a class, maybe with a private ctor?
+ * 1) verbose to specify static everywhere.
+ * 2) can't use `this` to refer to methods in the class--
+ * works in raw JS but transpilation/minifying/retargeting will often
+ * rewrite the code such that `this` no longer references 
+ * the class - it's legit fragile.
+ * 3) also, potential pitfall with unbound (i.e. stored calls)
+ * where const stored = MyClass.method; stored();
+ * works if the method happens to not reference this but fails at runtime
+ * otherwise, which is not good. Probably possible to use typing
+ * magic to have a const stored = MyClass.bound('method') but ugly.
+ * 
+ * Why not the pattern const MyObject = { method: ()=> { return 1; } }
+ * I do like the feel of this,
+ * But again, you can't use `this` to call other methods.
+ * 
+ * Why not namespaces? They're deprecated these days.
+ * 
+ * A singleton pattern would work but it's more lines of code
+ * and has different semantics, we don't want it to feel like
+ * there's one instance we want it to feel like it can't be instantiated.
+ * Downside: unlike a true static method, needs to be bound
+ * 
+ * See automated tests for an example usage.
+ */
+export class UI512StaticClass {
+    // Freezing is optional, it's unlikely that someone would call (this as any).state = 1
+    // Can't use a constructor that calls Object.freeze(this)
+    // but that would prevent method=()=>{} style methods from being added.
+    private static instancesToFreeze: UI512StaticClass[] = [];
+    
+    constructor() {
+        UI512StaticClass.instancesToFreeze.push(this);
+    }
+
+    static freezeAll() {
+        for (let i = 0; i < UI512StaticClass.instancesToFreeze.length; i++) {
+            Object.freeze(UI512StaticClass.instancesToFreeze[i]);
+        }
+    }
+}
+
+
 /**
  * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.
  * I use compressToUTF16() instead of compress() to use only valid utf sequences.

@@ -1,5 +1,5 @@
 
-/* auto */ import { RingBuffer, UI512Compress, tostring } from './../util/util512Base';
+/* auto */ import { RingBuffer, UI512Compress, tostring, UI512StaticClass, TestUI512StaticClass } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
@@ -88,6 +88,55 @@ t.test('JoinIntoMessage', () => {
     let got = joinIntoMessage('without|marks', 'prefix:');
     assertEq('prefix:: without|marks', got);
 });
+t.test('StaticClass', () => {
+    const TestUI512StaticClass = new class TestUI512StaticClass extends UI512StaticClass {
+    addNumbers = (a: number, b: number): number => {
+        return this.addNumbersHelper(a, b);   
+    }
+    addNumbersHelper = (a: number, b: number): number => {
+        return a + b;
+    }
+}
+
+    //~ class TestNoThis {
+        //~ addNumbers(a: number, b: number): number {
+            //~ return this.addNumbersHelper(a, b);   
+        //~ }
+        //~ addNumbersHelper(a: number, b: number): number {
+            //~ return a + b;
+        //~ }
+    //~ }
+    
+    //~ const MyClass = new class MyClass extends UI512StaticClass {
+        //~ bound2(m: keyof MyClass) {
+            //~ return this.constructor.bind(m, this.constructor);
+        //~ }
+        //~ addNumbers(a: number, b: number): number {
+            //~ return this.addNumbersHelper(a, b);   
+        //~ }
+        //~ addNumbersHelper(a: number, b: number): number {
+            //~ return a + b;
+        //~ }
+    //~ }
+
+    //~ function bound3<T>(c: T, m: keyof T) {
+        //~ const method = c[m]
+        //~ type fsdf = typeof method
+        //~ type dfg = Parameters<fsdf>
+        //~ return (...args: Parameters<typeof (c[m])>): ReturnType<typeof (c[m])> => {
+            //~ console.log("func has been called");
+            //~ return c[m](...args);
+        //~ };
+        //~ return (...arguments)=>c[m](...arguments);
+    //~ }
+
+    // don't use bind, it loses type safety
+
+    const stored = TestUI512StaticClass.addNumbers;
+    //~ const stored = bound3(MyClass, 'addNumbers')
+    assertEq(9, stored(4, 5));
+    assertEq(9, TestUI512StaticClass.addNumbers(4, 5,));
+})
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''));
     assertEq('\u10E8 ', UI512Compress.compressString('a'));

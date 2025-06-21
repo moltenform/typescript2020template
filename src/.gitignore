@@ -1,6 +1,6 @@
 
 nocpy_*
-dist/
+dist
 *.pyc
 *.tsbuildinfo
 

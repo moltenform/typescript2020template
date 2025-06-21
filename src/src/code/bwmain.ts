@@ -1,6 +1,6 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../util/util512Higher';
-/* auto */ import { checkIsProductionBuild } from './../util/util512Base';
+/* auto */ import { checkIsProductionBuild, UI512StaticClass } from './../util/util512Base';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
 //~ import  'reflect-metadata';
@@ -33,11 +33,12 @@ async function onDemoModules() {
 }
 
 export function runOnLoad() {
+    UI512StaticClass.freezeAll();
     const mapping = {
         idBtnSimpleTest: onSimpleTest,
         idBtnDemoModules: onDemoModules,
         idBtnDemoSave: onDemoSave,
-        idBtnRunUtil512Tests: SimpleUtil512Tests.runTests
+        idBtnRunUtil512Tests: ()=>SimpleUtil512Tests.runTests(true)
     };
 
     for (let k in mapping) {
