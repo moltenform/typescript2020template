@@ -94,8 +94,8 @@ For more scripts, see the "scripts" section of `package.json`.
 * lodash
 * lz-string
 * serializer.ts
-* no longer need whatwg-fetch polyfill
 * map-values-deep, MIT license (pasted into source)
+* no longer needed: polyfills for whatwg-fetch, string.includes, string.startsWith
 
 ### vscode tips
 

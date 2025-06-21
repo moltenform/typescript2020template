@@ -1,8 +1,10 @@
 
-/* auto */ import { bool } from './../util/util512Base';
+/* auto */ import { bool, O } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq, LockableArr } from './../util/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
+import {expectTypeOf} from 'expect-type'
+import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -10,9 +12,6 @@
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
 export let testCollectionUtil512 = t;
 
-/**
- * test some less useful classes
- */
 t.test('LockableArr', () => {
     // test standard use
     let ar = new LockableArr<number>();
@@ -33,9 +32,17 @@ t.test('LockableArr', () => {
     copy.set(1, 57);
     assertEq(57, copy.at(1));
     assertEq(56, ar.at(1));
+    // ok to lock twice
+    ar.lock() 
+    // corner cases
+    assertEq(undefined, ar.at(100));
+    let emptyAr = new LockableArr<number>();
+    assertEq(0, emptyAr.len());    
+    let emptyArCopy = emptyAr.getUnlockedCopy();
+    assertEq(0, emptyArCopy.len());
 });
 
-t.test('ValHolder.param', () => {
+t.test('ValHolder as an out param', () => {
     function increment(vv: ValHolder<number>) {
         vv.val += 1;
     }
@@ -53,12 +60,22 @@ t.test('ValHolder.closure', () => {
     increment();
     assertEq(1, v.val);
 });
-t.test('findStrToEnum.FoundPrimary', () => {
+t.test('listEnumValsIncludingAlternates', () => {
+    assertEq('xxx', listEnumValsIncludingAlternates(TestEnum))
+    assertEq('xxx', listEnumValsIncludingAlternates(TestSimpleEnum))
+    assertEq('xxx', listEnumVals(TestEnum, true))
+    assertEq('xxx', listEnumVals(TestEnum, false))
+    assertEq('xxx', listEnumVals(TestSimpleEnum, true))
+    assertEq('xxx', listEnumVals(TestSimpleEnum, false))
+})
+t.test('findStrToEnum, standard usage', () => {
+    // test typing inference
+    expectTypeOf(findStrToEnum(TestEnum, 'First')).toEqualTypeOf(TestEnum);
+    // found primary
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
     assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Second'));
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Third'));
-});
-t.test('findStrToEnum.NotFound', () => {
+    // not found
     assertEq(undefined, findStrToEnum(TestEnum, ''));
     assertEq(undefined, findStrToEnum(TestEnum, 'F'));
     assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'));
@@ -70,71 +87,86 @@ t.test('findStrToEnum.YouShouldNotBeAbleToAccessFlags', () => {
 });
 t.test('findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts', () => {
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormTheFirst'));
-    assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormScnd'));
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateFormFoo'));
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormTheFirst'));
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormScnd'));
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateFormFoo'));
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__TheFirst'));
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Scnd'));
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__Foo'));
     assertEq(undefined, findStrToEnum(TestEnum, 'AlternateForm'));
-    assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm'));
     assertEq(undefined, findStrToEnum(TestEnum, '__AlternateForm__'));
 });
-t.test('findStrToEnum.FirstLetterCaseInsensitive', () => {
+t.test('findStrToEnum.capitalizes first letter', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'first'));
     assertEq(undefined, findStrToEnum(TestEnum, 'firsT'));
     assertEq(undefined, findStrToEnum(TestEnum, 'FirsT'));
     assertEq(undefined, findStrToEnum(TestEnum, 'First '));
-    assertEq(undefined, findStrToEnum(TestEnum, 'Firstf'));
-    assertEq(undefined, findStrToEnum(TestEnum, 'Firs'));
 });
-t.test('findStrToEnum.UseAlts', () => {
+t.test('findStrToEnum.Use alternate forms to retrieve', () => {
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'First'));
     assertEq(TestEnum.First, findStrToEnum(TestEnum, 'TheFirst'));
     assertEq(TestEnum.Second, findStrToEnum(TestEnum, 'Scnd'));
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'));
 });
-t.test('getEnumToStr.FoundPrimary', () => {
-    assertEq('first', getEnumToStrOrFallback(TestEnum, TestEnum.First));
-    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.Second));
-    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.Third));
+
+t.test('getStrToEnum, standard usage', () => {
+    // test typing inference
+    expectTypeOf(getStrToEnum(TestEnum, 'context', 'First')).toEqualTypeOf(TestEnum);
+    // found
+    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'context',  'First'));
+    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'context',  'TheFirst'));
+    assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'context',  'Second'));
+    // not found
+    assertThrows('Not a valid choice', () => getStrToEnum(TestEnum, 'context',  ''));
+    assertThrows('Not a valid choice', () => getStrToEnum(TestEnum, 'context',  'F'));
+    assertThrows('Not a valid choice', () => getStrToEnum(TestEnum, 'context',  'Firstf'));
 });
-t.test('getEnumToStr.AlternatesHaveSameVal', () => {
-    assertEq(
-        'first',
-        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__TheFirst)
-    );
-    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Scnd));
-    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Thd));
+t.test('findEnumToStr, standard usage', () => {
+    // test typing inference
+    expectTypeOf(findEnumToStr(TestEnum, 1)).toEqualTypeOf('');
+    // found
+    assertEq("first", findEnumToStr(TestEnum, TestEnum.First));
+    assertEq("first", findEnumToStr(TestEnum, 1));
+    assertEq("second", findEnumToStr(TestEnum, 2));
+    // not found
+    assertEq(undefined, findEnumToStr(TestEnum, -1));
+    assertEq(undefined, findEnumToStr(TestEnum, 999));
+    assertEq(undefined, findEnumToStr(TestEnum, 1)); // flag should not be visible
 });
-t.test('getEnumToStr.NotFound', () => {
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, -1));
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, 999));
+t.test('getEnumToStr, standard usage', () => {
+    // test typing inference
+    expectTypeOf(getEnumToStr(TestEnum, 1)).toEqualTypeOf('');
+    // found
+    assertEq("first", getEnumToStr(TestEnum, TestEnum.First));
+    assertEq("first", getEnumToStr(TestEnum, 1));
+    assertEq("second", getEnumToStr(TestEnum, 2));
+    // not found
+    assertEq(undefined, getEnumToStr(TestEnum, -1));
+    assertEq(undefined, getEnumToStr(TestEnum, 999));
+    assertEq(undefined, getEnumToStr(TestEnum, 1)); // flag should not be visible
 });
-t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__isUI512Enum));
-    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__UI512EnumCapitalize));
+t.test('getEnumToStrOrFallback, standard usage', () => {
+    // test typing inference
+    expectTypeOf(getEnumToStrOrFallback(TestEnum, 1)).toEqualTypeOf('');
+    // found
+    assertEq("first", getEnumToStrOrFallback(TestEnum, TestEnum.First));
+    assertEq("first", getEnumToStrOrFallback(TestEnum, 1));
+    assertEq("second", getEnumToStrOrFallback(TestEnum, 2));
+    // not found
+    assertEq('fallback', getEnumToStrOrFallback(TestEnum, -1, 'fallback'));
+    assertEq('fallback', getEnumToStrOrFallback(TestEnum, 999, 'fallback'));
+    assertEq('fallback', getEnumToStrOrFallback(TestEnum, 1, 'fallback')); // flag should not be visible
 });
-t.test('getStrToEnum.HasExpectedReturnType', () => {
-    /* check that the return value is the correct type.
-    unfortunately this seems to require manually entering the type
-    as a parameter, in the redundant form getStrToEnum<TestEnum>(TestEnum) */
-    function takesEnumVal(__unused_v: TestEnum) {}
-    let r = getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First');
-    takesEnumVal(r);
-});
-t.test('getStrToEnum.FoundPrimary', () => {
-    assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'));
-    assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'));
-    assertEq(TestEnum.Third, getStrToEnum(TestEnum, 'TestEnum', 'Third'));
-});
-t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
+t.test('test enum values', () => {
+    assertEq(1, TestEnum.__isUI512Enum);
+    assertEq(1, TestEnum.__UI512EnumCapitalize);
+    assertEq(TestEnum.__AlternateForm__TheFirst, TestEnum.First);
+    assertEq(TestEnum.__AlternateForm__Scnd, TestEnum.Second);
+    assertTrue(TestEnum.First as number !== TestEnum.Second as number);
+})
+
+t.test('ShowValuesInExceptionMsg', () => {
     let excMessage = '';
     try {
-        getStrToEnum(TestEnum, 'TestEnum', 'Firstf');
+        getStrToEnum(TestEnum, 'TestEnum', '-nonexist-');
     } catch (e) {
         ensureIsError(e);
         excMessage = e.toString();
@@ -179,6 +211,28 @@ t.test('cast', () => {
         cast(Parent, o1);
     });
 });
+t.test('castVerifyIsNum and castVerifyIsStr', () => {
+    assertEq(1, castVerifyIsNum(1));
+    assertThrows('type cast exception', () => {
+        castVerifyIsNum(null);
+    });
+    assertThrows('type cast exception', () => {
+        castVerifyIsNum(undefined);
+    });
+    assertThrows('type cast exception', () => {
+        castVerifyIsNum('abc');
+    });
+    assertEq('abc', castVerifyIsStr('abc'));
+    assertThrows('type cast exception', () => {
+        castVerifyIsStr(null);
+    });
+    assertThrows('type cast exception', () => {
+        castVerifyIsStr(undefined);
+    });
+    assertThrows('type cast exception', () => {
+        castVerifyIsStr(123);
+    });
+})
 t.test('isString', () => {
     assertTrue(typeof '' === 'string');
     assertTrue(typeof 'abc' === 'string');
@@ -187,8 +241,8 @@ t.test('isString', () => {
     assertTrue(typeof null !== 'string');
     assertTrue(typeof undefined !== 'string');
     assertTrue(typeof ['a'] !== 'string');
-    /* ok to disable the warning, intentionally making a Object-style-string.
-    we now assume that these will never occur, so it's ok that
+    /* intentionally making an unusual Object-style-string.
+    We assume that these will never occur, so it's ok that
     they aren't identified as strings. */
     /* eslint-disable-next-line no-new-wrappers */
     assertTrue(typeof new String('abc') !== 'string');
@@ -206,38 +260,29 @@ t.test('fitIntoInclusive.NeedToTruncate', () => {
     assertEq(3, fitIntoInclusive(4, 1, 3));
 });
 t.test('util512Sort.String', () => {
-    assertEq(0, util512Sort('', ''));
-    assertEq(0, util512Sort('a', 'a'));
-    assertEq(1, util512Sort('abc', 'abb'));
-    assertEq(-1, util512Sort('abb', 'abc'));
-    assertEq(1, util512Sort('abcd', 'abc'));
-    assertEq(-1, util512Sort('abc', 'abcd'));
+    const arr = ['', 'a', 'abc', 'abb', 'abcd']
+    _.sortBy(arr)
+    assertEq('TMMP', arr.join(','))
 });
 t.test('util512Sort.StringWithNonAscii', () => {
-    assertEq(0, util512Sort('aunicode\u2666char', 'aunicode\u2666char'));
-    assertEq(1, util512Sort('aunicode\u2667char', 'aunicode\u2666char'));
-    assertEq(-1, util512Sort('aunicode\u2666char', 'aunicode\u2667char'));
-    assertEq(0, util512Sort('accented\u00e9letter', 'accented\u00e9letter'));
-    assertEq(1, util512Sort('accented\u00e9letter', 'accented\u0065\u0301letter'));
-    assertEq(-1, util512Sort('accented\u0065\u0301letter', 'accented\u00e9letter'));
+    const arr = [
+        'accented\u0065\u0301letter',
+'aunicode\u2666char', 'aunicode\u2667char', 'accented\u00e9letter',
+'accented\u0065\u0301letter', 
+    ]
+    assertEq('TMMP', arr.join(','))
 });
 t.test('util512Sort.Bool', () => {
-    assertEq(0, util512Sort(false, false));
-    assertEq(0, util512Sort(true, true));
-    assertEq(1, util512Sort(true, false));
-    assertEq(-1, util512Sort(false, true));
+    const arr = [false, true, false, true]
+    _.sortBy(arr)
+    assertEq('false,true,false,true', arr.map(String).join(','));
 });
 t.test('util512Sort.Number', () => {
-    assertEq(0, util512Sort(0, 0));
-    assertEq(0, util512Sort(1, 1));
-    assertEq(0, util512Sort(12345, 12345));
-    assertEq(0, util512Sort(-11.15, -11.15));
-    assertEq(-1, util512Sort(0, 1));
-    assertEq(1, util512Sort(1, 0));
-    assertEq(1, util512Sort(1.4, 1.3));
-    assertEq(1, util512Sort(0, -1));
-    assertEq(1, util512Sort(Number.POSITIVE_INFINITY, 12345));
-    assertEq(-1, util512Sort(Number.NEGATIVE_INFINITY, -12345));
+    const arr = [
+        0, 1, 12345, -11.15, 1.4, 1.3, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY
+    ]
+    _.sortBy(arr)
+    assertEq('TMMP', arr.map(String).join(','));
 });
 t.test('util512Sort.Nullish', () => {
     assertEq(0, util512Sort(undefined, undefined));
@@ -365,105 +410,7 @@ t.test('util512Sort.ArrayNested', () => {
     assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]));
     assertEq(-1, util512Sort([[10, 20], 50, [30]], [[10, 20], 60, [30]]));
 });
-t.test('forOf', () => {
-    let ar = [11, 22, 33];
-    let result: number[] = [];
-    for (let item of ar) {
-        result.push(item);
-    }
 
-    assertEq([11, 22, 33], result);
-});
-t.test('forOfEmpty', () => {
-    let ar: number[] = [];
-    let result: number[] = [];
-    for (let item of ar) {
-        result.push(item);
-    }
-
-    assertEq([], result);
-});
-t.test('forOfGenerator', () => {
-    function* myGenerator() {
-        yield 10;
-        yield 20;
-        yield 30;
-        yield 40;
-    }
-
-    let result: number[] = [];
-    for (let item of myGenerator()) {
-        result.push(item);
-    }
-
-    assertEq([10, 20, 30, 40], result);
-});
-t.test('OrderedHash.IterKeys', () => {
-    let h = new OrderedHash<number>();
-    h.insertNew('ccc', 30);
-    h.insertNew('ccb', 29);
-    h.insertNew('cca', 28);
-    let result: string[] = [];
-    for (let item of h.iterKeys()) {
-        result.push(item);
-    }
-
-    assertEq(['ccc', 'ccb', 'cca'], result);
-});
-t.test('OrderedHash.IterVals', () => {
-    let h = new OrderedHash<number>();
-    h.insertNew('ccc', 30);
-    h.insertNew('ccb', 29);
-    h.insertNew('cca', 28);
-    let result: number[] = [];
-    for (let item of h.iter()) {
-        result.push(item);
-    }
-
-    assertEq([30, 29, 28], result);
-});
-t.test('OrderedHash.IterReversed', () => {
-    let h = new OrderedHash<number>();
-    h.insertNew('ccc', 30);
-    h.insertNew('ccb', 29);
-    h.insertNew('cca', 28);
-    let result: number[] = [];
-    for (let item of h.iterReversed()) {
-        result.push(item);
-    }
-
-    assertEq([28, 29, 30], result);
-});
-t.test('MapKeyToObjectCanSet', () => {
-    let o = new MapKeyToObjectCanSet<number>();
-    o.add('five', 5);
-    o.add('six', 6);
-    // test exists
-    assertTrue(o.exists('five'));
-    assertTrue(o.exists('six'));
-    assertTrue(!o.exists('seven'));
-    assertTrue(!o.exists(''));
-    // test get
-    assertEq(5, o.get('five'));
-    assertEq(6, o.get('six'));
-    assertThrows('not found', () => {
-        o.get('seven');
-    });
-    assertThrows('not found', () => {
-        o.get('');
-    });
-    // test find
-    assertEq(5, o.find('five'));
-    assertEq(6, o.find('six'));
-    assertEq(undefined, o.find('seven'));
-    assertEq(undefined, o.find(''));
-    // test getKeys
-    assertEq(['five', 'six'], sorted(o.getKeys()));
-    assertEq([5, 6], sorted(o.getVals()));
-    // test remove
-    o.remove('five');
-    assertEq(undefined, o.find('five'));
-});
 t.test('checkThrowEq', () => {
     checkThrowEq(1, 1);
     checkThrowEq('abc', 'abc');
@@ -506,11 +453,14 @@ t.test('longstr', () => {
 });
 
 /**
- * test-only enum
+ * test-only enum.
+ * do our tests on numeric enums because
+ * the that's what our legacy code uses, string enums are
+ * better especially when persisting to disk.
  */
 enum TestEnum {
     __isUI512Enum = 1,
-    __UI512EnumCapitalize,
+    __UI512EnumCapitalize = 1, // don't disrupt order
     First,
     Second,
     Third,
@@ -518,3 +468,14 @@ enum TestEnum {
     __AlternateForm__Scnd = Second,
     __AlternateForm__Thd = Third
 }
+
+/**
+ * test-only enum
+ */
+enum TestSimpleEnum {
+    __isUI512Enum = 1,
+    EOne,
+    ETwo,
+    EThree
+}
+

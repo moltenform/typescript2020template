@@ -1,6 +1,11 @@
-
 /* auto */ import { O, tostring, Util512StaticClass } from './util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
+/* auto */ import {
+    assertTrue,
+    assertWarn,
+    checkThrow512,
+    ensureDefined,
+    make512Error
+} from './util512Assert';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -9,26 +14,26 @@ import _ from 'lodash';
 /**
  * typescript utilities
  */
-export const Util512 = new class Util512 extends Util512StaticClass {
+export const Util512 = new (class Util512 extends Util512StaticClass {
     /**
      * checks for number type, and not NaN / Infinity
      */
-    isValidNumber=(value: unknown)=> {
+    isValidNumber = (value: unknown) => {
         return typeof value === 'number' && Number.isFinite(value);
-    }
+    };
 
     /**
      * like Python's range()
      */
     range = (start: number, end: number, inc = 1) => {
         if (end <= start && inc > 0) {
-            return []
+            return [];
         } else if (end >= start && inc < 0) {
-            return []
+            return [];
         } else {
             return _.range(start, end, inc);
         }
-    }
+    };
 
     /**
      * like Python's [x] * y
@@ -41,7 +46,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return ret;
-    }
+    };
 
     /**
      * sets an element, expands array if necessary
@@ -55,24 +60,24 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         ar[index] = val;
-    }
+    };
 
     /**
      * like Python's extend()
      * distinct from Array.concat which returns a new object
      * don't use splice+apply, might run into issues with max-args-pased
      */
-    extendArray = <T>(ar: T[], added: T[]) =>{
+    extendArray = <T>(ar: T[], added: T[]) => {
         for (let i = 0; i < added.length; i++) {
             ar.push(added[i]);
         }
-    }
+    };
 
     /*
      * parseInt allows trailing text, this doesn't.
      * also only accepts non-negative numbers.
      */
-    parseIntStrict = (s: O<string>): O<number>=> {
+    parseIntStrict = (s: O<string>): O<number> => {
         if (!s) {
             return undefined;
         }
@@ -83,13 +88,13 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         } else {
             return undefined;
         }
-    }
+    };
 
     /*
      * this enforces base10 unlike builtin parseInt,
      * and uses undefined instead of NaN
      */
-    parseInt = (s: O<string>): O<number> =>{
+    parseInt = (s: O<string>): O<number> => {
         let ret = 0;
         if (s) {
             /* ok to use, we remembered to say base 10 */
@@ -100,12 +105,12 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return Number.isFinite(ret) ? ret : undefined;
-    }
+    };
 
     /**
      * ensures that the string is <= maxLen
      */
-    truncateWithEllipsis = (s: string, maxLen: number)=> {
+    truncateWithEllipsis = (s: string, maxLen: number) => {
         if (s.length <= maxLen) {
             return s;
         } else {
@@ -116,22 +121,22 @@ export const Util512 = new class Util512 extends Util512StaticClass {
                 return s.slice(0, maxLen - ellipsis.length) + ellipsis;
             }
         }
-    }
+    };
 
     /**
      * useful for map/reduce,
      * although _.sum is preferred
      */
-    add = (n1: number, n2: number)=> {
+    add = (n1: number, n2: number) => {
         return n1 + n2;
-    }
+    };
 
     /**
      * is a 'map' empty.
      * this codebase used to target es5 so we
      * often say {} instead of new Map()
      */
-    isMapEmpty = <U>(map: Record<string, U>)=> {
+    isMapEmpty = <U>(map: Record<string, U>) => {
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
                 return false;
@@ -139,21 +144,21 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return true;
-    }
+    };
 
     /**
      * freeze a property on an object
      */
-    freezeProperty = (o: any, propName: string)=> {
+    freezeProperty = (o: any, propName: string) => {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
-    }
+    };
 
     /**
      * https://github.com/substack/deep-freeze
      * public domain
      */
-    freezeRecurse = (o: any) =>{
+    freezeRecurse = (o: any) => {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -166,7 +171,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
                 this.freezeRecurse(o[prop]);
             }
         }
-    }
+    };
 
     /**
      * like Python's re.escape.
@@ -174,14 +179,14 @@ export const Util512 = new class Util512 extends Util512StaticClass {
      */
     escapeForRegex = (s: string) => {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    }
+    };
 
     /**
      * make the first character uppercase.
      */
     capitalizeFirst = (s: string) => {
         return s.substring(0, 1).toLocaleUpperCase() + s.substring(1);
-    }
+    };
 
     /**
      * instead of a switch() or a map string->function,
@@ -230,14 +235,14 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         } else {
             checkThrow512(false, `callAsMethodOnClass ${clsname} could not find ${s}`);
         }
-    }
+    };
 
     /**
      * for use with callAsMethodOnClass
      */
     isMethodOnClass = (me: any, s: string) => {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
-    }
+    };
 
     /**
      * returns list of keys.
@@ -251,7 +256,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return ret;
-    }
+    };
 
     /**
      * returns list of vals.
@@ -265,7 +270,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return ret;
-    }
+    };
 
     /**
      * padStart, accepts integers as well.
@@ -274,7 +279,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
     padStart = (sIn: string | number, targetLength: number, padString: string) => {
         let s = tostring(sIn);
         return _.padStart(s, targetLength, padString);
-    }
+    };
 
     /**
      * to base64 with / and + characters
@@ -286,7 +291,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return btoa(s);
-    }
+    };
 
     /**
      * to base64 with _ and - characters.
@@ -294,7 +299,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
      */
     toBase64UrlSafe = (s: string) => {
         return btoa(s).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '');
-    }
+    };
 
     /**
      * from base64 with _ and - characters.
@@ -305,7 +310,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
             s += '==='.slice(0, 4 - (s.length % 4));
         }
         return atob(s.replace(/_/g, '/').replace(/-/g, '+'));
-    }
+    };
 
     /**
      * javascript's default sort is dangerous because it's
@@ -313,22 +318,22 @@ export const Util512 = new class Util512 extends Util512StaticClass {
      * we know we are sorting strings. our util512 sort is
      * usually better though because it checks types at runtime.
      */
-    sortStringArray = (arr: string[]):void => {
+    sortStringArray = (arr: string[]): void => {
         /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
         arr.sort();
-    }
+    };
 
     /**
      * normalize newlines to \n
      */
-    normalizeNewlines = (s: string) =>{
+    normalizeNewlines = (s: string) => {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    }
+    };
 
     /**
      * filter a list, keeping only unique values.
      */
-    keepOnlyUnique = (ar: string[]) =>{
+    keepOnlyUnique = (ar: string[]) => {
         let ret: string[] = [];
         let seen: Record<string, boolean> = {};
         for (let i = 0; i < ar.length; i++) {
@@ -339,7 +344,7 @@ export const Util512 = new class Util512 extends Util512StaticClass {
         }
 
         return ret;
-    }
+    };
 
     /**
      * map-values-deep, applies mapping recursively to an object.
@@ -358,12 +363,12 @@ export const Util512 = new class Util512 extends Util512StaticClass {
             : _.isObject(obj)
             ? obj
             : fn(obj, key);
-    }
-}
+    };
+})();
 
 /**
-     * array that can be locked
-     */
+ * array that can be locked
+ */
 export class LockableArr<T> {
     protected vals: T[] = [];
     protected locked = false;
@@ -396,56 +401,9 @@ export class LockableArr<T> {
     getUnlockedCopy() {
         let other = new LockableArr<T>();
         other.locked = false;
-        other.vals = this.vals.slice(0);
+        other.vals = _.clone(this.vals);
         return other;
     }
-};
-
-/**
- * polyfill for String.includes, from http://developer.mozilla.org
- * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
- */
-if (!String.prototype.includes) {
-    /* eslint-disable-next-line no-extend-native */
-    String.prototype.includes = function (search: string | RegExp, start?: number) {
-        if (search instanceof RegExp) {
-            throw TypeError('first argument must not be a RegExp');
-        }
-        if (start === undefined) {
-            start = 0;
-        }
-
-        /* eslint-disable-next-line @typescript-eslint/prefer-includes */
-        return this.indexOf(search, start) !== -1;
-    };
-}
-
-/**
- * polyfill for String.startsWith, from http://developer.mozilla.org
- * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
- */
-if (!String.prototype.startsWith) {
-    /* eslint-disable-next-line no-extend-native */
-    Object.defineProperty(String.prototype, 'startsWith', {
-        value: function (search: string, rawPos: number) {
-            let pos = rawPos > 0 ? rawPos | 0 : 0;
-            return this.substring(pos, pos + search.length) === search;
-        }
-    });
-}
-
-/**
- * polyfill for String.endsWith, from https://developer.mozilla.org
- * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
- */
-if (!String.prototype.endsWith) {
-    /* eslint-disable-next-line no-extend-native */
-    String.prototype.endsWith = function (search: string, this_len?: number) {
-        if (this_len === undefined || this_len > this.length) {
-            this_len = this.length;
-        }
-        return this.substring(this_len - search.length, this_len) === search;
-    };
 }
 
 /**
@@ -515,7 +473,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
  * string to enum.
  * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
  */
-export function findStrToEnum<T>(Enm: any, s: string): O<T> {
+export function findStrToEnum<T>(Enm: T, s: string): O<T> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
         'must provide an enum type with __isUI512Enum defined.'
@@ -543,7 +501,7 @@ export function findStrToEnum<T>(Enm: any, s: string): O<T> {
 /**
  * same as findStrToEnum, but throws if not found, showing possible values.
  */
-export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
+export function getStrToEnum<T>(Enm: T, msgContext: string, s: string): T {
     let found = findStrToEnum<T>(Enm, s);
     if (found !== undefined) {
         return found;
@@ -585,6 +543,18 @@ export function findEnumToStr(Enm: TypeLikeAnEnum, n: number): O<string> {
     }
 
     return undefined;
+}
+
+/**
+ * findEnumToStr, but throws
+ */
+export function getEnumToStr(
+    Enm: TypeLikeAnEnum,
+    n: number,
+): string {
+    const ret = findEnumToStr(Enm, n) 
+    checkThrow512(ret === undefined, `Not a valid choice for this value.`);
+    return ret
 }
 
 /**
@@ -660,211 +630,76 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
     return n;
 }
 
-/**
- * compare two objects.
- * confirms that types match.
- * works on arbitrarily nested array structures.
- * can be used in .sort() or just to compare values.
- */
-export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
-    if (a === undefined && b === undefined) {
-        return 0;
-    } else if (a === null && b === null) {
-        return 0;
-    } else if (typeof a === 'string' && typeof b === 'string') {
-        return a < b ? -1 : a > b ? 1 : 0;
-    } else if (typeof a === 'number' && typeof b === 'number') {
-        return a < b ? -1 : a > b ? 1 : 0;
-    } else if (typeof a === 'boolean' && typeof b === 'boolean') {
-        return a < b ? -1 : a > b ? 1 : 0;
-    } else if (a instanceof Array && b instanceof Array) {
-        if (a.length < b.length) {
-            return -1;
-        }
-        if (a.length > b.length) {
-            return 1;
-        }
-        let howManyElementsToSort = a.length;
-        for (let i = 0; i < howManyElementsToSort; i++) {
-            let cmp = util512Sort(a[i], b[i]);
-            if (cmp !== 0) {
-                return cmp;
-            }
-        }
-        return 0;
+export function getShapeRecurse(val: unknown, level=0): unknown {
+    if (val === undefined) {
+        return 'undefined';
+    } else if (val === null) {
+        return 'null';
+    } else if (typeof val === 'function') {
+        throw new Error('cannot compare functions');
+    } else if (Array.isArray(val)) {
+        return val.map((v) => getShapeRecurse(v, level + 1));
+    } else if (typeof val === 'object') {
+        return _.mapValues(val, (v) => getShapeRecurse(v, level + 1));
     } else {
-        if (silent) {
-            return 1;
-        } else {
-            checkThrow512(false, `could not compare types ${a} and ${b}`);
-        }
+        return typeof val;
     }
 }
 
-/**
- * a map from string to object that preserves insertion order.
- * like Python's OrderedDict
- */
-export class OrderedHash<TValue> {
-    protected keys: string[] = [];
-    protected vals: Record<string, TValue> = Object.create(null);
-
-    deleteAll() {
-        this.keys = [];
-        this.vals = Object.create(null);
+export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):void {
+    if (!arr.length) {
+        return
     }
 
-    insertNew(k: string, v: TValue) {
-        assertTrue(k !== null && k !== undefined, 'invalid key');
-        assertTrue(v !== undefined, 'invalid val');
-        assertTrue(this.vals[k] === undefined, `key ${k} already exists`);
-        this.keys.push(k);
-        this.vals[k] = v;
+    const shapeFirst = getShapeRecurse(mapper(arr[0]));
+    if (arr.some((v) => !_.isEqual(getShapeRecurse(mapper(v)), shapeFirst))) {
+        throw new Error('cannot compare arrays with different types/shapes');
     }
 
-    insertAt(k: string, v: TValue, n: number) {
-        assertTrue(k !== null && k !== undefined, 'invalid key');
-        assertTrue(v !== undefined, 'invalid val');
-        assertTrue(this.vals[k] === undefined, `key ${k} already exists`);
-        this.keys.splice(n, 0, k);
-        this.vals[k] = v;
-    }
-
-    getIndex(k: string) {
-        let ret = this.keys.indexOf(k);
-        assertTrue(ret !== -1, `could not find ${k}`);
-        return ret;
-    }
-
-    atIndex(n: number): O<TValue> {
-        if (n >= 0 && n < this.keys.length) {
-            return this.vals[this.keys[n]];
-        } else {
-            return undefined;
-        }
-    }
-
-    find(k: string): O<TValue> {
-        return this.vals[k];
-    }
-
-    get(k: string): TValue {
-        return ensureDefined(this.find(k), 'could not find ', k);
-    }
-
-    delete(k: string): boolean {
-        assertTrue(k !== null && k !== undefined, 'invalid key');
-        let index = this.keys.indexOf(k);
-        if (index !== -1) {
-            this.keys.splice(index, 1);
-            delete this.vals[k];
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    length() {
-        return this.keys.length;
-    }
-
-    *iterKeys() {
-        for (let i = 0, len = this.keys.length; i < len; i++) {
-            yield this.keys[i];
-        }
-    }
-
-    *iter() {
-        for (let i = 0, len = this.keys.length; i < len; i++) {
-            let key = this.keys[i];
-            yield this.vals[key];
-        }
-    }
-
-    *iterReversed() {
-        for (let i = this.keys.length - 1; i >= 0; i--) {
-            yield this.vals[this.keys[i]];
-        }
-    }
+    _.sortBy(arr, mapper)
 }
 
-/**
- * dump ordered hash to a string
- */
-export function orderedHashSummary<T>(hash: OrderedHash<T>) {
-    let ret = '';
-    for (let k of hash.iterKeys()) {
-        ret += k;
-        ret += ':';
-        ret += hash.get(k);
-        ret += '\n';
-    }
+//~ /**
+ //~ * compare two objects.
+ //~ * confirms that types match.
+ //~ * works on arbitrarily nested array structures.
+ //~ * can be used in .sort() or just to compare values.
+ //~ */
+//~ export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
+    //~ if (a === undefined && b === undefined) {
+        //~ return 0;
+    //~ } else if (a === null && b === null) {
+        //~ return 0;
+    //~ } else if (typeof a === 'string' && typeof b === 'string') {
+        //~ return a < b ? -1 : a > b ? 1 : 0;
+    //~ } else if (typeof a === 'number' && typeof b === 'number') {
+        //~ return a < b ? -1 : a > b ? 1 : 0;
+    //~ } else if (typeof a === 'boolean' && typeof b === 'boolean') {
+        //~ return a < b ? -1 : a > b ? 1 : 0;
+    //~ } else if (a instanceof Array && b instanceof Array) {
+        //~ if (a.length < b.length) {
+            //~ return -1;
+        //~ }
+        //~ if (a.length > b.length) {
+            //~ return 1;
+        //~ }
+        //~ let howManyElementsToSort = a.length;
+        //~ for (let i = 0; i < howManyElementsToSort; i++) {
+            //~ let cmp = util512Sort(a[i], b[i]);
+            //~ if (cmp !== 0) {
+                //~ return cmp;
+            //~ }
+        //~ }
+        //~ return 0;
+    //~ } else {
+        //~ if (silent) {
+            //~ return 1;
+        //~ } else {
+            //~ checkThrow512(false, `could not compare types ${a} and ${b}`);
+        //~ }
+    //~ }
+//~ }
 
-    return ret;
-}
-
-/**
- * map a key to object, does not allow setting a value twice.
- */
-export class MapKeyToObject<T> {
-    protected objects: Record<string, T> = Object.create(null);
-    exists(key: string) {
-        return Object.prototype.hasOwnProperty.call(this.objects, key);
-    }
-
-    get(key: string) {
-        return ensureDefined(this.objects[key], 'id not found', key);
-    }
-
-    getOrFallback(key: string, fallback: T) {
-        let found = this.objects[key];
-        return found ?? fallback;
-    }
-
-    find(key: O<string>): O<T> {
-        if (key) {
-            return this.objects[key];
-        } else {
-            return undefined;
-        }
-    }
-
-    add(key: string, obj: T) {
-        assertTrue(slength(key) > 0, `invalid id ${key}`);
-        checkThrow512(
-            this.objects[key] === undefined,
-            `duplicate key, ${key} already exists`
-        );
-
-        this.objects[key] = obj;
-    }
-
-    freeze() {
-        Object.freeze(this.objects);
-    }
-
-    remove(key: string) {
-        delete this.objects[key];
-    }
-
-    getVals(): T[] {
-        return Util512.getMapVals(this.objects);
-    }
-
-    getKeys(): string[] {
-        return Util512.getMapKeys(this.objects);
-    }
-}
-
-/**
- * map a key to object, does allow setting a value twice.
- */
-export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
-    set(key: string, obj: T) {
-        assertTrue(slength(key) > 0, `invalid id ${key}`);
-        this.objects[key] = obj;
-    }
-}
 
 /**
  * a quick way to trigger assertion if value is not what was expected.
@@ -892,9 +727,9 @@ export function assertWarnEq(
     got: unknown,
     c1?: unknown,
     c2?: unknown,
-    c3?: unknown,
+    c3?: unknown
 ) {
-    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+    if (!_.isEqual(expected, got)) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         msgEq += c1 ?? '';
         assertWarn(false, msgEq, c2, c3);
@@ -911,7 +746,7 @@ export function checkThrowEq<T>(
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+    if (!_.isEqual(expected, got)) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`);
     }
@@ -928,7 +763,7 @@ export function checkThrowEq512<T>(
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (expected !== got && util512Sort(expected, got, true) !== 0) {
+    if (!_.isEqual(expected, got)) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         checkThrow512(false, msg + msgEq, c1, c2);
     }
@@ -936,17 +771,11 @@ export function checkThrowEq512<T>(
 
 /**
  * get last of an array
+ * unlike _.last, will throw if array is empty
  */
 export function arLast<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'empty array');
     return ar[ar.length - 1];
-}
-
-/**
- * get last of an array, or undefined if array is empty
- */
-export function lastIfThere<T>(ar: T[]): O<T> {
-    return ar ? ar[ar.length - 1] : undefined;
 }
 
 /**
@@ -956,5 +785,3 @@ export function longstr(s: string, newlinesBecome = ' ') {
     s = s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
     return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
 }
-
-

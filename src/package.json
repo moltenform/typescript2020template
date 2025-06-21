@@ -31,6 +31,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-ban": "^1.6.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "expect-type": "^1.2.1",
     "fork-ts-checker-notifier-webpack-plugin": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "html-webpack-plugin": "^5.5.0",

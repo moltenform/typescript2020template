@@ -61,7 +61,7 @@ module.exports = {
 
         // personal preference, ones that I think are fine
         'no-inner-declarations': 'off',
-        'no-prototype-builtins': 'off',
+        'no-prototype-builtins': 'error',
         'no-debugger': 'off',
         'no-constant-condition': 'off',
         'prefer-const': 'off',
