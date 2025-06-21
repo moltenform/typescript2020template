@@ -13,5 +13,6 @@
         "dist": true, 
         "external": true, 
         "**/nocpy*": true,
+        "**/compare-docs-to-see-all-new-options": true,
     }
 }

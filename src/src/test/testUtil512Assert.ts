@@ -1,5 +1,5 @@
 
-/* auto */ import { RingBuffer, UI512Compress, tostring, UI512StaticClass, TestUI512StaticClass } from './../util/util512Base';
+/* auto */ import { RingBuffer, UI512Compress, tostring, UI512StaticClass, } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
@@ -88,54 +88,78 @@ t.test('JoinIntoMessage', () => {
     let got = joinIntoMessage('without|marks', 'prefix:');
     assertEq('prefix:: without|marks', got);
 });
-t.test('StaticClass', () => {
-    const TestUI512StaticClass = new class TestUI512StaticClass extends UI512StaticClass {
-    addNumbers = (a: number, b: number): number => {
-        return this.addNumbersHelper(a, b);   
+t.test('StaticClass Illustrating Problems', () => {
+    class Class1 {
+        static addNumbers(a: number, b: number): number {
+            return this.addNumbersHelper(a, b);
+        }
+        static addNumbersHelper(a: number, b: number): number {
+            return a + b;
+        }
     }
-    addNumbersHelper = (a: number, b: number): number => {
-        return a + b;
-    }
-}
 
-    //~ class TestNoThis {
-        //~ addNumbers(a: number, b: number): number {
-            //~ return this.addNumbersHelper(a, b);   
-        //~ }
-        //~ addNumbersHelper(a: number, b: number): number {
-            //~ return a + b;
-        //~ }
-    //~ }
-    
-    //~ const MyClass = new class MyClass extends UI512StaticClass {
-        //~ bound2(m: keyof MyClass) {
-            //~ return this.constructor.bind(m, this.constructor);
-        //~ }
-        //~ addNumbers(a: number, b: number): number {
-            //~ return this.addNumbersHelper(a, b);   
-        //~ }
-        //~ addNumbersHelper(a: number, b: number): number {
-            //~ return a + b;
-        //~ }
-    //~ }
+    // this works
+    assertEq(9, Class1.addNumbers(4, 5));
 
-    //~ function bound3<T>(c: T, m: keyof T) {
-        //~ const method = c[m]
-        //~ type fsdf = typeof method
-        //~ type dfg = Parameters<fsdf>
-        //~ return (...args: Parameters<typeof (c[m])>): ReturnType<typeof (c[m])> => {
-            //~ console.log("func has been called");
-            //~ return c[m](...args);
-        //~ };
-        //~ return (...arguments)=>c[m](...arguments);
-    //~ }
-
-    // don't use bind, it loses type safety
-
-    const stored = TestUI512StaticClass.addNumbers;
-    //~ const stored = bound3(MyClass, 'addNumbers')
+    // this works but loses typing info
+    const stored = Class1.addNumbers.bind(Class1) 
     assertEq(9, stored(4, 5));
+
+    // this works (unless the minifier/transpiler rewrites it which is possible)
+    try {
+        const storedWorks = Class1.addNumbersHelper
+        assertEq(9, storedWorks(4, 5));
+    } catch(e) {
+        console.log("test passed: transpiler made `this` refer to something else")
+    }
+    
+    // this fails (!)
+    try {
+        const storedFails = Class1.addNumbers;
+        assertEq(9, storedFails(4, 5));
+    } catch(e) {
+        console.log("test passed: the approach doesn't work because `this` is invalid")
+    }
+})
+t.test('StaticClass Illustrating Problems 2', () => {
+    const Class2 = {
+        addNumbers: (a: number, b: number): number => {
+            return Class2.addNumbersHelper(a, b);
+        },
+        addNumbersHelper: (a: number, b: number): number => {
+            return a + b;
+        }
+    }
+
+    // this works, and i like the feel where it shows this
+    // will never have another instantiation.
+    assertEq(9, Class2.addNumbers(4, 5));
+
+    // and it doesn't run into binding problems
+    const stored = Class2.addNumbers
+    assertEq(9, stored(4, 5));
+
+    // drawbacks: can't refer to `this`, need to type the full name out.
+    // and I don't think you could add private methods.
+})
+t.test('StaticClass Best', () => {
+    // put the classname in there twice for better callstacks
+    const TestUI512StaticClass = new class TestUI512StaticClass extends UI512StaticClass {
+        addNumbers = (a: number, b: number): number => {
+            return this.addNumbersHelper(a, b);   
+        }
+        addNumbersHelper = (a: number, b: number): number => {
+            return a + b;
+        }
+    }
+
+    // simple calls
     assertEq(9, TestUI512StaticClass.addNumbers(4, 5,));
+
+    // by using =method()=> style methods, we can even store references
+    // like this without needing bind(), which otherise would fail mysteriously on `this`
+    const stored = TestUI512StaticClass.addNumbers;
+    assertEq(9, stored(4, 5));
 })
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''));

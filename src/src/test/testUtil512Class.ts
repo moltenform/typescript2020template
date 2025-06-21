@@ -29,6 +29,12 @@ t.test('isValidNumber', () => {
     assertTrue(!Util512.isValidNumber(''));
 });
 t.test('Range.Upwards', () => {
+    try {
+    Util512.range(0, 1);
+    } catch( e) {
+        alert(e.stack)
+    }
+
     assertEq([0], Util512.range(0, 1));
     assertEq([1], Util512.range(1, 2));
     assertEq([0, 1, 2, 3], Util512.range(0, 4));

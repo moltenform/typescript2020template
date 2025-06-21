@@ -172,15 +172,16 @@ export type O<T> = T | undefined;
  * works in raw JS but transpilation/minifying/retargeting will often
  * rewrite the code such that `this` no longer references 
  * the class - it's legit fragile.
- * 3) also, potential pitfall with unbound (i.e. stored calls)
- * where const stored = MyClass.method; stored();
- * works if the method happens to not reference this but fails at runtime
+ * 3) also, there's a pitfall with unbound (i.e. stored calls)
+ * for code like: const stored = MyClass.method; stored();
+ * Works if the method happens to not reference `this` but fails at runtime
  * otherwise, which is not good. Probably possible to use typing
- * magic to have a const stored = MyClass.bound('method') but ugly.
+ * magic to have a const stored = MyClass.bound('method'), but ugly.
  * 
  * Why not the pattern const MyObject = { method: ()=> { return 1; } }
- * I do like the feel of this,
- * But again, you can't use `this` to call other methods.
+ * I do like the feel of this, and no binding issues with MyObject.method.
+ * But again, you can't use `this` to call other methods, you'd need
+ * to specify the full name which is verbose.
  * 
  * Why not namespaces? They're deprecated these days.
  * 
@@ -208,21 +209,22 @@ export class UI512StaticClass {
     }
 }
 
-
 /**
  * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.
  * I use compressToUTF16() instead of compress() to use only valid utf sequences.
  */
-export class UI512Compress {
-    protected static stringEscapeNewline = '##Newline##';
-    protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
-    protected static reNewline = /\n/g;
-    static compressString(s: string): string {
+
+export const UI512Compress = new class UI512Compress extends UI512StaticClass {
+    protected stringEscapeNewline = '##Newline##';
+    protected reEscapeNewline = new RegExp(this.stringEscapeNewline, 'g');
+    protected reNewline = /\n/g;
+    compressString = (s: string): string => {
         let compressed = LzString.compressToUTF16(s);
         return compressed;
     }
 
-    static decompressString(s: string): string {
+    decompressString= (s: string): string  => {
         return LzString.decompressFromUTF16(s) ?? '';
     }
 }
+

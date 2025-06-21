@@ -1,5 +1,5 @@
 
-/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring, UI512StaticClass } from './util512Base';
 import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -172,39 +172,39 @@ export function checkThrow512(
 /**
  * store logs. user can choose "send err report" to send us error context.
  */
-export class UI512ErrorHandling {
-    static shouldRecordErrors = true;
-    static runningTests = false;
-    static silenceAssertMsgs = false;
-    static silenceWarnings = false;
-    static silenceWarningsAndMore = false;
-    static silenceWarningsAndMoreCount = 0;
-    static contextHint = '';
-    static readonly maxEntryLength = 512;
-    static readonly maxLinesKept = 256;
-    static store = new RingBufferLocalStorage(UI512ErrorHandling.maxLinesKept);
+export const UI512ErrorHandling = new class UI512ErrorHandling extends UI512StaticClass {
+    shouldRecordErrors = true;
+    runningTests = false;
+    silenceAssertMsgs = false;
+    silenceWarnings = false;
+    silenceWarningsAndMore = false;
+    silenceWarningsAndMoreCount = 0;
+    contextHint = '';
+    readonly maxEntryLength = 512;
+    readonly maxLinesKept = 256;
+    store = new RingBufferLocalStorage(this.maxLinesKept);
 
-    protected static encodeErrMsg(s: string) {
-        s = s.substring(0, UI512ErrorHandling.maxEntryLength);
+    protected  encodeErrMsg=(s: string) =>{
+        s = s.substring(0, this.maxEntryLength);
         return UI512Compress.compressString(s);
     }
 
-    protected static decodeErrMsg(compressed: string) {
+    protected  decodeErrMsg=(compressed: string) =>{
         return UI512Compress.decompressString(compressed);
     }
 
-    static appendErrMsgToLogs(severity: boolean, s: string) {
-        if (UI512ErrorHandling.shouldRecordErrors) {
-            if (!UI512ErrorHandling.runningTests) {
+    appendErrMsgToLogs = (severity: boolean, s: string)=> {
+        if (this.shouldRecordErrors) {
+            if (!this.runningTests) {
                 let sseverity = severity ? '1' : '2';
-                let encoded = sseverity + UI512ErrorHandling.encodeErrMsg(s);
-                UI512ErrorHandling.store.append(encoded);
+                let encoded = sseverity + this.encodeErrMsg(s);
+                this.store.append(encoded);
             }
         }
     }
 
-    static getLatestErrLogs(amount: number): string[] {
-        return UI512ErrorHandling.store.retrieve(amount);
+    getLatestErrLogs = (amount: number): string[] =>{
+        return this.store.retrieve(amount);
     }
 }
 

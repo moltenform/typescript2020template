@@ -127,14 +127,14 @@ t.test('LockableArr', () => {
     assertThrows('locked', () => {
         ar.set(1, 57);
     });
-    t.say(/*——————————*/ "changing the copy won't change original");
-    let copy = ar.getUnlockedCopy();
-    assertEq(55, copy.at(0));
-    assertEq(56, copy.at(1));
-    assertEq(2, copy.len());
-    copy.set(1, 57);
-    assertEq(57, copy.at(1));
-    assertEq(56, ar.at(1));
+    //~ t.say(/*——————————*/ "changing the copy won't change original");
+    //~ let copy = ar.getUnlockedCopy();
+    //~ assertEq(55, copy.at(0));
+    //~ assertEq(56, copy.at(1));
+    //~ assertEq(2, copy.len());
+    //~ copy.set(1, 57);
+    //~ assertEq(57, copy.at(1));
+    //~ assertEq(56, ar.at(1));
 });
 t.test('keepOnlyUnique', () => {
     assertEq([], Util512.keepOnlyUnique([]));

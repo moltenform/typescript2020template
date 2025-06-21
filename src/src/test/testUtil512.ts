@@ -10,18 +10,6 @@
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
 export let testCollectionUtil512 = t;
 
-t.test('class methods can be called via this', () => {
-    class ExampleClass {
-        static method1() {
-            return this.method2();
-        }
-        static method2() {
-            return 'abc';
-        }
-    }
-    assertEq('abc', ExampleClass.method1(), '');
-});
-
 t.test('ValHolder.param', () => {
     function increment(vv: ValHolder<number>) {
         vv.val += 1;
