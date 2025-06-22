@@ -1,7 +1,7 @@
 
 /* auto */ import { bool, O } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr } from './../util/util512';
+/* auto */ import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
 import {expectTypeOf} from 'expect-type'
 import _ from 'lodash';
@@ -61,12 +61,12 @@ t.test('ValHolder.closure', () => {
     assertEq(1, v.val);
 });
 t.test('listEnumValsIncludingAlternates', () => {
-    assertEq('xxx', listEnumValsIncludingAlternates(TestEnum))
-    assertEq('xxx', listEnumValsIncludingAlternates(TestSimpleEnum))
-    assertEq('xxx', listEnumVals(TestEnum, true))
-    assertEq('xxx', listEnumVals(TestEnum, false))
-    assertEq('xxx', listEnumVals(TestSimpleEnum, true))
-    assertEq('xxx', listEnumVals(TestSimpleEnum, false))
+    assertEq('__isUI512Enum,__UI512EnumCapitalize,First,Second,Third,TheFirst,Scnd,Thd', listEnumValsIncludingAlternates(TestEnum))
+    assertEq('__isUI512Enum,EOne,ETwo,EThree', listEnumValsIncludingAlternates(TestSimpleEnum))
+    assertEq(', first, second, third', listEnumVals(TestEnum, true))
+    assertEq(', First, Second, Third', listEnumVals(TestEnum, false))
+    assertEq(', eone, etwo, ethree', listEnumVals(TestSimpleEnum, true))
+    assertEq(', EOne, ETwo, EThree', listEnumVals(TestSimpleEnum, false))
 })
 t.test('findStrToEnum, standard usage', () => {
     // test typing inference
@@ -172,12 +172,11 @@ t.test('ShowValuesInExceptionMsg', () => {
         excMessage = e.toString();
     }
 
-    let pts = excMessage.split(',');
-    pts.sort(util512Sort);
+    let pts = sortedConsistentType(excMessage.split(','));
     assertEq(` first`, pts[0]);
     assertEq(` second`, pts[1]);
     assertEq(` third`, pts[2]);
-    assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`));
+    assertTrue((pts[3] as string).endsWith(`Not a valid choice of TestEnum. try one of`));
 });
 t.test('slength', () => {
     assertEq(0, slength(null));
@@ -259,161 +258,90 @@ t.test('fitIntoInclusive.NeedToTruncate', () => {
     assertEq(1, fitIntoInclusive(0, 1, 3));
     assertEq(3, fitIntoInclusive(4, 1, 3));
 });
-t.test('util512Sort.String', () => {
-    const arr = ['', 'a', 'abc', 'abb', 'abcd']
-    _.sortBy(arr)
+t.test('getShapeRecurse', () => {
+    assertEq('null', getShapeRecurse(null));
+    assertEq('undefined', getShapeRecurse(undefined));
+    assertEq([], getShapeRecurse([]));
+    assertEq(['number', 'number'], getShapeRecurse([1, 2]));
+    assertEq({}, getShapeRecurse({}));
+    assertEq({ a: {b: 'number', c: 'string'}}, getShapeRecurse({ a: {b: 1, c: 'abc'} }));
+});
+t.test('sortConsistentType.String', () => {
+    const arr = sortedConsistentType(['', 'a', 'abc', 'abb', 'abcd'])
     assertEq('TMMP', arr.join(','))
 });
-t.test('util512Sort.StringWithNonAscii', () => {
-    const arr = [
+t.test('sortConsistentType.StringWithNonAscii', () => {
+    const arr = sortedConsistentType([
         'accented\u0065\u0301letter',
 'aunicode\u2666char', 'aunicode\u2667char', 'accented\u00e9letter',
 'accented\u0065\u0301letter', 
-    ]
+    ])
     assertEq('TMMP', arr.join(','))
 });
-t.test('util512Sort.Bool', () => {
-    const arr = [false, true, false, true]
-    _.sortBy(arr)
-    assertEq('false,true,false,true', arr.map(String).join(','));
-});
-t.test('util512Sort.Number', () => {
-    const arr = [
+t.test('sortConsistentType.Number', () => {
+    const arr = sortedConsistentType([
         0, 1, 12345, -11.15, 1.4, 1.3, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY
-    ]
-    _.sortBy(arr)
+    ])
     assertEq('TMMP', arr.map(String).join(','));
 });
-t.test('util512Sort.Nullish', () => {
-    assertEq(0, util512Sort(undefined, undefined));
-    assertEq(0, util512Sort(null, null));
-    assertThrows('not compare', () => util512Sort(null, undefined));
-    assertThrows('not compare', () => util512Sort(undefined, null));
+t.test('sortConsistentType.Nullish', () => {
+    assertEq([undefined, undefined], sortedConsistentType([undefined, undefined]));
+    assertEq([null, null], sortedConsistentType([null, null]));
+    assertThrows('not compare', () => sortedConsistentType([undefined, undefined]));
 });
-t.test('util512Sort.DiffTypesShouldThrow', () => {
-    assertThrows('not compare', () => util512Sort('a', 1));
-    assertThrows('not compare', () => util512Sort('a', true));
-    assertThrows('not compare', () => util512Sort('a', undefined));
-    assertThrows('not compare', () => util512Sort('a', []));
-    assertThrows('not compare', () => util512Sort(1, 'a'));
-    assertThrows('not compare', () => util512Sort(1, true));
-    assertThrows('not compare', () => util512Sort(1, undefined));
-    assertThrows('not compare', () => util512Sort(1, []));
-    assertThrows('not compare', () => util512Sort(true, 'a'));
-    assertThrows('not compare', () => util512Sort(true, 1));
-    assertThrows('not compare', () => util512Sort(true, undefined));
-    assertThrows('not compare', () => util512Sort(true, []));
-    assertThrows('not compare', () => util512Sort(undefined, 'a'));
-    assertThrows('not compare', () => util512Sort(undefined, 1));
-    assertThrows('not compare', () => util512Sort(undefined, true));
-    assertThrows('not compare', () => util512Sort(undefined, []));
-    assertThrows('not compare', () => util512Sort([], 'a'));
-    assertThrows('not compare', () => util512Sort([], 1));
-    assertThrows('not compare', () => util512Sort([], true));
-    assertThrows('not compare', () => util512Sort([], undefined));
+t.test('sortConsistentType.DiffTypesShouldThrow', () => {
+    assertThrows('not compare', () => sortedConsistentType(['a', 1]));
+    assertThrows('not compare', () => sortedConsistentType(['a', true]));
+    assertThrows('not compare', () => sortedConsistentType(['a', undefined]));
+    assertThrows('not compare', () => sortedConsistentType(['a', []]));
 });
-t.test('util512Sort.DiffTypesInArrayShouldThrow', () => {
-    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', 1]));
-    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', true]));
-    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', undefined]));
-    assertThrows('not compare', () => util512Sort(['a', 'a'], ['a', []]));
-    assertThrows('not compare', () => util512Sort(['a', 1], ['a', 'a']));
-    assertThrows('not compare', () => util512Sort(['a', 1], ['a', true]));
-    assertThrows('not compare', () => util512Sort(['a', 1], ['a', undefined]));
-    assertThrows('not compare', () => util512Sort(['a', 1], ['a', []]));
-    assertThrows('not compare', () => util512Sort(['a', true], ['a', 'a']));
-    assertThrows('not compare', () => util512Sort(['a', true], ['a', 1]));
-    assertThrows('not compare', () => util512Sort(['a', true], ['a', undefined]));
-    assertThrows('not compare', () => util512Sort(['a', true], ['a', []]));
-    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', 'a']));
-    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', 1]));
-    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', true]));
-    assertThrows('not compare', () => util512Sort(['a', undefined], ['a', []]));
-    assertThrows('not compare', () => util512Sort(['a', []], ['a', 'a']));
-    assertThrows('not compare', () => util512Sort(['a', []], ['a', 1]));
-    assertThrows('not compare', () => util512Sort(['a', []], ['a', true]));
-    assertThrows('not compare', () => util512Sort(['a', []], ['a', undefined]));
+t.test('sortConsistentType.DiffTypesInArrayShouldThrow', () => {
+     const arr = sortedConsistentType([
+        ['a', 1], ['b', 2], ['a', 2], ['b', 1]
+    ])
+    assertEq('TMMP', arr.map(String).join(','));
+    assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', 'a']]));
+    assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', true]]));
+    assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', undefined]]));
+    assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', []]]));
 });
-t.test('util512Sort.ArrayThreeElements', () => {
-    assertEq(0, util512Sort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']));
-    assertEq(1, util512Sort([5, 'a', 'abc'], [5, 'a', 'abb']));
-    assertEq(-1, util512Sort([5, 'a', 'abb'], [5, 'a', 'abc']));
+t.test('sortConsistentType.DiffTypesInObjectShouldThrow', () => {
+     const arr = sortedConsistentType([
+        {a:1}, {a:2}, {a:0}
+    ])
+    assertEq('TMMP', arr.map(String).join(','));
+    assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: 'a'}]));
+    assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: true}]));
+    assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: undefined}]));
+    assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: []}]));
 });
-t.test('util512Sort.ArraySameLength', () => {
-    assertEq(0, util512Sort([], []));
-    assertEq(0, util512Sort([5, 'a'], [5, 'a']));
-    assertEq(1, util512Sort([5, 'a', 7], [5, 'a', 6]));
-    assertEq(-1, util512Sort([5, 'a', 6], [5, 'a', 7]));
-    assertEq(1, util512Sort([5, 7, 'a'], [5, 6, 'a']));
-    assertEq(1, util512Sort([5, 7, 'a', 600], [5, 6, 'a', 700]));
+t.test('sortConsistentType.DifferentLength', () => {
+    assertThrows('not compare', () => sortedConsistentType([[1,2], [1,2,3]]));
+    assertThrows('not compare', () => sortedConsistentType([{a:1}, {a:1, b:2}]));
 });
-t.test('util512Sort.ArrayDifferentLength', () => {
-    assertEq(1, util512Sort([1], []));
-    assertEq(-1, util512Sort([], [1]));
-    assertEq(1, util512Sort([10, 20], [10]));
-    assertEq(-1, util512Sort([10], [10, 20]));
-});
-t.test('util512Sort.ArrayNested', () => {
-    assertEq(0, util512Sort([[]], [[]]));
-    assertEq(0, util512Sort([[], []], [[], []]));
-    assertEq(0, util512Sort([[1, 2], []], [[1, 2], []]));
-    assertEq(0, util512Sort([[10, 20], [30]], [[10, 20], [30]]));
-    assertEq(1, util512Sort([[10, 20], [30]], [[10, 20], [-30]]));
-    assertEq(-1, util512Sort([[10, 20], [-30]], [[10, 20], [30]]));
-    assertEq(
-        1,
-        util512Sort(
-            [
-                [10, 20],
-                [1, 30]
-            ],
-            [
-                [10, 20],
-                [1, -30]
-            ]
-        )
-    );
-    assertEq(
-        -1,
-        util512Sort(
-            [
-                [10, 20],
-                [1, -30]
-            ],
-            [
-                [10, 20],
-                [1, 30]
-            ]
-        )
-    );
-    assertEq(
-        1,
-        util512Sort(
-            [
-                [10, 20],
-                [30, 31]
-            ],
-            [[10, 20], [30]]
-        )
-    );
-    assertEq(
-        -1,
-        util512Sort(
-            [[10, 20], [30]],
-            [
-                [10, 20],
-                [30, 31]
-            ]
-        )
-    );
-    assertEq(0, util512Sort([[10, 20], 50, [30]], [[10, 20], 50, [30]]));
-    assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]));
-    assertEq(-1, util512Sort([[10, 20], 50, [30]], [[10, 20], 60, [30]]));
+t.test('sortConsistentType.maps and stability', () => {
+    const arrArrs = [
+        ['a', 1], ['b', 2], ['a', 2], ['b', 1]
+    ]
+    assertEq('TMMP', sortedConsistentType(arrArrs).map(String).join(','));
+    assertEq('TMMP', sortedConsistentType(arrArrs, (x:any) => x[0]).map(String).join(','));
+    assertEq('TMMP', sortedConsistentType(arrArrs, (x:any) => x[1]).map(String).join(','));
+    const arr = [
+        {a:3, b:1}, {a:2, b:3}, {a:1, b:3}, 
+    ]
+    assertEq('TMMP', sortedConsistentType(arr).map(String).join(','));
+    assertEq('TMMP', sortedConsistentType(arr, (x:any) => x.a).map(String).join(','));
+    assertEq('TMMP', sortedConsistentType(arr, (x:any) => x.b).map(String).join(','));
 });
 
 t.test('checkThrowEq', () => {
     checkThrowEq(1, 1);
     checkThrowEq('abc', 'abc');
+    checkThrowEq({a:'abc', b:1}, {a:'abc', b:1}, 'abc');
+    checkThrowEq({a:'abc', b:{c:1}}, {a:'abc', b:{c:1}}, 'abc');
+    assertThrows('but got', () => {
+        checkThrowEq({a:'abc', b:{c:1}}, {a:'abc', b:{c:2}}, 'abc');
+    });
     assertThrows('but got', () => {
         checkThrowEq(1, 2);
     });
@@ -424,6 +352,10 @@ t.test('checkThrowEq', () => {
 t.test('last', () => {
     assertEq(3, arLast([1, 2, 3]));
     assertEq(1, arLast([1]));
+    assertThrows('empty', ()=>arLast([]));
+    assertEq(3, _.last([1, 2, 3]));
+    assertEq(1, _.last([1]));
+    assertEq(undefined, _.last([]));
 });
 t.test('bool', () => {
     assertEq(true, bool(true));
@@ -438,6 +370,20 @@ t.test('bool', () => {
     assertEq(false, bool(undefined));
     assertEq(false, bool(NaN));
 });
+t.test('assertEq corner cases', () => {
+    assertEq(null, null);
+    assertThrows('but got', () => {
+    assertEq(undefined, null);
+    })
+    assertEq([1,2,3], [1,2,3]);
+    assertThrows('but got', () => {
+    assertEq([1,2,3], [1,2,4]);
+    })
+    assertEq([1,2,{a:4}], [1,2,3,{a:4}]);
+    assertThrows('but got', () => {
+    assertEq([1,2,{a:4}], [1,2,3,{a:5}]);
+    })
+})
 t.test('longstr', () => {
     let s = longstr(`a long
         string across
@@ -451,6 +397,15 @@ t.test('longstr', () => {
     let sWindows = Util512.normalizeNewlines(s).replace(/\n/g, '\r\n');
     assertEq('a long string across a few lines', longstr(sWindows));
 });
+
+/**
+ * sorting helper for tests, space inefficent because it's not in-place
+ */
+function sortedConsistentType(arr: unknown[], mapper=(x:unknown)=>x): unknown[] {
+   const copy = _.clone(arr) 
+    sortConsistentType(copy, mapper);
+    return copy
+}
 
 /**
  * test-only enum.

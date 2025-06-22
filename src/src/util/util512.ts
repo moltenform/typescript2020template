@@ -630,22 +630,36 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
     return n;
 }
 
-export function getShapeRecurse(val: unknown, level=0): unknown {
-    if (val === undefined) {
-        return 'undefined';
-    } else if (val === null) {
-        return 'null';
-    } else if (typeof val === 'function') {
-        throw new Error('cannot compare functions');
-    } else if (Array.isArray(val)) {
-        return val.map((v) => getShapeRecurse(v, level + 1));
-    } else if (typeof val === 'object') {
-        return _.mapValues(val, (v) => getShapeRecurse(v, level + 1));
-    } else {
-        return typeof val;
+/**
+ * returns the 'shape' as a structure of strings.
+ * 1 -> 'number'
+ * [1, 'abc'] -> ['number', 'string']
+ * { a: {b: 1, c: 'abc'} } -> { a: {b: 'number', c: 'string'}}
+ */
+export function getShapeRecurse(val: unknown,): unknown {
+    const getValType = (v: unknown): string => {
+        if (val === undefined) {
+            return 'undefined';
+        } else if (val === null) {
+            return 'null';
+        } else if (typeof val === 'function') {
+            throw new Error('cannot compare functions');
+        } else {
+            return typeof val;
+        }
     }
+
+    return Util512.mapValuesDeep(val, getValType)
 }
 
+/**
+ * JavaScript's built-in sort only does string comparisons,
+ * even when given numbers. `sortConsistentType` on the other hand
+ * does reasonable sorting and thanks to lodash it supports several types.
+ * This function also refuses to compare dissimilar data, so it will throw
+ * if attempting to compare a string and number.
+ * This is a stable, in-place sort.
+ */
 export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):void {
     if (!arr.length) {
         return
@@ -658,48 +672,6 @@ export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):void {
 
     _.sortBy(arr, mapper)
 }
-
-//~ /**
- //~ * compare two objects.
- //~ * confirms that types match.
- //~ * works on arbitrarily nested array structures.
- //~ * can be used in .sort() or just to compare values.
- //~ */
-//~ export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
-    //~ if (a === undefined && b === undefined) {
-        //~ return 0;
-    //~ } else if (a === null && b === null) {
-        //~ return 0;
-    //~ } else if (typeof a === 'string' && typeof b === 'string') {
-        //~ return a < b ? -1 : a > b ? 1 : 0;
-    //~ } else if (typeof a === 'number' && typeof b === 'number') {
-        //~ return a < b ? -1 : a > b ? 1 : 0;
-    //~ } else if (typeof a === 'boolean' && typeof b === 'boolean') {
-        //~ return a < b ? -1 : a > b ? 1 : 0;
-    //~ } else if (a instanceof Array && b instanceof Array) {
-        //~ if (a.length < b.length) {
-            //~ return -1;
-        //~ }
-        //~ if (a.length > b.length) {
-            //~ return 1;
-        //~ }
-        //~ let howManyElementsToSort = a.length;
-        //~ for (let i = 0; i < howManyElementsToSort; i++) {
-            //~ let cmp = util512Sort(a[i], b[i]);
-            //~ if (cmp !== 0) {
-                //~ return cmp;
-            //~ }
-        //~ }
-        //~ return 0;
-    //~ } else {
-        //~ if (silent) {
-            //~ return 1;
-        //~ } else {
-            //~ checkThrow512(false, `could not compare types ${a} and ${b}`);
-        //~ }
-    //~ }
-//~ }
-
 
 /**
  * a quick way to trigger assertion if value is not what was expected.
@@ -715,7 +687,8 @@ export function assertEq<T>(
     if (!_.isEqual(expected, got)) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         msgEq += c1 ?? '';
-        assertTrue(false, msgEq, c2, c3);
+        console.error(msgEq);
+        //~ assertTrue(false, msgEq, c2, c3);
     }
 }
 

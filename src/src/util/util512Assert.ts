@@ -172,28 +172,28 @@ export function checkThrow512(
 /**
  * store logs. user can choose "send err report" to send us error context.
  */
-export const UI512ErrorHandling = new class UI512ErrorHandling extends Util512StaticClass {
-    shouldRecordErrors = true;
-    runningTests = false;
-    silenceAssertMsgs = false;
-    silenceWarnings = false;
-    silenceWarningsAndMore = false;
-    silenceWarningsAndMoreCount = 0;
-    contextHint = '';
-    readonly maxEntryLength = 512;
-    readonly maxLinesKept = 256;
-    store = new RingBufferLocalStorage(this.maxLinesKept);
+export class UI512ErrorHandling {
+    static shouldRecordErrors = true;
+    static runningTests = false;
+    static silenceAssertMsgs = false;
+    static silenceWarnings = false;
+    static silenceWarningsAndMore = false;
+    static silenceWarningsAndMoreCount = 0;
+    static contextHint = '';
+    static readonly maxEntryLength = 512;
+    static readonly maxLinesKept = 256;
+    static store = new RingBufferLocalStorage(this.maxLinesKept);
 
-    protected  encodeErrMsg=(s: string) =>{
+    protected static encodeErrMsg(s: string) {
         s = s.substring(0, this.maxEntryLength);
         return UI512Compress.compressString(s);
     }
 
-    protected  decodeErrMsg=(compressed: string) =>{
+    protected static decodeErrMsg(compressed: string) {
         return UI512Compress.decompressString(compressed);
     }
 
-    appendErrMsgToLogs = (severity: boolean, s: string)=> {
+    static appendErrMsgToLogs  (severity: boolean, s: string) {
         if (this.shouldRecordErrors) {
             if (!this.runningTests) {
                 let sseverity = severity ? '1' : '2';
@@ -203,7 +203,7 @@ export const UI512ErrorHandling = new class UI512ErrorHandling extends Util512St
         }
     }
 
-    getLatestErrLogs = (amount: number): string[] =>{
+    static getLatestErrLogs  (amount: number): string[] {
         return this.store.retrieve(amount);
     }
 }

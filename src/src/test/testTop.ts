@@ -4,7 +4,7 @@
     assertTrue,
     assertWarn
 } from './../util/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512, ValHolder } from './../util/util512';
+/* auto */ import {  Util512, ValHolder } from './../util/util512';
 /* auto */ import {
     SimpleUtil512TestCollection,
     notifyUserIfDebuggerIsSetToAllExceptions
@@ -51,8 +51,8 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
 
         /* run tests from low level to high level */
         colls.reverse();
-        let colNamesSeen = new MapKeyToObjectCanSet<boolean>();
-        let mapSeen = new MapKeyToObjectCanSet<boolean>();
+        let colNamesSeen = new Map<string, boolean>();
+        let mapSeen = new Map<string, boolean>();
 
         /* put slow tests after fast tests */
         let slowTests = colls.filter(item => item.slow);
@@ -64,7 +64,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
             testsIncluded.map(item => item.tests.length + item.atests.length));
         let counter = new ValHolder(1);
         for (let coll of colls) {
-            if (colNamesSeen.exists(coll.name.toLowerCase())) {
+            if (colNamesSeen.has(coll.name.toLowerCase())) {
                 assertTrue(false, 'duplicate collection name', coll.name);
             }
 
@@ -92,7 +92,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
-        mapSeen: MapKeyToObjectCanSet<boolean>
+        mapSeen: Map<string, boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         assertWarn(
@@ -105,7 +105,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         tests = tests.concat(coll.tests);
         for (let i = 0; i < tests.length; i++) {
             let [tstname, fnTest] = tests[i];
-            if (mapSeen.exists(tstname.toLowerCase())) {
+            if (mapSeen.has(tstname.toLowerCase())) {
                 assertWarn(false, 'duplicate test name', tstname);
             }
 

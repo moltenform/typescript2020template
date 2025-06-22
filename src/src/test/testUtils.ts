@@ -2,7 +2,8 @@
 /* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { Util512, util512Sort } from './../util/util512';
+/* auto */ import { sortConsistentType, Util512, } from './../util/util512';
+import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -90,7 +91,7 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
  */
 export function sorted<T>(ar: T[]) {
     let arCopy = ar.slice();
-    arCopy.sort(util512Sort);
+    sortConsistentType(arCopy);
     return arCopy;
 }
 
