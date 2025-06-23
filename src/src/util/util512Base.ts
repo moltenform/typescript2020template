@@ -53,7 +53,7 @@ export function checkIsProductionBuild(): boolean {
         retWebpack = false;
     }
 
-    let retVite = false;
+    // let retVite = false;
     // try {
     //     retVite = import.meta!.env!.PROD;
     // } catch {

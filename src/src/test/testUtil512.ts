@@ -2,16 +2,14 @@
 /* auto */ import { bool, O } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testHelpers';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
 import {expectTypeOf} from 'expect-type'
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUtil512');
-export let testCollectionUtil512 = t;
-
+t.setCurrentLabel('testCollectionUtil512');
 t.test('LockableArr', () => {
     // test standard use
     let ar = new LockableArr<number>();

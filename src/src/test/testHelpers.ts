@@ -134,14 +134,37 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
  */
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public slow = false) {}
-    tests: [string, VoidFn][] = [];
+    currentLabel = ''
+    tests: [string, VoidFn, string][] = [];
     _context = '';
+
+    /**
+     * label a group of tests
+     */
+    public setCurrentLabel(s: string) {
+        this.currentLabel = s;
+    }
 
     /**
      * add a non-async test to the collection
      */
     public test(s: string, fn: VoidFn) {
-        this.tests.push([s, fn]);
+        this.tests.push([s, fn, this.currentLabel]);
+        return this;
+    }
+
+    /**
+     * do nothing with this test
+     */
+    public testSkip(_s: string, _fn: VoidFn) {
         return this;
     }
 }
+
+/**
+ * example: import { tSkipped as t } from './testHelpers'
+ */
+export const t = new SimpleUtil512TestCollection('main');
+export const tSlow = new SimpleUtil512TestCollection('main', true);
+export const tSkipped = new SimpleUtil512TestCollection('main');
+

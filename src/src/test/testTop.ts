@@ -7,12 +7,13 @@
 /* auto */ import {  shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
 /* auto */ import {
     SimpleUtil512TestCollection,
-    notifyUserIfDebuggerIsSetToAllExceptions
+    notifyUserIfDebuggerIsSetToAllExceptions,
+    t
 } from './testHelpers';
-/* auto */ import { testCollectionUtil512Higher } from './testUtil512Higher';
-/* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
-/* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
-/* auto */ import { testCollectionUtil512 } from './testUtil512';
+/* auto */ import  './testUtil512Higher';
+/* auto */ import './testUtil512Class';
+/* auto */ import './testUtil512Assert';
+/* auto */ import './testUtil512';
 import { Util512StaticClass } from '../util/util512Base';
 import { testCollectionUtil512Base } from './testUtil512Base';
 import _ from 'lodash'
@@ -43,11 +44,12 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
      runTestsImpl=async(includeSlow: boolean) =>{
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
-            testCollectionUtil512Assert,
-            testCollectionUtil512Base,
-            testCollectionUtil512,
-            testCollectionUtil512Class,
-            testCollectionUtil512Higher
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionUtil512Base,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512Higher
+            t
         ];
 
         if (!colls || !colls.length) {
@@ -106,9 +108,9 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         );
 
         /* note that some tests require async tests to be done first. */
-        let tests: [string, VoidFn | AsyncFn][] = _.clone(coll.tests);
+        let tests: [string, VoidFn | AsyncFn, string][] = _.clone(coll.tests);
         for (let i = 0; i < tests.length; i++) {
-            let [tstname, fnTest] = tests[i];
+            let [tstname, fnTest, label] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
                 assertWarn(false, 'duplicate test name', tstname);
             }

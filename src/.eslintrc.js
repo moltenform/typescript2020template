@@ -101,11 +101,7 @@ module.exports = {
         // should I enable strict-boolean-expressions to detect this? 
         // no, causes false positives for code like if (str1) {...} which I think is ok.
         // so I've written my own || check, which runs when you run `npm run prettierexceptlongimports`
-        '@typescript-eslint/prefer-nullish-coalescing': ["error", { 
-            ignoreConditionalTests: false,
-            ignoreMixedLogicalExpressions: false,
-            forceSuggestionFixer: false,
-          },],
+        '@typescript-eslint/prefer-nullish-coalescing': ["error"],
 
         // went through all non-default ones, chose to turn these on
         'curly': 'warn',
@@ -162,7 +158,7 @@ module.exports = {
         
         // a few other ones
         '@typescript-eslint/consistent-type-assertions': 'error',
-        '@typescript-eslint/consistent-type-imports': {prefer: 'type-imports'},
+        '@typescript-eslint/consistent-type-imports': 'error',
         
         // after 2.26.0
         '@typescript-eslint/non-nullable-type-assertion-style': 'warn', 

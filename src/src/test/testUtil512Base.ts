@@ -27,6 +27,23 @@ t.test('RingBuffer.SizeRemainsConstant', () => {
     assertEq('c', buf.getAt(3));
     assertEq('', buf.getAt(5));
 });
+t.test('RingBufferFromMock.SizeRemainsConstant', () => {
+    let buf = new RingBufferLocalStorageMock(4);
+    buf.append('a');
+    buf.append('b');
+    buf.append('c');
+    buf.append('d');
+    buf.append('e');
+    buf.append('f');
+    assertEq(['f'], buf.retrieve(1));
+    assertEq(['f', 'e'], buf.retrieve(2));
+    assertEq(['f', 'e', 'd'], buf.retrieve(3));
+    assertEq('d', buf.getAt(0));
+    assertEq('e', buf.getAt(1));
+    assertEq('f', buf.getAt(2));
+    assertEq('c', buf.getAt(3));
+    assertEq('', buf.getAt(5));
+});
 t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     let buf = new RingBufferArray(4);
     assertEq(['', ''], buf.retrieve(2));
