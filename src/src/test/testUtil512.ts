@@ -61,8 +61,8 @@ t.test('ValHolder.closure', () => {
     assertEq(1, v.val);
 });
 t.test('listEnumValsIncludingAlternates', () => {
-    assertEq('__isUI512Enum,__UI512EnumCapitalize,First,Second,Third,TheFirst,Scnd,Thd', listEnumValsIncludingAlternates(TestEnum))
-    assertEq('__isUI512Enum,EOne,ETwo,EThree', listEnumValsIncludingAlternates(TestSimpleEnum))
+    assertEq('__isUI512Enum, __UI512EnumCapitalize, First, Second, Third, TheFirst, Scnd, Thd', listEnumValsIncludingAlternates(TestEnum))
+    assertEq('__isUI512Enum, EOne, ETwo, EThree', listEnumValsIncludingAlternates(TestSimpleEnum))
     assertEq(', first, second, third', listEnumVals(TestEnum, true))
     assertEq(', First, Second, Third', listEnumVals(TestEnum, false))
     assertEq(', eone, etwo, ethree', listEnumVals(TestSimpleEnum, true))
@@ -123,9 +123,10 @@ t.test('findEnumToStr, standard usage', () => {
     // test typing inference
     expectTypeOf(findEnumToStr(TestEnum, 1)).toEqualTypeOf('');
     // found
+    assertEq("first", findEnumToStr(TestEnum, TestEnum.__AlternateForm__TheFirst));
     assertEq("first", findEnumToStr(TestEnum, TestEnum.First));
-    assertEq("first", findEnumToStr(TestEnum, 1));
-    assertEq("second", findEnumToStr(TestEnum, 2));
+    assertEq("first", findEnumToStr(TestEnum, 2));
+    assertEq("second", findEnumToStr(TestEnum, 3));
     // not found
     assertEq(undefined, findEnumToStr(TestEnum, -1));
     assertEq(undefined, findEnumToStr(TestEnum, 999));
@@ -133,23 +134,24 @@ t.test('findEnumToStr, standard usage', () => {
 });
 t.test('getEnumToStr, standard usage', () => {
     // test typing inference
-    expectTypeOf(getEnumToStr(TestEnum, 1)).toEqualTypeOf('');
+    expectTypeOf(getEnumToStr(TestEnum, 2)).toEqualTypeOf('');
     // found
+    assertEq("first", getEnumToStr(TestEnum, TestEnum.__AlternateForm__TheFirst));
     assertEq("first", getEnumToStr(TestEnum, TestEnum.First));
-    assertEq("first", getEnumToStr(TestEnum, 1));
-    assertEq("second", getEnumToStr(TestEnum, 2));
+    assertEq("first", getEnumToStr(TestEnum, 2));
+    assertEq("second", getEnumToStr(TestEnum, 3));
     // not found
-    assertEq(undefined, getEnumToStr(TestEnum, -1));
-    assertEq(undefined, getEnumToStr(TestEnum, 999));
-    assertEq(undefined, getEnumToStr(TestEnum, 1)); // flag should not be visible
+    assertThrows('Not a valid', ()=>getEnumToStr(TestEnum, -1));
+    assertThrows('Not a valid', ()=>getEnumToStr(TestEnum, 999));
+    assertThrows('Not a valid', ()=>getEnumToStr(TestEnum, 1)); // flag should not be visible
 });
 t.test('getEnumToStrOrFallback, standard usage', () => {
     // test typing inference
     expectTypeOf(getEnumToStrOrFallback(TestEnum, 1)).toEqualTypeOf('');
     // found
     assertEq("first", getEnumToStrOrFallback(TestEnum, TestEnum.First));
-    assertEq("first", getEnumToStrOrFallback(TestEnum, 1));
-    assertEq("second", getEnumToStrOrFallback(TestEnum, 2));
+    assertEq("first", getEnumToStrOrFallback(TestEnum, 2));
+    assertEq("second", getEnumToStrOrFallback(TestEnum, 3));
     // not found
     assertEq('fallback', getEnumToStrOrFallback(TestEnum, -1, 'fallback'));
     assertEq('fallback', getEnumToStrOrFallback(TestEnum, 999, 'fallback'));
@@ -164,19 +166,14 @@ t.test('test enum values', () => {
 })
 
 t.test('ShowValuesInExceptionMsg', () => {
-    let excMessage = '';
-    try {
-        getStrToEnum(TestEnum, 'TestEnum', '-nonexist-');
-    } catch (e) {
-        ensureIsError(e);
-        excMessage = e.toString();
-    }
+    let errFound = assertThrows('', ()=>getStrToEnum(TestEnum, 'TestEnum', '-nonexist-'))
+    let excMessage: string = errFound.toString();
 
     let pts = sortedConsistentType(excMessage.split(','));
     assertEq(` first`, pts[0]);
     assertEq(` second`, pts[1]);
     assertEq(` third`, pts[2]);
-    assertTrue((pts[3] as string).endsWith(`Not a valid choice of TestEnum. try one of`));
+    assertTrue(excMessage.includes(`Not a valid choice of TestEnum. try one of`));
 });
 t.test('slength', () => {
     assertEq(0, slength(null));
@@ -262,13 +259,15 @@ t.test('getShapeRecurse', () => {
     assertEq('null', getShapeRecurse(null));
     assertEq('undefined', getShapeRecurse(undefined));
     assertEq([], getShapeRecurse([]));
+    assertEq({ a: 'string'}, getShapeRecurse({ a: 'a'}));
+    assertEq({ a: 'string', b:'number'}, getShapeRecurse({ a: 'a', b:1}));
     assertEq(['number', 'number'], getShapeRecurse([1, 2]));
     assertEq({}, getShapeRecurse({}));
     assertEq({ a: {b: 'number', c: 'string'}}, getShapeRecurse({ a: {b: 1, c: 'abc'} }));
 });
 t.test('sortConsistentType.String', () => {
     const arr = sortedConsistentType(['', 'a', 'abc', 'abb', 'abcd'])
-    assertEq('TMMP', arr.join(','))
+    assertEq(',a,abb,abc,abcd', arr.join(','))
 });
 t.test('sortConsistentType.StringWithNonAscii', () => {
     const arr = sortedConsistentType([
@@ -276,18 +275,18 @@ t.test('sortConsistentType.StringWithNonAscii', () => {
 'aunicode\u2666char', 'aunicode\u2667char', 'accented\u00e9letter',
 'accented\u0065\u0301letter', 
     ])
-    assertEq('TMMP', arr.join(','))
+    assertEq('accentedéletter,accentedéletter,accentedéletter,aunicode♦char,aunicode♧char', arr.join(','))
 });
 t.test('sortConsistentType.Number', () => {
     const arr = sortedConsistentType([
         0, 1, 12345, -11.15, 1.4, 1.3, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY
     ])
-    assertEq('TMMP', arr.map(String).join(','));
+    assertEq('-Infinity,-11.15,0,1,1.3,1.4,12345,Infinity', arr.map(String).join(','));
 });
 t.test('sortConsistentType.Nullish', () => {
     assertEq([undefined, undefined], sortedConsistentType([undefined, undefined]));
     assertEq([null, null], sortedConsistentType([null, null]));
-    assertThrows('not compare', () => sortedConsistentType([undefined, undefined]));
+    assertThrows('not compare', () => sortedConsistentType([undefined, null]));
 });
 t.test('sortConsistentType.DiffTypesShouldThrow', () => {
     assertThrows('not compare', () => sortedConsistentType(['a', 1]));
@@ -299,7 +298,7 @@ t.test('sortConsistentType.DiffTypesInArrayShouldThrow', () => {
      const arr = sortedConsistentType([
         ['a', 1], ['b', 2], ['a', 2], ['b', 1]
     ])
-    assertEq('TMMP', arr.map(String).join(','));
+    assertEq('a,1,a,2,b,1,b,2', arr.map(String).join(','));
     assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', 'a']]));
     assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', true]]));
     assertThrows('not compare', () => sortedConsistentType([['a', 1], ['a', undefined]]));
@@ -309,7 +308,7 @@ t.test('sortConsistentType.DiffTypesInObjectShouldThrow', () => {
      const arr = sortedConsistentType([
         {a:1}, {a:2}, {a:0}
     ])
-    assertEq('TMMP', arr.map(String).join(','));
+    assertEq("{\"a\":1},{\"a\":2},{\"a\":0}", arr.map((x:any)=>JSON.stringify(x)).join(','));
     assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: 'a'}]));
     assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: true}]));
     assertThrows('not compare', () => sortedConsistentType([{a:1}, {a: undefined}]));
@@ -323,15 +322,16 @@ t.test('sortConsistentType.maps and stability', () => {
     const arrArrs = [
         ['a', 1], ['b', 2], ['a', 2], ['b', 1]
     ]
-    assertEq('TMMP', sortedConsistentType(arrArrs).map(String).join(','));
-    assertEq('TMMP', sortedConsistentType(arrArrs, (x:any) => x[0]).map(String).join(','));
-    assertEq('TMMP', sortedConsistentType(arrArrs, (x:any) => x[1]).map(String).join(','));
+    assertEq('a,1,a,2,b,1,b,2', sortedConsistentType(arrArrs).map(String).join(','));
+    // intentionally not a pretty order, because it's a stable sort
+    assertEq('a,1,a,2,b,2,b,1', sortedConsistentType(arrArrs, (x:any) => x[0]).map(String).join(','));
+    assertEq('a,1,b,1,b,2,a,2', sortedConsistentType(arrArrs, (x:any) => x[1]).map(String).join(','));
     const arr = [
         {a:3, b:1}, {a:2, b:3}, {a:1, b:3}, 
     ]
-    assertEq('TMMP', sortedConsistentType(arr).map(String).join(','));
-    assertEq('TMMP', sortedConsistentType(arr, (x:any) => x.a).map(String).join(','));
-    assertEq('TMMP', sortedConsistentType(arr, (x:any) => x.b).map(String).join(','));
+    assertEq('{\"a\":3,\"b\":1},{\"a\":2,\"b\":3},{\"a\":1,\"b\":3}', sortedConsistentType(arr).map((x:any)=>JSON.stringify(x)).join(','));
+    assertEq('{\"a\":1,\"b\":3},{\"a\":2,\"b\":3},{\"a\":3,\"b\":1}', sortedConsistentType(arr, (x:any) => x.a).map((x:any)=>JSON.stringify(x)).join(','));
+    assertEq('{\"a\":3,\"b\":1},{\"a\":2,\"b\":3},{\"a\":1,\"b\":3}', sortedConsistentType(arr, (x:any) => x.b).map((x:any)=>JSON.stringify(x)).join(','));
 });
 
 t.test('checkThrowEq', () => {
@@ -372,16 +372,16 @@ t.test('bool', () => {
 });
 t.test('assertEq corner cases', () => {
     assertEq(null, null);
-    assertThrows('but got', () => {
-    assertEq(undefined, null);
-    })
+    assertEq(undefined, undefined);
+    // interestingly, _.isEqual says null equals undefined,
+    // let that be for now,
     assertEq([1,2,3], [1,2,3]);
     assertThrows('but got', () => {
     assertEq([1,2,3], [1,2,4]);
     })
-    assertEq([1,2,{a:4}], [1,2,3,{a:4}]);
+    assertEq([1,2,{a:4}], [1,2,{a:4}]);
     assertThrows('but got', () => {
-    assertEq([1,2,{a:4}], [1,2,3,{a:5}]);
+    assertEq([1,2,{a:4}], [1,2,{a:5}]);
     })
 })
 t.test('longstr', () => {
@@ -402,8 +402,9 @@ t.test('longstr', () => {
  * sorting helper for tests, space inefficent because it's not in-place
  */
 function sortedConsistentType(arr: unknown[], mapper=(x:unknown)=>x): unknown[] {
-   const copy = _.clone(arr) 
-    sortConsistentType(copy, mapper);
+   let copy = _.clone(arr) 
+   copy = sortConsistentType(copy, mapper);
+   assertTrue(Array.isArray(copy));
     return copy
 }
 

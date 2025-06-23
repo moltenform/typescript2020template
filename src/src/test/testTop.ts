@@ -4,7 +4,7 @@
     assertTrue,
     assertWarn
 } from './../util/util512Assert';
-/* auto */ import {  Util512, ValHolder } from './../util/util512';
+/* auto */ import {  shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
 /* auto */ import {
     SimpleUtil512TestCollection,
     notifyUserIfDebuggerIsSetToAllExceptions
@@ -31,9 +31,17 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
             return;
         }
 
+        shouldBreakOnExceptions_Enable()
         UI512ErrorHandling.runningTests = true;
         console.log('Running tests...');
+        try {
+            await this.runTestsImpl(includeSlow);
+        } finally {
+            UI512ErrorHandling.runningTests = false;
+        }
+    }
 
+    async runTestsImpl(includeSlow: boolean) {
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
             testCollectionExternalLibs,
@@ -77,7 +85,6 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
             }
         }
 
-        UI512ErrorHandling.runningTests = false;
         if (UI512ErrorHandling.silenceWarnings) {
             console.log(`A test may have failed, warning occurred.`);
         } else {

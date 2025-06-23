@@ -3,6 +3,7 @@
 /* auto */ import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
+import { shouldBreakOnExceptions_Enable } from '../util/util512';
 //~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -33,6 +34,7 @@ async function onDemoModules() {
 }
 
 export function runOnLoad() {
+    shouldBreakOnExceptions_Enable();
     Util512StaticClass.callAfterAppLoad();
     const mapping = {
         idBtnSimpleTest: onSimpleTest,

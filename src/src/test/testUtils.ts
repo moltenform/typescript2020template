@@ -2,7 +2,7 @@
 /* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
 /* auto */ import { O } from './../util/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { sortConsistentType, Util512, } from './../util/util512';
+/* auto */ import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from './../util/util512';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -16,11 +16,16 @@ export async function assertThrowsAsync<T>(
     fn: () => Promise<T>
 ) {
     let msg: O<string>;
+    shouldBreakOnExceptions_Disable();
+    UI512ErrorHandling.silenceAssertMsgs = true;
     try {
         await fn();
     } catch (e) {
         ensureIsError(e);
         msg = e.message ? e.message : '';
+    } finally {
+        shouldBreakOnExceptions_Enable();
+        UI512ErrorHandling.silenceAssertMsgs = false;
     }
 
     let expectedErr = expectedErrAndContext.split('|')[0];
@@ -36,13 +41,20 @@ export async function assertThrowsAsync<T>(
  * assert that an exception is thrown, with a certain message
  */
 export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
+    let errStored: any
     let msg: O<string>;
+    shouldBreakOnExceptions_Disable();
+    UI512ErrorHandling.silenceAssertMsgs = true;
 
     try {
         fn();
     } catch (e) {
+        errStored = e
         ensureIsError(e);
         msg = e.message ?? '';
+    } finally {
+        shouldBreakOnExceptions_Enable();
+        UI512ErrorHandling.silenceAssertMsgs = false;
     }
 
     let expectedErr = expectedErrAndContext.split('|')[0];
@@ -53,6 +65,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
         `message "${msg}" did not contain "${expectedErr}"`,
         context
     );
+    return errStored
 }
 
 /**
@@ -60,7 +73,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
  */
 export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
     let msg: O<string>;
-    let svd = UI512ErrorHandling.silenceAssertMsgs;
+    let saved = UI512ErrorHandling.silenceAssertMsgs;
     UI512ErrorHandling.silenceAssertMsgs = true;
     try {
         fn();
@@ -68,7 +81,7 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
         ensureIsError(e);
         msg = e.message ?? '';
     } finally {
-        UI512ErrorHandling.silenceAssertMsgs = svd;
+        UI512ErrorHandling.silenceAssertMsgs = saved;
     }
 
     let expectedErr = expectedErrAndContext.split('|')[0];
@@ -90,8 +103,8 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
  * test-only code, since this is inefficient
  */
 export function sorted<T>(ar: T[]) {
-    let arCopy = ar.slice();
-    sortConsistentType(arCopy);
+    let arCopy = _.clone(ar);
+    arCopy = _.sortBy(arCopy);
     return arCopy;
 }
 

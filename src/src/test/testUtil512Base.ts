@@ -72,12 +72,11 @@ t.test('StaticClass Illustrating Problems', () => {
     }
     
     // this fails (!)
-    try {
+    // the approach doesn't work because `this` is invalid
+    assertThrows('undefined', ()=> {
         const storedFails = Class1.addNumbers;
         assertEq(9, storedFails(4, 5));
-    } catch(e) {
-        console.log("test passed: the approach doesn't work because `this` is invalid")
-    }
+    })
 })
 t.test('StaticClass Illustrating Problems 2', () => {
     const Class2 = {

@@ -429,7 +429,7 @@ export type TypeLikeAnEnum = { __isUI512Enum: number };
 /**
  * list enum vals
  */
-export function listEnumValsIncludingAlternates<T>(Enm: T) {
+export function listEnumValsIncludingAlternates<T>(Enm: T):string {
     let ret: string[] = [];
     for (let enumMember in Enm) {
         /* show possible values */
@@ -446,13 +446,13 @@ export function listEnumValsIncludingAlternates<T>(Enm: T) {
         }
     }
 
-    return ret;
+    return ret.join(', ');
 }
 
 /**
  * list enum vals
  */
-export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
+export function listEnumVals<T>(Enm: T, makeLowercase: boolean):string {
     let s = '';
     for (let enumMember in Enm) {
         /* show possible values */
@@ -553,7 +553,7 @@ export function getEnumToStr(
     n: number,
 ): string {
     const ret = findEnumToStr(Enm, n) 
-    checkThrow512(ret === undefined, `Not a valid choice for this value.`);
+    checkThrow512(ret !== undefined, `Not a valid choice for this value.`);
     return ret
 }
 
@@ -636,8 +636,8 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * [1, 'abc'] -> ['number', 'string']
  * { a: {b: 1, c: 'abc'} } -> { a: {b: 'number', c: 'string'}}
  */
-export function getShapeRecurse(val: unknown,): unknown {
-    const getValType = (v: unknown): string => {
+export function getShapeRecurse(origObj: unknown,): unknown {
+    const getValType = (val: unknown): string => {
         if (val === undefined) {
             return 'undefined';
         } else if (val === null) {
@@ -649,7 +649,7 @@ export function getShapeRecurse(val: unknown,): unknown {
         }
     }
 
-    return Util512.mapValuesDeep(val, getValType)
+    return Util512.mapValuesDeep(origObj, getValType)
 }
 
 /**
@@ -658,11 +658,11 @@ export function getShapeRecurse(val: unknown,): unknown {
  * does reasonable sorting and thanks to lodash it supports several types.
  * This function also refuses to compare dissimilar data, so it will throw
  * if attempting to compare a string and number.
- * This is a stable, in-place sort.
+ * This is a stable sort.
  */
-export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):void {
+export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):unknown[] {
     if (!arr.length) {
-        return
+        return arr
     }
 
     const shapeFirst = getShapeRecurse(mapper(arr[0]));
@@ -670,7 +670,7 @@ export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):void {
         throw new Error('cannot compare arrays with different types/shapes');
     }
 
-    _.sortBy(arr, mapper)
+    return _.sortBy(arr, mapper)
 }
 
 /**
@@ -685,12 +685,33 @@ export function assertEq<T>(
     c3?: unknown
 ): asserts got is T {
     if (!_.isEqual(expected, got)) {
-        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         msgEq += c1 ?? '';
-        console.error(msgEq);
-        //~ assertTrue(false, msgEq, c2, c3);
+        assertTrue(false, msgEq, c2, c3);
+        while(false) {
+            let fhgfh=567;
+        }
     }
 }
+
+declare global{
+  var shouldBreakOnExceptions: boolean
+}
+
+export function shouldBreakOnExceptions_Disable() {
+    if (typeof globalThis !== 'undefined') {
+        // could be a stack to push/pop (which would make nested calls work), but even in that case it wouldn't
+        // work during await/async code, so leave it simple for now.
+        globalThis.shouldBreakOnExceptions = false;
+    }
+}
+
+export function shouldBreakOnExceptions_Enable() {
+    if (typeof globalThis !== 'undefined') {
+        globalThis.shouldBreakOnExceptions = true;
+    }
+}
+
 
 /**
  * if expected and msg are not the same, assertWarn.
@@ -703,7 +724,7 @@ export function assertWarnEq(
     c3?: unknown
 ) {
     if (!_.isEqual(expected, got)) {
-        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         msgEq += c1 ?? '';
         assertWarn(false, msgEq, c2, c3);
     }
@@ -720,7 +741,7 @@ export function checkThrowEq<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (!_.isEqual(expected, got)) {
-        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`);
     }
 }
@@ -737,7 +758,7 @@ export function checkThrowEq512<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (!_.isEqual(expected, got)) {
-        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         checkThrow512(false, msg + msgEq, c1, c2);
     }
 }
