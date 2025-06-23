@@ -4,7 +4,9 @@ import { assertTrue, ensureIsError } from './../util/util512Assert';
 import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
 import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
 import {expectTypeOf} from 'expect-type'
-import _ from 'lodash';
+import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
+    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
+    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -351,9 +353,9 @@ t.test('last', () => {
     assertEq(3, arLast([1, 2, 3]));
     assertEq(1, arLast([1]));
     assertThrows('empty', ()=>arLast([]));
-    assertEq(3, _.last([1, 2, 3]));
-    assertEq(1, _.last([1]));
-    assertEq(undefined, _.last([]));
+    assertEq(3, ldLast([1, 2, 3]));
+    assertEq(1, ldLast([1]));
+    assertEq(undefined, ldLast([]));
 });
 t.test('bool', () => {
     assertEq(true, bool(true));
@@ -371,7 +373,7 @@ t.test('bool', () => {
 t.test('assertEq corner cases', () => {
     assertEq(null, null);
     assertEq(undefined, undefined);
-    // interestingly, _.isEqual says null equals undefined,
+    // interestingly, lsIsEqual says null equals undefined,
     // let that be for now,
     assertEq([1,2,3], [1,2,3]);
     assertThrows('but got', () => {
@@ -400,7 +402,7 @@ t.test('longstr', () => {
  * sorting helper for tests, space inefficent because it's not in-place
  */
 function sortedConsistentType(arr: unknown[], mapper=(x:unknown)=>x): unknown[] {
-   let copy = _.clone(arr) 
+   let copy = ldClone(arr) 
    copy = sortConsistentType(copy, mapper);
    assertTrue(Array.isArray(copy));
     return copy

@@ -17,7 +17,7 @@ import './testUtil512Assert';
 import './testUtil512Base';
 import './testUtil512';
 import { Util512StaticClass } from '../util/util512Base';
-import _ from 'lodash'
+import {sum, sortBy} from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -65,7 +65,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         colls = fastTests.concat(slowTests);
         let testsIncluded = colls
             .filter(item => includeSlow || !item.slow)
-        let countTotal = _.sum(
+        let countTotal = sum(
             testsIncluded.map(item => item.tests.length));
         let counter = new ValHolder(1);
         for (let coll of colls) {
@@ -102,7 +102,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
 
         /* if it says runFirst, run it first. */
         for (let k in coll.tests) {
-            coll.tests[k] = _.sortBy(coll.tests[k], tt=>tt[0].startsWith('runFirst') ? 0 : 1);
+            coll.tests[k] = sortBy(coll.tests[k], tt=>tt[0].startsWith('runFirst') ? 0 : 1);
             console.log(k)
             const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];
 

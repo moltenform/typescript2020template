@@ -45,6 +45,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "@optimize-lodash/rollup-plugin": "^5.0.2",
     "base64-js": "^1.5.1",
     "es6-error": "^4.1.1",
     "file-saver": "^2.0.5",

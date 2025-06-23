@@ -6,7 +6,10 @@ import {
     ensureDefined,
     make512Error
 } from './util512Assert';
-import _ from 'lodash';
+import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
+    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
+    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
+
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -31,7 +34,7 @@ export const Util512 = new (class Util512 extends Util512StaticClass {
         } else if (end >= start && inc < 0) {
             return [];
         } else {
-            return _.range(start, end, inc);
+            return ldRange(start, end, inc);
         }
     };
 
@@ -125,7 +128,7 @@ export const Util512 = new (class Util512 extends Util512StaticClass {
 
     /**
      * useful for map/reduce,
-     * although _.sum is preferred
+     * although ldSum is preferred
      */
     add = (n1: number, n2: number) => {
         return n1 + n2;
@@ -278,7 +281,7 @@ export const Util512 = new (class Util512 extends Util512StaticClass {
      */
     padStart = (sIn: string | number, targetLength: number, padString: string) => {
         let s = tostring(sIn);
-        return _.padStart(s, targetLength, padString);
+        return ldPadStart(s, targetLength, padString);
     };
 
     /**
@@ -356,11 +359,11 @@ export const Util512 = new (class Util512 extends Util512StaticClass {
         fn: (o: any, k?: string | number) => any,
         key?: string | number
     ): any => {
-        return _.isArray(obj)
-            ? _.map(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
-            : _.isPlainObject(obj)
-            ? _.mapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
-            : _.isObject(obj)
+        return ldIsArray(obj)
+            ? ldMap(obj, (innerObj, idx) => this.mapValuesDeep(innerObj, fn, idx))
+            : ldIsPlainObject(obj)
+            ? ldMapValues(obj, (val, key) => this.mapValuesDeep(val, fn, key))
+            : ldIsObject(obj)
             ? obj
             : fn(obj, key);
     };
@@ -401,7 +404,7 @@ export class LockableArr<T> {
     getUnlockedCopy() {
         let other = new LockableArr<T>();
         other.locked = false;
-        other.vals = _.clone(this.vals);
+        other.vals = ldClone(this.vals);
         return other;
     }
 }
@@ -666,11 +669,11 @@ export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):unknow
     }
 
     const shapeFirst = getShapeRecurse(mapper(arr[0]));
-    if (arr.some((v) => !_.isEqual(getShapeRecurse(mapper(v)), shapeFirst))) {
+    if (arr.some((v) => !ldIsEqual(getShapeRecurse(mapper(v)), shapeFirst))) {
         throw new Error('cannot compare arrays with different types/shapes');
     }
 
-    return _.sortBy(arr, mapper)
+    return ldSortBy(arr, mapper)
 }
 
 /**
@@ -684,7 +687,7 @@ export function assertEq<T>(
     c2?: unknown,
     c3?: unknown
 ): asserts got is T {
-    if (!_.isEqual(expected, got)) {
+    if (!ldIsEqual(expected, got)) {
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         msgEq += c1 ?? '';
         assertTrue(false, msgEq, c2, c3);
@@ -732,7 +735,7 @@ export function assertWarnEq(
     c2?: unknown,
     c3?: unknown
 ) {
-    if (!_.isEqual(expected, got)) {
+    if (!ldIsEqual(expected, got)) {
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         msgEq += c1 ?? '';
         assertWarn(false, msgEq, c2, c3);
@@ -752,7 +755,7 @@ export function checkThrowEq<T>(
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (!_.isEqual(expected, got)) {
+    if (!ldIsEqual(expected, got)) {
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`);
     }
@@ -769,7 +772,7 @@ export function checkThrowEq512<T>(
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (!_.isEqual(expected, got)) {
+    if (!ldIsEqual(expected, got)) {
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         checkThrow512(false, msg + msgEq, c1, c2);
     }
@@ -777,7 +780,7 @@ export function checkThrowEq512<T>(
 
 /**
  * get last of an array
- * unlike _.last, will throw if array is empty
+ * unlike ldLast, will throw if array is empty
  */
 export function arLast<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'empty array');

@@ -3,7 +3,9 @@ import { AsyncFn, VoidFn } from '../util/util512Higher';
 import { O } from '../util/util512Base';
 import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
 import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from '../util/util512';
-import _ from 'lodash';
+import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
+    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
+    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -103,8 +105,8 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
  * test-only code, since this is inefficient
  */
 export function sorted<T>(ar: T[]) {
-    let arCopy = _.clone(ar);
-    arCopy = _.sortBy(arCopy);
+    let arCopy = ldClone(ar);
+    arCopy = ldSortBy(arCopy);
     return arCopy;
 }
 

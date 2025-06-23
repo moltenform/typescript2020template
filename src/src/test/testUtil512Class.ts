@@ -2,8 +2,10 @@
 import { assertTrue } from './../util/util512Assert';
 import { Util512, assertEq, longstr } from './../util/util512';
 import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
-import _ from 'lodash';
-
+import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
+    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
+    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
+    
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
@@ -153,8 +155,8 @@ t.test('add', () => {
     assertEq(6, [1, 2, 3].reduce(Util512.add));
     assertEq(9, [1, 2, 3].reduce(Util512.add, 3));
     assertEq(0, [].reduce(Util512.add, 0));
-    assertEq(6, _.sum([1, 2, 3]));
-    assertEq(0, _.sum([]));
+    assertEq(6, ldSum([1, 2, 3]));
+    assertEq(0, ldSum([]));
 });
 
 t.test('isMapEmpty.PlainObject', () => {
@@ -178,9 +180,9 @@ t.test('Clone.PlainObject', () => {
     let obj0 = {};
     let obj1 = { a: true };
     let obj2 = { abc: 'abc', def: '_def' };
-    let clone0 = _.clone(obj0);
-    let clone1 = _.clone(obj1);
-    let clone2 = _.clone(obj2);
+    let clone0 = ldClone(obj0);
+    let clone1 = ldClone(obj1);
+    let clone2 = ldClone(obj2);
     assertEq([], sorted(Util512.getMapKeys(clone0)));
     assertEq(['a'], sorted(Util512.getMapKeys(clone1)));
     assertEq(['abc', 'def'], sorted(Util512.getMapKeys(clone2)));
@@ -190,9 +192,9 @@ t.test('Clone.Class', () => {
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
     (cls2 as any).aSingleAdded = 1;
-    let clone0 = _.clone(cls0);
-    let clone1 = _.clone(cls1);
-    let clone2 = _.clone(cls2);
+    let clone0 = ldClone(cls0);
+    let clone1 = ldClone(cls1);
+    let clone2 = ldClone(cls2);
     assertEq([], sorted(Util512.getMapKeys(clone0)));
     assertEq(['aSingleProp'], sorted(Util512.getMapKeys(clone1)));
     assertEq(['aSingleAdded', 'aSingleProp'], sorted(Util512.getMapKeys(clone2)));
@@ -424,16 +426,16 @@ t.test('padStart', () => {
     assertEq('0123', Util512.padStart('123', 4, '0'));
 });
 t.test('arrayToBase64.arrayOfNumbers', () => {
-    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
+    let nums: number[] = ldSplit('hello', '').map((x: string) => x.charCodeAt(0));
     assertEq('aGVsbG8=', Util512.arrayToBase64(nums));
 });
 t.test('arrayToBase64.Uint8Array', () => {
-    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
+    let nums: number[] = ldSplit('hello', '').map((x: string) => x.charCodeAt(0));
     let uint8 = new Uint8Array(nums);
     assertEq('aGVsbG8=', Util512.arrayToBase64(uint8));
 });
 t.test('arrayToBase64.ArrayBuffer', () => {
-    let nums: number[] = _.split('hello', '').map((x: string) => x.charCodeAt(0));
+    let nums: number[] = ldSplit('hello', '').map((x: string) => x.charCodeAt(0));
     let buffer = new ArrayBuffer(nums.length);
     let view = new Uint8Array(buffer);
     for (let i = 0; i < nums.length; i++) {
@@ -469,10 +471,10 @@ t.test('Base64UrlSafe.ReplacesWithUnderscoreAndDash', () => {
 });
 t.test('stringToCharArray', () => {
     // better than the Array.prototype.map.call trick.
-    assertEq([], _.split('', ''));
-    assertEq(['a'], _.split('a', ''));
-    assertEq(['a', 'b', ' ', 'c', 'd'], _.split('ab cd', ''));
-    assertEq([97, 98, 32, 99, 100], _.split('ab cd', '').map(c => c.charCodeAt(0)));
+    assertEq([], ldSplit('', ''));
+    assertEq(['a'], ldSplit('a', ''));
+    assertEq(['a', 'b', ' ', 'c', 'd'], ldSplit('ab cd', ''));
+    assertEq([97, 98, 32, 99, 100], ldSplit('ab cd', '').map(c => c.charCodeAt(0)));
 });
 t.test('sortDecorated', () => {
     class MyClass {
@@ -481,17 +483,17 @@ t.test('sortDecorated', () => {
 
     // test typical usage
     let input: string[] = ['abc', 'dba', 'aab', 'ffd'];
-    let ret = _.sortBy(input, s => s.charAt(2));
+    let ret = ldSortBy(input, s => s.charAt(2));
     assertEq('dba;aab;abc;ffd', ret.join(';'));
 
     // test with class
     let inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('cc')];
-    let retCl = _.sortBy(inputCl, o => o.a);
+    let retCl = ldSortBy(inputCl, o => o.a);
     assertEq('aa;bb;cc', retCl.map(o => o.a).join(';'));
 
     // test with class and ties
     inputCl = [new MyClass('bb'), new MyClass('aa'), new MyClass('bb')];
-    retCl = _.sortBy(inputCl, o => o.a);
+    retCl = ldSortBy(inputCl, o => o.a);
     assertEq('aa;bb;bb', retCl.map(o => o.a).join(';'));
 });
 t.test('normalizeNewlines', () => {
