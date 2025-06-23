@@ -13,7 +13,6 @@
 /* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './testUtil512';
-/* auto */ import { testCollectionExternalLibs } from './testExternalLibs';
 import { Util512StaticClass } from '../util/util512Base';
 import { testCollectionUtil512Base } from './testUtil512Base';
 import _ from 'lodash'
@@ -44,7 +43,6 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
      runTestsImpl=async(includeSlow: boolean) =>{
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
-            testCollectionExternalLibs,
             testCollectionUtil512Assert,
             testCollectionUtil512Base,
             testCollectionUtil512,
@@ -69,7 +67,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         let testsIncluded = colls
             .filter(item => includeSlow || !item.slow)
         let countTotal = _.sum(
-            testsIncluded.map(item => item.tests.length + item.atests.length));
+            testsIncluded.map(item => item.tests.length));
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.has(coll.name.toLowerCase())) {
@@ -103,13 +101,12 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
     ) => {
         notifyUserIfDebuggerIsSetToAllExceptions();
         assertWarn(
-            coll.tests.length > 0 || coll.atests.length > 0,
+            coll.tests.length > 0,
             'no tests in collection'
         );
 
         /* note that some tests require async tests to be done first. */
-        let tests: [string, VoidFn | AsyncFn][] = coll.atests;
-        tests = tests.concat(coll.tests);
+        let tests: [string, VoidFn | AsyncFn][] = _.clone(coll.tests);
         for (let i = 0; i < tests.length; i++) {
             let [tstname, fnTest] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {

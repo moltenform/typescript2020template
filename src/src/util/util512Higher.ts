@@ -46,6 +46,10 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
         assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
+        if (min === max) {
+            return min;
+        }
+        
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,

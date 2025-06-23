@@ -135,7 +135,6 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public slow = false) {}
     tests: [string, VoidFn][] = [];
-    atests: [string, AsyncFn][] = [];
     _context = '';
 
     /**
@@ -144,22 +143,5 @@ export class SimpleUtil512TestCollection {
     public test(s: string, fn: VoidFn) {
         this.tests.push([s, fn]);
         return this;
-    }
-
-    /**
-     * add an async test to the collection
-     */
-    public atest(s: string, fn: AsyncFn) {
-        this.atests.push([s, fn]);
-        return this;
-    }
-
-    /**
-     * writes a string to the console,
-     * often used to indicate that a test is divided into subtests.
-     */
-    public say(context: string) {
-        this._context = context;
-        console.log(Util512.repeat(25, ' ').join('') + this._context);
     }
 }

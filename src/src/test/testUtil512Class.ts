@@ -2,12 +2,6 @@
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq, longstr } from './../util/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testHelpers';
-import {
-    BrowserOSInfo,
-    BrowserOSInfoSimple,
-    guessOs,
-    guessOsSimple
-} from '../external/bowser';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -295,13 +289,32 @@ t.test('capitalizeFirst.Alphabet', () => {
 });
 t.test('callAsMethod.ValidMethod', () => {
     let o1 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false);
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, false/* ok if parent*/);
     assertEq(true, o1.calledAbc);
     assertEq(false, o1.calledZ);
     let o2 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false);
+    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, false/* ok if parent*/);
     assertEq(false, o2.calledAbc);
     assertEq(true, o2.calledZ);
+    // minification needs to preserve names
+    assertEq('TestClsWithMethods', o1.constructor.name);
+});
+t.test('callAsMethod.child', () => {
+    let o1 = new TestClsWithMethodsChild();
+    const ret = Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o1, 'goMethodOnChild', [false, 0], true /* okifnotexist*/, 'fallback'/* returnifnotexist */, false/* ok if parent*/);
+    assertEq(false, o1.calledAbc);
+    assertEq(false, o1.calledZ);
+    assertEq(true, o1.calledMethodOnChild);
+    assertEq(undefined, ret);
+
+    let o2 = new TestClsWithMethodsChild();
+    assertThrows('', ()=>Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o2, 'goAbc', [true, 1], true /* okifnotexist*/, 'fallback'/* returnifnotexist */, false/* ok if parent*/));
+    Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o2, 'goAbc', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, true/* ok if parent*/);
+    assertEq(true, o2.calledAbc);
+    assertEq(false, o2.calledZ);
+    assertEq(false, o2.calledMethodOnChild);
+    // minification needs to preserve names
+    assertEq('TestClsWithMethodsChild', o1.constructor.name);
 });
 t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
@@ -344,6 +357,7 @@ t.test('callAsMethod.BadCharInMethodName', () => {
 t.test('callAsMethod.MissingMethodWhenAllowed', () => {
     let o = new TestClsWithMethods();
     Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], true);
+    assertEq('fallback', Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], true, 'fallback'));
 });
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
@@ -542,5 +556,17 @@ class TestClsWithMethods {
         assertEq(true, p1);
         assertEq(1, p2);
         this.calledZ = true;
+    }
+}
+
+/**
+ * test-only code.
+ */
+class TestClsWithMethodsChild extends TestClsWithMethods {
+    calledMethodOnChild = false
+    goMethodOnChild(p1: boolean, p2: number) {
+        assertEq(false, p1);
+        assertEq(0, p2);
+        this.calledMethodOnChild = true;
     }
 }

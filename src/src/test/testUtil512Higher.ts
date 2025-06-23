@@ -61,12 +61,12 @@ t.test('generateUniqueBase64UrlSafe', () => {
 });
 
 /* ok to disable warning, we're intentionally only synchronous here */
-t.atest('canAwaitACall', async () => {
+t.test('canAwaitACall', async () => {
     let ret = await exampleAsyncFn();
     assertEq(1, ret)
 });
 /* don't need to write return await exampleAsyncFn */
-t.atest('canChainACall', async () => {
+t.test('canChainACall', async () => {
     async function testFn() {
         return exampleAsyncFn()
     }
@@ -79,7 +79,7 @@ async function exampleAsyncFn() {
     await Util512Higher.sleep(100);
     return 1;
 }
-t.atest('doesNotTimeOut', async () => {
+t.test('doesNotTimeOut', async () => {
     let shortFn = async () => {
         await Util512Higher.sleep(200);
         return 123;
@@ -89,7 +89,7 @@ t.atest('doesNotTimeOut', async () => {
     assertEq(123, result);
     assertTrue(performance.now() - start < 600, 'too slow');
 });
-t.atest('timesOut', async () => {
+t.test('timesOut', async () => {
     let longFn = async () => {
         await Util512Higher.sleep(800);
         return 123;
@@ -101,7 +101,7 @@ t.atest('timesOut', async () => {
     await assertThrowsAsync('Timed out', () => cb());
     assertTrue(performance.now() - start < 600, 'too slow');
 });
-t.atest('minimumTimeSlowsDown', async () => {
+t.test('minimumTimeSlowsDown', async () => {
     let shortFn = async () => {
         await Util512Higher.sleep(100);
         return 123;
@@ -111,7 +111,7 @@ t.atest('minimumTimeSlowsDown', async () => {
     assertEq(123, result);
     assertTrue(performance.now() - start > 400, 'too fast');
 });
-t.atest('minimumTimeStaysSame', async () => {
+t.test('minimumTimeStaysSame', async () => {
     let longFn = async () => {
         await Util512Higher.sleep(500);
         return 123;

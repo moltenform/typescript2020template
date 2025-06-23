@@ -4,7 +4,6 @@
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
 import { shouldBreakOnExceptions_Enable } from '../util/util512';
-//~ import  'reflect-metadata';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -17,7 +16,7 @@ function setOutput(s: string) {
 }
 
 async function onSimpleTest() {
-    let s = 'abc. currently running as:';
+    let s = 'Currently running as:';
     s += checkIsProductionBuild() ? 'release' : 'debug';
     setOutput(s);
     await Util512Higher.sleep(1000);
@@ -44,9 +43,9 @@ export function runOnLoad() {
     };
 
     for (let k in mapping) {
-        let elBtn = document.getElementById(k);
-        if (elBtn) {
-            elBtn.addEventListener('click', () => {
+        let btn = document.getElementById(k);
+        if (btn) {
+            btn.addEventListener('click', () => {
                 Util512Higher.syncToAsyncTransition(
                     mapping[k](),
                     'handler for ' + k,
