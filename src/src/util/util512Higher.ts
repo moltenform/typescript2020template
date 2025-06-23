@@ -1,6 +1,7 @@
 
 /* auto */ import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+import { Util512StaticClass } from './util512Base';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -9,12 +10,12 @@
  * typescript utilities
  * contains utilities like RNG that aren't as straightforward to test.
  */
-export class Util512Higher {
+export const Util512Higher = new (class Util512Higher extends Util512StaticClass {
     /**
      * weakUuid, by broofa
      * uses the weak Math.random, not cryptographically sound.
      */
-    static weakUuid() {
+     weakUuid =()=> {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             let r = (Math.random() * 16) | 0;
             let v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -27,7 +28,7 @@ export class Util512Higher {
      * uses the weak Math.random, don't use this for crypto.
      * slightly an uneven distribution.
      */
-    static getRandIntInclusiveWeak(min: number, max: number) {
+     getRandIntInclusiveWeak=(min: number, max: number)=> {
         assertTrue(min >= 1 && max >= 1, `invalid min ${min}`);
         if (min === max) {
             return min;
@@ -41,7 +42,7 @@ export class Util512Higher {
     /**
      * random number between min and max, inclusive
      */
-    static getRandIntInclusiveStrong(min: number, max: number) {
+     getRandIntInclusiveStrong=(min: number, max: number)=> {
         assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
@@ -72,7 +73,7 @@ export class Util512Higher {
     /**
      * make random bytes, return as base64.
      */
-    static makeCryptRandString(bytes: number) {
+     makeCryptRandString=(bytes: number) =>{
         let buf = new Uint8Array(bytes);
         window.crypto.getRandomValues(buf);
         return Util512.arrayToBase64(Array.from(buf));
@@ -81,7 +82,7 @@ export class Util512Higher {
     /**
      * generate random string, first byte is specified
      */
-    static generateUniqueBase64UrlSafe(nBytes: number, charPrefix: string) {
+     generateUniqueBase64UrlSafe=(nBytes: number, charPrefix: string)=> {
         assertEq(1, charPrefix.length, 'expected one char');
         let buf = new Uint8Array(nBytes + 1);
         window.crypto.getRandomValues(buf);
@@ -95,7 +96,7 @@ export class Util512Higher {
     /**
      * download image asynchronously
      */
-    static beginLoadImage(url: string, img: HTMLImageElement, callback: () => void) {
+     beginLoadImage=(url: string, img: HTMLImageElement, callback: () => void) =>{
         let haveRunCallback = false;
         let on_load = () => {
             if (!haveRunCallback) {
@@ -119,21 +120,47 @@ export class Util512Higher {
             /* apparently it might be possible for .complete to be set
             immediately in some cases */
             showMsgIfExceptionThrown(() => {
-                haveRunCallback = true;
-                callback();
+                if (!haveRunCallback) {
+                    haveRunCallback = true;
+                    callback();
+                }
             }, 'LoadImage.on_load');
         }
+    }
+
+    loadImageAsync(url: string, img: HTMLImageElement) {
+        return new Promise<void>((resolve, reject) => {
+            let haveRunCallback = false;
+            img.addEventListener('load', () => {
+                if (!haveRunCallback) {
+                    haveRunCallback = true;
+                    resolve();
+                }
+        });
+            img.addEventListener('error', () =>{
+                reject(new Error('failed to load ' + url));
+        });
+            img.src = url;
+            if (img.complete) {
+                /* apparently it might be possible for .complete to be set
+                immediately in some cases */
+                if (!haveRunCallback) {
+                    haveRunCallback = true;
+                    resolve();
+                }
+            }
+        })
     }
 
     /**
      * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
-    private static loadJsonImpl(
+    private loadJsonImpl=(
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
         callbackOnErr: (n: number) => void
-    ) {
+    ) => {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
         let on_load = () => {
@@ -160,10 +187,10 @@ export class Util512Higher {
     /**
      * download json asynchronously, and return string.
      */
-    static asyncLoadJsonString(url: string): Promise<string> {
+     asyncLoadJsonString = (url: string):Promise<string> => {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
-            Util512Higher.loadJsonImpl(
+            this.loadJsonImpl(
                 url,
                 req,
                 s => {
@@ -179,19 +206,19 @@ export class Util512Higher {
     /**
      * download json asynchronously, and return parsed js object.
      */
-    static async asyncLoadJson(url: string): Promise<AnyUnshapedJson> {
-        let s = await Util512Higher.asyncLoadJsonString(url);
+      asyncLoadJson = async (url: string): Promise<AnyUnshapedJson>=> {
+        let s = await this.asyncLoadJsonString(url);
         return JSON.parse(s);
     }
 
     /**
      * load and run script. must be on same domain.
      */
-    static scriptsAlreadyLoaded: Record<string, boolean> = {};
-    static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
+     private scriptsAlreadyLoaded: Record<string, boolean> = {};
+     asyncLoadJsIfNotAlreadyLoaded = (url: string): Promise<void>=> {
         return new Promise((resolve, reject) => {
             assertTrue(url.startsWith('/'));
-            if (Util512Higher.scriptsAlreadyLoaded[url]) {
+            if (this.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;
             }
@@ -212,7 +239,7 @@ export class Util512Higher {
             let on_load = () => {
                 if (!cbCalled) {
                     cbCalled = true;
-                    Util512Higher.scriptsAlreadyLoaded[url] = true;
+                    this.scriptsAlreadyLoaded[url] = true;
                     resolve();
                 }
             };
@@ -232,11 +259,11 @@ export class Util512Higher {
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
      */
-    static syncToAsyncTransition<T>(
+     syncToAsyncTransition = <T>(
         fn: Promise<T>,
         context: string,
         rtype: RespondToErr
-    ) {
+    ) => {
         fn.then(
             () => {
                 /* fulfilled with no exceptions */
@@ -248,26 +275,26 @@ export class Util512Higher {
     }
 
     /**
-     * essentially a replacement for timeout.
+     * essentially a replacement for timeout, but responds to exceptions.
      */
-    static syncToAsyncAfterPause(
+     syncToAsyncAfterPause = (
         fn: () => unknown,
         nMilliseconds: number,
         context: string,
         rtype: RespondToErr
-    ) {
-        let asyncf = async () => {
-            await Util512Higher.sleep(nMilliseconds);
+    )=> {
+        let fnWithSleep = async () => {
+            await this.sleep(nMilliseconds);
             fn();
         };
 
-        Util512Higher.syncToAsyncTransition(asyncf(), context, rtype);
+        this.syncToAsyncTransition(fnWithSleep(), context, rtype);
     }
 
     /**
      * call this in an async function: await sleep(1000) to wait one second.
      */
-    static sleep(ms: number) {
+     sleep=(ms: number) =>{
         return new Promise<void>(resolve => {
             /* it's ok to use an old-style promise, we're not going from sync to async */
             /* eslint-disable-next-line ban/ban */
@@ -282,31 +309,31 @@ export class Util512Higher {
             2) use a try/finally in case fn throws exceptions
         I think my approach is simpler.
      */
-    static async runAsyncWithTimeout<T>(fn: Promise<T>, ms: number): Promise<T> {
-        class SentinelClass {}
+     runAsyncWithTimeout = async <T>(fn: Promise<T>, ms: number): Promise<T> => {
+        let tokenIndicatingTimeout = Symbol()
         let fTimeout = async () => {
-            await Util512Higher.sleep(ms);
-            return new SentinelClass();
+            await this.sleep(ms);
+            return tokenIndicatingTimeout;
         };
 
         let ps = [fn, fTimeout()];
         let ret = await Promise.race(ps);
-        if (ret instanceof SentinelClass) {
+        if (ret === tokenIndicatingTimeout) {
             checkThrow512(false, 'Timed out.');
         } else {
-            return ret;
+            return ret as T;
         }
     }
 
     /**
      * takes at least ms seconds.
      */
-    static async runAsyncWithMinimumTime<T>(fn: Promise<T>, ms: number): Promise<T> {
-        let fTimeout = async (): Promise<any> => {
-            return Util512Higher.sleep(ms);
+      runAsyncWithMinimumTime =async<T>(fn: Promise<T>, ms: number): Promise<T> =>{
+        let fTimeout = async (): Promise<void> => {
+            return this.sleep(ms);
         };
 
-        let ps: [Promise<T>, Promise<any>] = [fn, fTimeout()];
+        let ps: [Promise<T>, Promise<void>] = [fn, fTimeout()];
         let ret = await Promise.all(ps);
         return ret[0];
     }
@@ -314,7 +341,7 @@ export class Util512Higher {
     /**
      * get date as month day hh mm
      */
-    static getDateString(includeSeconds = false) {
+     getDateString=(includeSeconds = false) =>{
         let d = new Date();
         let hours = d.getHours();
         if (hours > 12) {
@@ -332,7 +359,7 @@ export class Util512Higher {
             sc
         );
     }
-}
+})
 
 /**
  * by default, alert on every exception
@@ -384,70 +411,8 @@ export type AsyncFn = () => Promise<unknown>;
 /**
  * used to intentionally free memory
  */
-export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
+export function SetToInvalidObjectToReleaseMemory<T>(_useToGetType: T): T {
     return undefined as any as T;
-}
-
-/**
- * can be used to build a periodic timer.
- */
-export class RepeatingManualTimer {
-    periodInMilliseconds = 0;
-    lasttimeseen = 0;
-    started = 0;
-    constructor(periodInMilliseconds: number) {
-        this.periodInMilliseconds = periodInMilliseconds;
-    }
-
-    update(ms: number) {
-        this.lasttimeseen = ms;
-    }
-
-    isDue(): boolean {
-        return this.lasttimeseen - this.started > this.periodInMilliseconds;
-    }
-
-    reset() {
-        this.started = this.lasttimeseen;
-    }
-}
-
-/**
- * just a flag indicating that the operation is complete.
- */
-export class RenderComplete {
-    complete = true;
-    and(other: RenderComplete) {
-        this.complete = this.complete && other.complete;
-    }
-
-    andB(other: boolean) {
-        this.complete = this.complete && other;
-    }
-}
-
-/**
- * can be used to build a periodic timer.
- */
-export class RepeatingTimer {
-    periodInMilliseconds = 0;
-    lasttimeseen = 0;
-    started = 0;
-    constructor(periodInMilliseconds: number) {
-        this.periodInMilliseconds = periodInMilliseconds;
-    }
-
-    update(ms: number) {
-        this.lasttimeseen = ms;
-    }
-
-    isDue(): boolean {
-        return this.lasttimeseen - this.started > this.periodInMilliseconds;
-    }
-
-    reset() {
-        this.started = this.lasttimeseen;
-    }
 }
 
 /**

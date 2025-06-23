@@ -1,7 +1,7 @@
 
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

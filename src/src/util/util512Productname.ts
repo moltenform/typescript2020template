@@ -3,7 +3,7 @@
 /* Released under the MIT license */
 
 /**
- * change these as appropriate for your product
+ * Feel free to change these as appropriate for your app name.
  */
 export const msgScriptErr = 'Script Error: ';
 export const msgInternalErr = 'Internal Error: ';

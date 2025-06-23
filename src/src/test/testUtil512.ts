@@ -2,7 +2,7 @@
 /* auto */ import { bool, O } from './../util/util512Base';
 /* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testHelpers';
 import {expectTypeOf} from 'expect-type'
 import _ from 'lodash';
 
@@ -60,7 +60,7 @@ t.test('ValHolder.closure', () => {
     increment();
     assertEq(1, v.val);
 });
-t.test('listEnumValsIncludingAlternates', () => {
+t.test('listEnumVals, listEnumValsIncludingAlternates', () => {
     assertEq('__isUI512Enum, __UI512EnumCapitalize, First, Second, Third, TheFirst, Scnd, Thd', listEnumValsIncludingAlternates(TestEnum))
     assertEq('__isUI512Enum, EOne, ETwo, EThree', listEnumValsIncludingAlternates(TestSimpleEnum))
     assertEq(', first, second, third', listEnumVals(TestEnum, true))
@@ -165,7 +165,7 @@ t.test('test enum values', () => {
     assertTrue(TestEnum.First as number !== TestEnum.Second as number);
 })
 
-t.test('ShowValuesInExceptionMsg', () => {
+t.test('getStrToEnum ShowValuesInExceptionMsg', () => {
     let errFound = assertThrows('', ()=>getStrToEnum(TestEnum, 'TestEnum', '-nonexist-'))
     let excMessage: string = errFound.toString();
 

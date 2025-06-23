@@ -13,7 +13,7 @@ export function bool(x: unknown): boolean {
 }
 
 /**
- * works as a typescript type assertion
+ * works as a typescript type guard
  */
 export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
     return bool(x);
@@ -21,11 +21,9 @@ export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
 
 /**
  * cast to string.
- * we used to have an isstring() check, but weird 'new String'
- * hybrid strings are rare and banned by es-lint, so assumed not to occur.
  */
 export function tostring(s: unknown): string {
-    /* nb: this is not the unsafe `new String()` constructor */
+    /* just a standard string, not the odd `new String()` construct */
     return String(s);
 }
 
@@ -46,16 +44,23 @@ declare const DBGPLACEHOLDER: boolean;
  * check if we are in a production build.
  */
 export function checkIsProductionBuild(): boolean {
-    let ret = false;
+    let retWebpack = false;
     try {
         /* when webpack builds this file it will replace the string */
         /* with `true` or `false` */
-        ret = WEBPACK_PRODUCTION;
+        retWebpack = WEBPACK_PRODUCTION;
     } catch {
-        ret = false;
+        retWebpack = false;
     }
 
-    return ret;
+    let retVite = false;
+    // try {
+    //     retVite = import.meta!.env!.PROD;
+    // } catch {
+    //     retVite = false;
+    // }
+
+    return retWebpack;
 }
 
 /**
@@ -121,23 +126,27 @@ export abstract class RingBuffer {
  * ui512LogPtr should be in local storage, we could be running in 2 browser windows.
  */
 export class RingBufferLocalStorage extends RingBuffer {
-    getAt(index: number): string {
-        if (window.localStorage) {
-            return window.localStorage.getItem('ui512Log_' + index.toString()) ?? '';
+    store(): Storage  {
+        return window.localStorage;
+    }
+    
+    override  getAt(index: number): string {
+        if (this.store()) {
+            return this.store().getItem('ui512Log_' + index.toString()) ?? '';
         } else {
             return '';
         }
     }
 
-    setAt(index: number, s: string) {
-        if (window.localStorage) {
-            window.localStorage.setItem('ui512Log_' + index.toString(), s);
+    override  setAt(index: number, s: string) {
+        if (this.store()) {
+            this.store().setItem('ui512Log_' + index.toString(), s);
         }
     }
 
-    getLatestIndex() {
-        if (window.localStorage) {
-            let sLatest = window.localStorage.getItem('ui512LogPtr') ?? '0';
+    override getLatestIndex() {
+        if (this.store()) {
+            let sLatest = this.store().getItem('ui512LogPtr') ?? '0';
 
             /* ok to use here, we remembered to say base 10 */
             /* eslint-disable-next-line ban/ban */
@@ -148,9 +157,9 @@ export class RingBufferLocalStorage extends RingBuffer {
         }
     }
 
-    setLatestIndex(index: number) {
-        if (window.localStorage) {
-            window.localStorage.setItem('ui512LogPtr', index.toString());
+    override setLatestIndex(index: number) {
+        if (this.store()) {
+            this.store().setItem('ui512LogPtr', index.toString());
         }
     }
 }

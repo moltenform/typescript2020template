@@ -91,7 +91,7 @@ export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unkno
  * duck type-checking, useful for try/catch
  */
 export function ensureIsError(e: unknown): asserts e is Error {
-    assertTrue(Boolean((e as any).message), 'Does not appear to be an error object');
+    assertTrue((e as any).message, 'Does not appear to be an error object');
 }
 
 /**
@@ -153,8 +153,9 @@ export function assertWarn(condition: unknown, s1?: string, s2?: unknown, s3?: u
 
 /**
  * a quick way to throw if condition is false.
- * not the same as assert - an assert should only be
- * triggered for unexpected conditions.
+ * check and assert do similar things but have different semantics,
+ * an assert() fires when there's logic issues in the program,
+ * a check() fires on mistaken input from the user, it's not a bug.
  */
 export function checkThrow512(
     condition: unknown,
@@ -167,10 +168,9 @@ export function checkThrow512(
     }
 }
 
-/* see also: assertEq, assertWarnEq, checkThrowEq in util512.ts */
-
 /**
  * store logs. user can choose "send err report" to send us error context.
+ * not a Util512StaticClass because it has state.
  */
 export class UI512ErrorHandling {
     static shouldRecordErrors = true;

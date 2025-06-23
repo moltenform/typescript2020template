@@ -40,7 +40,7 @@ export function runOnLoad() {
         idBtnSimpleTest: onSimpleTest,
         idBtnDemoModules: onDemoModules,
         idBtnDemoSave: onDemoSave,
-        idBtnRunUtil512Tests: ()=>SimpleUtil512Tests.runTests(true)
+        idBtnRunUtil512Tests: SimpleUtil512Tests.runTests
     };
 
     for (let k in mapping) {

@@ -688,30 +688,39 @@ export function assertEq<T>(
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
         msgEq += c1 ?? '';
         assertTrue(false, msgEq, c2, c3);
-        while(false) {
-            let fhgfh=567;
-        }
     }
 }
 
-declare global{
+/**
+ * used during debugging, for example tell your IDE
+ * to break on uncaught exceptions if shouldBreakOnExceptions===true
+ */
+declare global {
   var shouldBreakOnExceptions: boolean
 }
 
-export function shouldBreakOnExceptions_Disable() {
-    if (typeof globalThis !== 'undefined') {
-        // could be a stack to push/pop (which would make nested calls work), but even in that case it wouldn't
-        // work during await/async code, so leave it simple for now.
-        globalThis.shouldBreakOnExceptions = false;
-    }
-}
-
+/**
+ * tell your IDE that it's ok to break on uncaught exceptions
+ */
 export function shouldBreakOnExceptions_Enable() {
     if (typeof globalThis !== 'undefined') {
         globalThis.shouldBreakOnExceptions = true;
     }
 }
 
+/**
+ * tell your IDE that not to break on uncaught exceptions,
+ * call this for places like assertThrows that intentionally throw
+ */
+export function shouldBreakOnExceptions_Disable() {
+    if (typeof globalThis !== 'undefined') {
+        // this would be better if it were a stack to push/pop,
+        // so that it would work during functions like assertAsserts,
+        // but it's not worth the complexity (and even with a stack
+        // there'd be await/async issues).
+        globalThis.shouldBreakOnExceptions = false;
+    }
+}
 
 /**
  * if expected and msg are not the same, assertWarn.
@@ -732,6 +741,9 @@ export function assertWarnEq(
 
 /**
  * a quick way to throw an expection if value is not what was expected.
+ * check and assert do similar things but have different semantics,
+ * an assert() fires when there's logic issues in the program,
+ * a check() fires on mistaken input from the user, it's not a bug.
  */
 export function checkThrowEq<T>(
     expected: T,
@@ -748,7 +760,7 @@ export function checkThrowEq<T>(
 
 /**
  * a quick way to throw an expection if value is not what was expected.
- * throws a 512 flavor of error
+ * tags error with '512' marking, indicating it came from that part of the code.
  */
 export function checkThrowEq512<T>(
     expected: T,

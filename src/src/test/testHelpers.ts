@@ -1,8 +1,8 @@
 
-/* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
-/* auto */ import { O } from './../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from './../util/util512';
+/* auto */ import { AsyncFn, VoidFn } from '../util/util512Higher';
+/* auto */ import { O } from '../util/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
+/* auto */ import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from '../util/util512';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */

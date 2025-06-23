@@ -8,7 +8,7 @@
 /* auto */ import {
     SimpleUtil512TestCollection,
     notifyUserIfDebuggerIsSetToAllExceptions
-} from './testUtils';
+} from './testHelpers';
 /* auto */ import { testCollectionUtil512Higher } from './testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './testUtil512Assert';
@@ -25,7 +25,7 @@ import _ from 'lodash'
  * a very simple testing framework.
  */
 export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512StaticClass {
-    async runTests(includeSlow: boolean) {
+     runTests = async(includeSlow=true)=>{
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
             return;
@@ -41,7 +41,7 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         }
     }
 
-    async runTestsImpl(includeSlow: boolean) {
+     runTestsImpl=async(includeSlow: boolean) =>{
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
             testCollectionExternalLibs,
@@ -95,12 +95,12 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
     /**
      * run a collection of tests
      */
-    async runCollection(
+    runCollection = async(
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
         mapSeen: Map<string, boolean>
-    ) {
+    ) => {
         notifyUserIfDebuggerIsSetToAllExceptions();
         assertWarn(
             coll.tests.length > 0 || coll.atests.length > 0,

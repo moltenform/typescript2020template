@@ -1,8 +1,8 @@
 
-/* auto */ import { RingBuffer, UI512Compress, tostring, Util512StaticClass, } from './../util/util512Base';
+/* auto */ import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage, } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -171,20 +171,35 @@ t.test('unknownToString', () => {
 class RingBufferArray extends RingBuffer {
     arr: string[] = [];
     ptrLatest = 0;
-    getAt(index: number): string {
+    override  getAt(index: number): string {
         return this.arr[index] ?? '';
     }
 
-    setAt(index: number, s: string) {
+    override setAt(index: number, s: string) {
         this.arr[index] = s;
     }
 
-    getLatestIndex() {
+   override  getLatestIndex() {
         return this.ptrLatest;
     }
 
-    setLatestIndex(index: number) {
+   override  setLatestIndex(index: number) {
         this.ptrLatest = index;
     }
 }
 
+class RingBufferLocalStorageMock extends RingBufferLocalStorage {
+    _store: O<Storage>
+    override store(): Storage  {
+        class MockStore {
+            getItem(key: string): string | null {
+                return this[key] ?? null;
+            }
+            setItem(key: string, value: string): void {
+                 this[key] = value;
+            }
+        }  
+
+        return this._store ?? new MockStore() as Storage;
+    }
+}
