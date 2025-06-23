@@ -1,6 +1,6 @@
 
-/* auto */ import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
-/* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+import { assertTrue, ensureIsError, checkThrow512, respondUI512Error } from './util512Assert';
+import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 import { Util512StaticClass } from './util512Base';
 
 /* (c) 2020 moltenform(Ben Fisher) */

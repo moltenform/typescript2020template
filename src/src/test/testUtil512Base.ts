@@ -1,15 +1,13 @@
 
-/* auto */ import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage, } from './../util/util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
-/* auto */ import { assertEq, assertWarnEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testHelpers';
+import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage, } from './../util/util512Base';
+import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
+import { assertEq, assertWarnEq } from './../util/util512';
+import { SimpleUtil512TestCollection, assertAsserts, assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUtil512Base');
-export let testCollectionUtil512Base = t;
-
+t.setCurrentLabel('testCollectionUtil512Base');
 t.test('RingBuffer.SizeRemainsConstant', () => {
     let buf = new RingBufferArray(4);
     buf.append('a');
@@ -210,13 +208,18 @@ class RingBufferLocalStorageMock extends RingBufferLocalStorage {
     override store(): Storage  {
         class MockStore {
             getItem(key: string): string | null {
+                // use null to match what localstorage.getItem does
                 return this[key] ?? null;
             }
             setItem(key: string, value: string): void {
                  this[key] = value;
             }
-        }  
+        }
 
-        return this._store ?? new MockStore() as Storage;
+        if (!this._store) {
+            this._store = new MockStore() as Storage;
+        }
+
+        return this._store
     }
 }

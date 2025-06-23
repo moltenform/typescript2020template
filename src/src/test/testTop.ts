@@ -1,21 +1,22 @@
-/* auto */ import { AsyncFn, VoidFn } from './../util/util512Higher';
-/* auto */ import {
+import { AsyncFn, VoidFn } from './../util/util512Higher';
+import {
     UI512ErrorHandling,
     assertTrue,
     assertWarn
 } from './../util/util512Assert';
-/* auto */ import {  shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
-/* auto */ import {
+import {  shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
+import {
     SimpleUtil512TestCollection,
     notifyUserIfDebuggerIsSetToAllExceptions,
-    t
+    t,
+    tSlow
 } from './testHelpers';
-/* auto */ import  './testUtil512Higher';
-/* auto */ import './testUtil512Class';
-/* auto */ import './testUtil512Assert';
-/* auto */ import './testUtil512';
+import  './testUtil512Higher';
+import './testUtil512Class';
+import './testUtil512Assert';
+import './testUtil512Base';
+import './testUtil512';
 import { Util512StaticClass } from '../util/util512Base';
-import { testCollectionUtil512Base } from './testUtil512Base';
 import _ from 'lodash'
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -44,12 +45,8 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
      runTestsImpl=async(includeSlow: boolean) =>{
         /* order tests from high to low */
         let colls: SimpleUtil512TestCollection[] = [
-            //~ testCollectionUtil512Assert,
-            //~ testCollectionUtil512Base,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512Higher
-            t
+            t,
+            tSlow
         ];
 
         if (!colls || !colls.length) {
@@ -102,24 +99,25 @@ export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512S
         mapSeen: Map<string, boolean>
     ) => {
         notifyUserIfDebuggerIsSetToAllExceptions();
-        assertWarn(
-            coll.tests.length > 0,
-            'no tests in collection'
-        );
 
-        /* note that some tests require async tests to be done first. */
-        let tests: [string, VoidFn | AsyncFn, string][] = _.clone(coll.tests);
-        for (let i = 0; i < tests.length; i++) {
-            let [tstname, fnTest, label] = tests[i];
-            if (mapSeen.has(tstname.toLowerCase())) {
-                assertWarn(false, 'duplicate test name', tstname);
+        /* if it says runFirst, run it first. */
+        for (let k in coll.tests) {
+            coll.tests[k] = _.sortBy(coll.tests[k], tt=>tt[0].startsWith('runFirst') ? 0 : 1);
+            console.log(k)
+            const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];
+
+            for (let i = 0; i < tests.length; i++) {
+                let [tstname, fnTest] = tests[i];
+                if (mapSeen.has(tstname.toLowerCase())) {
+                    assertWarn(false, 'duplicate test name', tstname);
+                }
+
+                /* fine to use await for both sync and async, since it's a no-op on sync fns. */
+                mapSeen.set(tstname.toLowerCase(), true);
+                console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
+                await fnTest();
+                counter.val += 1;
             }
-
-            /* it's totally fine to await on a synchronous fn. */
-            mapSeen.set(tstname.toLowerCase(), true);
-            console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
-            await fnTest();
-            counter.val += 1;
         }
     }
 })();

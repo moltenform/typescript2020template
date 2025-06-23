@@ -1,15 +1,13 @@
 
-/* auto */ import { assertTrue } from './../util/util512Assert';
-/* auto */ import { Util512, assertEq, longstr } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './testHelpers';
+import { assertTrue } from './../util/util512Assert';
+import { Util512, assertEq, longstr } from './../util/util512';
+import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
-export let testCollectionUtil512Class = t;
-
+t.setCurrentLabel('testCollectionUtil512Class');
 t.test('isValidNumber', () => {
     assertTrue(Util512.isValidNumber(123));
     assertTrue(Util512.isValidNumber(0));

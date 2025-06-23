@@ -1,8 +1,8 @@
 
-/* auto */ import { bool, O } from './../util/util512Base';
-/* auto */ import { assertTrue, ensureIsError } from './../util/util512Assert';
-/* auto */ import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
+import { bool, O } from './../util/util512Base';
+import { assertTrue, ensureIsError } from './../util/util512Assert';
+import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
+import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
 import {expectTypeOf} from 'expect-type'
 import _ from 'lodash';
 

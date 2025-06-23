@@ -1,5 +1,5 @@
-/* auto */ import { O, tostring, Util512StaticClass } from './util512Base';
-/* auto */ import {
+import { O, tostring, Util512StaticClass } from './util512Base';
+import {
     assertTrue,
     assertWarn,
     checkThrow512,

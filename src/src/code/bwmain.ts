@@ -1,7 +1,7 @@
 
-/* auto */ import { RespondToErr, Util512Higher } from './../util/util512Higher';
-/* auto */ import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
-/* auto */ import { SimpleUtil512Tests } from './../test/testTop';
+import { RespondToErr, Util512Higher } from './../util/util512Higher';
+import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
+import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
 import { shouldBreakOnExceptions_Enable } from '../util/util512';
 

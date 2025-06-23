@@ -1,8 +1,8 @@
 
-/* auto */ import { AsyncFn, VoidFn } from '../util/util512Higher';
-/* auto */ import { O } from '../util/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
-/* auto */ import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from '../util/util512';
+import { AsyncFn, VoidFn } from '../util/util512Higher';
+import { O } from '../util/util512Base';
+import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
+import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from '../util/util512';
 import _ from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -135,7 +135,7 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public slow = false) {}
     currentLabel = ''
-    tests: [string, VoidFn, string][] = [];
+    tests: Record<string, [string, VoidFn][]> = {};
     _context = '';
 
     /**
@@ -149,7 +149,11 @@ export class SimpleUtil512TestCollection {
      * add a non-async test to the collection
      */
     public test(s: string, fn: VoidFn) {
-        this.tests.push([s, fn, this.currentLabel]);
+        if (!this.tests[this.currentLabel]) {
+            this.tests[this.currentLabel] = [];
+        }
+
+        this.tests[this.currentLabel].push([s, fn]);
         return this;
     }
 
@@ -165,6 +169,6 @@ export class SimpleUtil512TestCollection {
  * example: import { tSkipped as t } from './testHelpers'
  */
 export const t = new SimpleUtil512TestCollection('main');
-export const tSlow = new SimpleUtil512TestCollection('main', true);
-export const tSkipped = new SimpleUtil512TestCollection('main');
+export const tSlow = new SimpleUtil512TestCollection('mainSlow', true);
+export const tSkipped = new SimpleUtil512TestCollection('mainSkipped');
 

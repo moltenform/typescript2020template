@@ -1,15 +1,13 @@
 
-/* auto */ import { Util512Higher } from './../util/util512Higher';
-/* auto */ import { assertTrue } from './../util/util512Assert';
-/* auto */ import { Util512, assertEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync } from './testHelpers';
+import { Util512Higher } from './../util/util512Higher';
+import { assertTrue } from './../util/util512Assert';
+import { Util512, assertEq } from './../util/util512';
+import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
-export let testCollectionUtil512Higher = t;
-
+t.setCurrentLabel('testCollectionUtil512Higher');
 t.test('WeakUuid', () => {
     let uid1 = Util512Higher.weakUuid();
     let uid2 = Util512Higher.weakUuid();

@@ -1,14 +1,12 @@
 
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
-/* auto */ import { assertEq, assertWarnEq } from './../util/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './testHelpers';
+import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
+import { assertEq, assertWarnEq } from './../util/util512';
+import { SimpleUtil512TestCollection, assertAsserts, assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUtil512Assert');
-export let testCollectionUtil512Assert = t;
-
+t.setCurrentLabel('testCollectionUtil512Assert');
 t.test('AssertThrows', () => {
     // test Get Message From Custom Error
     assertThrows('mymessage', () => {
