@@ -1,15 +1,9 @@
-
-// we're not actually in a typescript environment, this is just a config file,
-// so safe to disable the warnings about require statements
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const main = [
-    './src/code/bwmain.ts'
-];
+const main = ['./src/code/bwmain.ts'];
 
 module.exports = {
     /* automatically find tsconfig.json */
@@ -19,12 +13,12 @@ module.exports = {
     },
     output: {
         path: path.join(process.cwd(), 'dist'),
-    "filename": "[name].[hash].min.js",
-   "chunkFilename": "[name].[chunkhash].bundle.js",
+        filename: '[name].[hash].min.js',
+        chunkFilename: '[name].[chunkhash].bundle.js'
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({
-            async: false,
+            async: false
         }),
         new HtmlWebpackPlugin({
             hash: true,
@@ -41,8 +35,8 @@ module.exports = {
                 minifyJS: true,
                 minifyJS: false,
                 minifyCSS: true,
-                minifyURLs: true,
-            },
+                minifyURLs: true
+            }
         }),
         new webpack.DefinePlugin({
             /*  note that the plugin does a direct text replacement. */
@@ -55,16 +49,17 @@ module.exports = {
                 test: /.tsx?$/,
                 use: [
                     {
-                        loader: 'ts-loader', options: {
-                            transpileOnly: true,
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true
                         }
                     }
-                ],
+                ]
             }
         ]
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"]
+        extensions: ['.tsx', '.ts', '.js']
     },
     performance: {
         /* suppress warning about large asset size */
@@ -74,7 +69,6 @@ module.exports = {
         /* set this to false if you'd rather not minimize code */
         minimize: true,
         /* into vendors.js */
-        splitChunks: {chunks: 'all' }
-    },
+        splitChunks: { chunks: 'all' }
+    }
 };
-

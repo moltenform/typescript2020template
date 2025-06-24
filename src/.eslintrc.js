@@ -13,7 +13,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: [
         '@typescript-eslint',
-        'ban',
+        'ban'
         // not 'prettier', we don't run prettier through eslint as it's slow
         // to run prettier, instead run `npm run prettierexceptlongimports`
     ],
@@ -25,7 +25,7 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
         'plugin:@typescript-eslint/recommended-requiring-type-checking', // You need both to actually get the defaults
-        'prettier', // Disable ESLint rules if their redundant with a prettier error 
+        'prettier' // Disable ESLint rules if their redundant with a prettier error
         // 'plugin:prettier/recommended' // Displays prettier errors as ESLint errors. (must be last)
     ],
     parserOptions: {
@@ -53,10 +53,10 @@ module.exports = {
         '@typescript-eslint/unbound-method': 'error',
 
         // don't needlessly have a call() or apply()
-        'no-useless-call': 'warn', 
+        'no-useless-call': 'warn',
 
         // apply is dangerous, there could be max arg limits. see also the ban/ban
-        'prefer-spread': 'warn', 
+        'prefer-spread': 'warn',
 
         // personal preference, ones that I think are fine
         'no-inner-declarations': 'off',
@@ -97,14 +97,14 @@ module.exports = {
         'no-invalid-this': 'off',
 
         // we want let s1 || 'default' to be an error, s1 ?? 'default' is better
-        // should I enable strict-boolean-expressions to detect this? 
+        // should I enable strict-boolean-expressions to detect this?
         // no, causes false positives for code like if (str1) {...} which I think is ok.
         // so I've written my own || check, which runs when you run `npm run prettierexceptlongimports`
-        '@typescript-eslint/prefer-nullish-coalescing': ["error"],
+        '@typescript-eslint/prefer-nullish-coalescing': ['error'],
 
         // went through all non-default ones, chose to turn these on
-        'curly': 'warn',
-        'eqeqeq': 'warn',
+        curly: 'warn',
+        eqeqeq: 'warn',
         'no-template-curly-in-string': 'warn',
         'block-scoped-var': 'warn',
         'default-case': 'warn',
@@ -153,28 +153,28 @@ module.exports = {
         '@typescript-eslint/no-implied-eval': 'warn',
         '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
         '@typescript-eslint/no-throw-literal': 'warn',
-        '@typescript-eslint/require-array-sort-compare': 'warn', 
-        
+        '@typescript-eslint/require-array-sort-compare': 'warn',
+
         // a few other ones
         '@typescript-eslint/consistent-type-assertions': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
-        
+
         // after 2.26.0
-        '@typescript-eslint/non-nullable-type-assertion-style': 'warn', 
-        '@typescript-eslint/no-confusing-void-expression': 'warn', 
-        '@typescript-eslint/consistent-indexed-object-style': 'error', 
-        '@typescript-eslint/no-implicit-any-catch': 'off', 
-        '@typescript-eslint/prefer-reduce-type-parameter': 'error', 
-        '@typescript-eslint/prefer-ts-expect-error': 'error', 
-        "no-duplicate-imports": "off", // turn off eslint's in favor of the ts version
-        "@typescript-eslint/no-duplicate-imports": ["error"],
-        "comma-dangle": "off", // turn off eslint's in favor of the ts version
-        "@typescript-eslint/comma-dangle": ["error"],
-        "no-loop-func": "off", // turn off eslint's in favor of the ts version
-        "@typescript-eslint/no-loop-func": ["error"],
-        "no-loss-of-precision": "off", // turn off eslint's in favor of the ts version
-        "@typescript-eslint/no-loss-of-precision": ["error"],
-        
+        '@typescript-eslint/non-nullable-type-assertion-style': 'warn',
+        '@typescript-eslint/no-confusing-void-expression': 'warn',
+        '@typescript-eslint/consistent-indexed-object-style': 'error',
+        '@typescript-eslint/no-implicit-any-catch': 'off',
+        '@typescript-eslint/prefer-reduce-type-parameter': 'error',
+        '@typescript-eslint/prefer-ts-expect-error': 'error',
+        'no-duplicate-imports': 'off', // turn off eslint's in favor of the ts version
+        '@typescript-eslint/no-duplicate-imports': ['error'],
+        'comma-dangle': 'off', // turn off eslint's in favor of the ts version
+        '@typescript-eslint/comma-dangle': ['error'],
+        'no-loop-func': 'off', // turn off eslint's in favor of the ts version
+        '@typescript-eslint/no-loop-func': ['error'],
+        'no-loss-of-precision': 'off', // turn off eslint's in favor of the ts version
+        '@typescript-eslint/no-loss-of-precision': ['error'],
+
         // after eslint7.32.0 + eslint-ts4.29.3
         'no-constant-binary-expression': 'error',
         'no-unused-private-class-members': 'error',
@@ -182,16 +182,19 @@ module.exports = {
         '@typescript-eslint/consistent-generic-constructors': 'error',
         '@typescript-eslint/no-unsafe-declaration-merging': 'error',
         '@typescript-eslint/no-duplicate-enum-values': 'error',
-        
+
         // checks locals, not fn params.
-        // annoying to leave this on while editing, so consider
-        // using typescript warning 6133 on only when building for production
-        '@typescript-eslint/no-unused-vars': ['error', {
-            // allow ones starting with an underscore
-            "argsIgnorePattern": "^_[^_].*$|^_$",
-            "varsIgnorePattern": "^_[^_].*$|^_$",
-            "caughtErrorsIgnorePattern": "^_[^_].*$|^_$"
-        }], 
+        // can be annoying to leave this on while editing, so consider
+        // using typescript warning 6133 instead because we can scope it to prod only
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+                // allow ones starting with an underscore
+                argsIgnorePattern: '^_[^_].*$|^_$',
+                varsIgnorePattern: '^_[^_].*$|^_$',
+                caughtErrorsIgnorePattern: '^_[^_].*$|^_$'
+            }
+        ],
 
         // don't need `radix` due to ban below
         // don't need `prefer-for-of`, in some cases I want the slightly-faster for in
@@ -199,14 +202,34 @@ module.exports = {
         // no-param-reassign might be useful one day
         // id-blacklist might be useful one day
 
-        "ban/ban": [
+        'ban/ban': [
             1, // warn
-            {"name": "parseInt", "message": "prefer my parseint in utils, don't need to remember to specify base10."},
-            {"name": ["*", "setTimeout"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-            {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-            {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-            {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
-            {"name": ["*", "substr"], "message": "substr is deprecated."},
+            {
+                name: 'parseInt',
+                message:
+                    "prefer my parseint in utils, don't need to remember to specify base10."
+            },
+            {
+                name: ['*', 'setTimeout'],
+                message:
+                    "use syncToAsyncAfterPause instead or exceptions won't get logged."
+            },
+            {
+                name: 'setTimeout',
+                message:
+                    "use syncToAsyncAfterPause instead or exceptions won't get logged."
+            },
+            {
+                name: ['*', 'setInterval'],
+                message:
+                    "use syncToAsyncAfterPause instead or exceptions won't get logged."
+            },
+            {
+                name: 'setInterval',
+                message:
+                    "use syncToAsyncAfterPause instead or exceptions won't get logged."
+            },
+            { name: ['*', 'substr'], message: 'substr is deprecated.' }
         ]
     }
 };

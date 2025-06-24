@@ -1,11 +1,9 @@
 {
-  "extends": "./tsconfig.development.json",
-  "compilerOptions": {
-    "noUnusedLocals": true,                 /*  Report errors on unused locals. */
-    "noUnusedParameters": true,            /* Report errors on unused parameters. */
-    "noEmitOnError": true,
-  },
-  "include": [
-    "src/**/*"
-  ]
+    "extends": "./tsconfig.development.json",
+    "compilerOptions": {
+        "noUnusedLocals": true /*  Report errors on unused locals. */,
+        "noUnusedParameters": true /* Report errors on unused parameters. */,
+        "noEmitOnError": true
+    },
+    "include": ["src/**/*"]
 }
