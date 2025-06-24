@@ -1,5 +1,5 @@
 
-import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring, Util512StaticClass } from './util512Base';
+import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
 import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */

@@ -1,10 +1,10 @@
 
-import { bool, O } from './../util/util512Base';
-import { assertTrue, ensureIsError } from './../util/util512Assert';
+import { bool } from './../util/util512Base';
+import { assertTrue } from './../util/util512Assert';
 import { Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, sortConsistentType, checkThrowEq, LockableArr, listEnumValsIncludingAlternates, listEnumVals, findEnumToStr, getEnumToStr, castVerifyIsNum, castVerifyIsStr, getShapeRecurse } from './../util/util512';
-import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
+import { assertThrows, t } from './testHelpers';
 import { expectTypeOf } from 'expect-type';
-import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+import { clone as ldClone, last as ldLast } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -494,7 +494,7 @@ function sortedConsistentType(arr: unknown[], mapper = (x: unknown) => x): unkno
  */
 enum TestEnum {
     __isUI512Enum = 1,
-    __UI512EnumCapitalize = 1, // don't disrupt order
+    __UI512EnumCapitalize = __isUI512Enum, // don't disrupt order
     First,
     Second,
     Third,

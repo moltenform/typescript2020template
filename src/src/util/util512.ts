@@ -1,7 +1,7 @@
 
-import { O, tostring, Util512StaticClass } from './util512Base';
-import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
-import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+import { type O, tostring, Util512StaticClass } from './util512Base';
+import { assertTrue, assertWarn, checkThrow512, make512Error } from './util512Assert';
+import { sortBy as ldSortBy, clone as ldClone, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -693,6 +693,7 @@ export function assertEq<T>(
  * to break on uncaught exceptions if shouldBreakOnExceptions===true
  */
 declare global {
+    // eslint-disable-next-line no-var
     var shouldBreakOnExceptions: boolean;
 }
 

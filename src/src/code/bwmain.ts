@@ -1,9 +1,9 @@
 
-import { RespondToErr, Util512Higher } from './../util/util512Higher';
+import { type AsyncFn, RespondToErr, Util512Higher } from './../util/util512Higher';
 import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
 import { SimpleUtil512Tests } from './../test/testTop';
 import { onDemoSave, testExternalModules } from './test-external-modules';
-import { shouldBreakOnExceptions_Enable } from '../util/util512';
+import { shouldBreakOnExceptions_Enable, Util512 } from '../util/util512';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -35,14 +35,14 @@ async function onDemoModules() {
 export function runOnLoad() {
     shouldBreakOnExceptions_Enable();
     Util512StaticClass.callAfterAppLoad();
-    const mapping = {
+    const mapping: Record<string, AsyncFn> = {
         idBtnSimpleTest: onSimpleTest,
         idBtnDemoModules: onDemoModules,
         idBtnDemoSave: onDemoSave,
         idBtnRunUtil512Tests: SimpleUtil512Tests.runTests
     };
 
-    for (let k in mapping) {
+    for (let k of Util512.getMapKeys(mapping)) {
         let btn = document.getElementById(k);
         if (btn) {
             btn.addEventListener('click', () => {

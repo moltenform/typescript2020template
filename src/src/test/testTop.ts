@@ -1,15 +1,15 @@
 
-import { AsyncFn, VoidFn } from './../util/util512Higher';
+import { type AsyncFn, type VoidFn } from './../util/util512Higher';
 import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
 import { shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
-import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, t, tSlow } from './testHelpers';
+import { type SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, t, tSlow } from './testHelpers';
 import './testUtil512Higher';
 import './testUtil512Class';
 import './testUtil512Assert';
 import './testUtil512Base';
 import './testUtil512';
 import { Util512StaticClass } from '../util/util512Base';
-import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+import { sortBy as ldSortBy, sum as ldSum } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -98,9 +98,9 @@ export const SimpleUtil512Tests =
             notifyUserIfDebuggerIsSetToAllExceptions();
 
             /* if it says runFirst, run it first. */
-            for (let k in coll.tests) {
+            for (let k of Util512.getMapKeys(coll.tests)) {
                 coll.tests[k] = ldSortBy(coll.tests[k], tt =>
-                    tt[0].startsWith('runFirst') ? 0 : 1
+                    tt[0].startsWith('-init-') ? 0 : 1
                 );
                 console.log(`=== Group: ${k} ===`);
                 const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];

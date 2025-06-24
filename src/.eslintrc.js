@@ -7,7 +7,6 @@
 // to run it from a shell
 // npm run lint
 
-// eslint-disable-next-line no-undef
 const path = require('path');
 module.exports = {
     root: true,
@@ -61,7 +60,7 @@ module.exports = {
 
         // personal preference, ones that I think are fine
         'no-inner-declarations': 'off',
-        'no-prototype-builtins': 'error',
+        'no-prototype-builtins': 'off',
         'no-debugger': 'off',
         'no-constant-condition': 'off',
         'prefer-const': 'off',
@@ -183,13 +182,16 @@ module.exports = {
         '@typescript-eslint/consistent-generic-constructors': 'error',
         '@typescript-eslint/no-unsafe-declaration-merging': 'error',
         '@typescript-eslint/no-duplicate-enum-values': 'error',
-        '@typescript-eslint/no-unsafe-enum-comparison': 'error',
-        '@typescript-eslint/no-unsafe-enum-asssignment': 'error',
-
+        
         // checks locals, not fn params.
-        // annoying to leave this on while editing, so we'll use typescript 6133 instead
-        // and leave typescript warning 6133 on only when building for production
-        '@typescript-eslint/no-unused-vars': 'off', 
+        // annoying to leave this on while editing, so consider
+        // using typescript warning 6133 on only when building for production
+        '@typescript-eslint/no-unused-vars': ['error', {
+            // allow ones starting with an underscore
+            "argsIgnorePattern": "^_[^_].*$|^_$",
+            "varsIgnorePattern": "^_[^_].*$|^_$",
+            "caughtErrorsIgnorePattern": "^_[^_].*$|^_$"
+        }], 
 
         // don't need `radix` due to ban below
         // don't need `prefer-for-of`, in some cases I want the slightly-faster for in

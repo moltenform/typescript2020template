@@ -1,8 +1,8 @@
 
 import { assertTrue } from './../util/util512Assert';
-import { Util512, assertEq, longstr } from './../util/util512';
-import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
-import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+import { Util512, assertEq } from './../util/util512';
+import { assertThrows, sorted, t } from './testHelpers';
+import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -170,8 +170,12 @@ t.test('isMapEmpty.Class', () => {
     let o1 = new TestClsOne();
     let o2 = new TestClsOne();
     (o2 as any).aSingleAdded = 1;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertTrue(Util512.isMapEmpty(o0 as any));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertTrue(!Util512.isMapEmpty(o1 as any));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertTrue(!Util512.isMapEmpty(o2 as any));
 });
 t.test('Clone.PlainObject', () => {
@@ -460,8 +464,11 @@ t.test('getMapVals.Class', () => {
     let cls1 = new TestClsOne();
     let cls2 = new TestClsOne();
     (cls2 as any).aSingleAdded = false;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertEq([], sorted(Util512.getMapVals(cls0 as any)));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertEq([true], sorted(Util512.getMapVals(cls1 as any)));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     assertEq([false, true], sorted(Util512.getMapVals(cls2 as any)));
 });
 t.test('padStart', () => {
@@ -574,25 +581,25 @@ t.test('keepOnlyUnique', () => {
 t.test('mapValuesDeep', () => {
     assertEq(
         {},
-        Util512.mapValuesDeep({}, v => v + 1)
+        Util512.mapValuesDeep({}, v => (v as number) + 1)
     );
     assertEq(
         { a: 2 },
-        Util512.mapValuesDeep({ a: 1 }, v => v + 1)
+        Util512.mapValuesDeep({ a: 1 }, v => (v as number) + 1)
     );
     assertEq(
         { a: 2, b: { c: 3, d: 4 } },
-        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: 3 } }, v => v + 1)
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: 3 } }, v => (v as number) + 1)
     );
     assertEq(
         { a: 2, b: { c: 3, d: [4, 5] } },
-        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: [3, 4] } }, v => v + 1)
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: [3, 4] } }, v => (v as number) + 1)
     );
 
     const ignoreObj = new TestClsOne();
     assertEq(
         { a: 2, b: { c: 3, d: ignoreObj } },
-        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: ignoreObj } }, v => v + 1)
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: ignoreObj } }, v => (v as number) + 1)
     );
 });
 

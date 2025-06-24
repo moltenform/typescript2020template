@@ -1,9 +1,9 @@
 
-import { AsyncFn, VoidFn } from '../util/util512Higher';
-import { O } from '../util/util512Base';
+import { type AsyncFn, type VoidFn } from '../util/util512Higher';
+import { type O } from '../util/util512Base';
 import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
-import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512 } from '../util/util512';
-import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable } from '../util/util512';
+import { sortBy as ldSortBy, clone as ldClone } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -135,7 +135,7 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public slow = false) {}
     currentLabel = '';
-    tests: Record<string, [string, VoidFn][]> = {};
+    tests: Record<string, [string, VoidFn | AsyncFn][]> = {};
     _context = '';
 
     /**
@@ -148,7 +148,7 @@ export class SimpleUtil512TestCollection {
     /**
      * add a non-async test to the collection
      */
-    public test(s: string, fn: VoidFn) {
+    public test(s: string, fn: VoidFn | AsyncFn) {
         if (!this.tests[this.currentLabel]) {
             this.tests[this.currentLabel] = [];
         }

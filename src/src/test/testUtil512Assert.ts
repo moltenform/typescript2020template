@@ -1,7 +1,7 @@
 
 import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 import { assertEq, assertWarnEq } from './../util/util512';
-import { SimpleUtil512TestCollection, assertAsserts, assertThrows, t } from './testHelpers';
+import { assertAsserts, assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

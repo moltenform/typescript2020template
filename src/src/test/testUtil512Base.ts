@@ -1,8 +1,7 @@
 
-import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage } from './../util/util512Base';
-import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
-import { assertEq, assertWarnEq } from './../util/util512';
-import { SimpleUtil512TestCollection, assertAsserts, assertThrows, t } from './testHelpers';
+import { RingBuffer, UI512Compress, tostring, Util512StaticClass, type O, RingBufferLocalStorage } from './../util/util512Base';
+import { assertEq } from './../util/util512';
+import { assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -80,6 +79,8 @@ t.test('StaticClass Illustrating Problems', () => {
 
     // this works (unless the minifier/transpiler rewrites it which is possible)
     try {
+        // (we're intentionally doing something unsafe, so suppress eslint)
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         const storedWorks = Class1.addNumbersHelper;
         assertEq(9, storedWorks(4, 5));
     } catch (e) {
@@ -89,6 +90,7 @@ t.test('StaticClass Illustrating Problems', () => {
     // this fails (!)
     // the approach doesn't work because `this` is invalid
     assertThrows('undefined', () => {
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         const storedFails = Class1.addNumbers;
         assertEq(9, storedFails(4, 5));
     });
@@ -181,6 +183,15 @@ t.test('unknownToString', () => {
     assertEq('null', tostring(e));
     assertEq('false', tostring(f));
 });
+t.test('expect init to have run first', () => {
+    assertEq(true, g_didFirstTestRun);
+});
+t.test('-init-this should run first', () => {
+    g_didFirstTestRun = true;
+});
+
+let g_didFirstTestRun = false;
+
 /**
  * implementation of RingBuffer backed by a simple array
  */

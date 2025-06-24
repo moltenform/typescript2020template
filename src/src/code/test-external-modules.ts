@@ -1,7 +1,7 @@
 
 import { sum as lodashSum } from 'lodash';
 import Base64js from 'base64-js';
-import { assertEq, getEnumToStrOrFallback, Util512 } from '../util/util512';
+import { assertEq, Util512 } from '../util/util512';
 import FileSaver from 'file-saver';
 import produce from 'immer';
 import lzstring from 'lz-string';
@@ -89,7 +89,7 @@ function testJsLru(results: string[]) {
     results.push('JsLru works');
 }
 
-export function onDemoSave() {
-    var text = new Blob(['hello world!'], { type: 'text/plain;charset=utf-8' });
+export async function onDemoSave() {
+    let text = new Blob(['hello world!'], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(text, 'hello world.txt');
 }
