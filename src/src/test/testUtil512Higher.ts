@@ -61,12 +61,12 @@ t.test('generateUniqueBase64UrlSafe', () => {
 /* ok to disable warning, we're intentionally only synchronous here */
 t.test('canAwaitACall', async () => {
     let ret = await exampleAsyncFn();
-    assertEq(1, ret)
+    assertEq(1, ret);
 });
 /* don't need to write return await exampleAsyncFn */
 t.test('canChainACall', async () => {
     async function testFn() {
-        return exampleAsyncFn()
+        return exampleAsyncFn();
     }
 
     assertEq(1, await testFn());
@@ -119,6 +119,3 @@ t.test('minimumTimeStaysSame', async () => {
     assertEq(123, result);
     assertTrue(performance.now() - start > 400, 'too fast');
 });
-
-
-

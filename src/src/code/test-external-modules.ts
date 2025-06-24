@@ -22,7 +22,7 @@ export async function testExternalModules() {
     testImmer(results);
     testLodash(results);
     testLzString(results);
-    testJsLru(results)
+    testJsLru(results);
     return results.join('\n');
 }
 
@@ -74,7 +74,7 @@ function testImmer(results: string[]) {
 }
 
 function testJsLru(results: string[]) {
-    let testmap = new (LRUMap)<string, number>(3);
+    let testmap = new LRUMap<string, number>(3);
     testmap.set('a', 1);
     testmap.set('b', 2);
     testmap.set('c', 3);
@@ -93,4 +93,3 @@ export function onDemoSave() {
     var text = new Blob(['hello world!'], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(text, 'hello world.txt');
 }
-

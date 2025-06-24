@@ -2,10 +2,8 @@
 import { assertTrue } from './../util/util512Assert';
 import { Util512, assertEq, longstr } from './../util/util512';
 import { SimpleUtil512TestCollection, assertThrows, sorted, t } from './testHelpers';
-import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
-    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
-    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
-    
+import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
+
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
@@ -24,9 +22,9 @@ t.test('isValidNumber', () => {
 });
 t.test('Range.Upwards', () => {
     try {
-    Util512.range(0, 1);
-    } catch( e) {
-        alert(e.stack)
+        Util512.range(0, 1);
+    } catch (e) {
+        alert(e.stack);
     }
 
     assertEq([0], Util512.range(0, 1));
@@ -135,7 +133,7 @@ t.test('parseInt', () => {
     assertEq(12, Util512.parseInt('0012'));
     assertEq(-12, Util512.parseInt('-12'));
     assertEq(0, Util512.parseInt('-0'));
-})
+});
 t.test('truncateWithEllipsis', () => {
     assertEq('', Util512.truncateWithEllipsis('', 2));
     assertEq('a', Util512.truncateWithEllipsis('a', 2));
@@ -289,11 +287,27 @@ t.test('capitalizeFirst.Alphabet', () => {
 });
 t.test('callAsMethod.ValidMethod', () => {
     let o1 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o1, 'goAbc', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, false/* ok if parent*/);
+    Util512.callAsMethodOnClass(
+        TestClsWithMethods.name,
+        o1,
+        'goAbc',
+        [true, 1],
+        false /* okifnotexist*/,
+        undefined /* returnifnotexist */,
+        false /* ok if parent*/
+    );
     assertEq(true, o1.calledAbc);
     assertEq(false, o1.calledZ);
     let o2 = new TestClsWithMethods();
-    Util512.callAsMethodOnClass(TestClsWithMethods.name, o2, 'goZ', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, false/* ok if parent*/);
+    Util512.callAsMethodOnClass(
+        TestClsWithMethods.name,
+        o2,
+        'goZ',
+        [true, 1],
+        false /* okifnotexist*/,
+        undefined /* returnifnotexist */,
+        false /* ok if parent*/
+    );
     assertEq(false, o2.calledAbc);
     assertEq(true, o2.calledZ);
     // minification needs to preserve names
@@ -301,15 +315,41 @@ t.test('callAsMethod.ValidMethod', () => {
 });
 t.test('callAsMethod.child', () => {
     let o1 = new TestClsWithMethodsChild();
-    const ret = Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o1, 'goMethodOnChild', [false, 0], true /* okifnotexist*/, 'fallback'/* returnifnotexist */, false/* ok if parent*/);
+    const ret = Util512.callAsMethodOnClass(
+        TestClsWithMethodsChild.name,
+        o1,
+        'goMethodOnChild',
+        [false, 0],
+        true /* okifnotexist*/,
+        'fallback' /* returnifnotexist */,
+        false /* ok if parent*/
+    );
     assertEq(false, o1.calledAbc);
     assertEq(false, o1.calledZ);
     assertEq(true, o1.calledMethodOnChild);
     assertEq(undefined, ret);
 
     let o2 = new TestClsWithMethodsChild();
-    assertThrows('', ()=>Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o2, 'goAbc', [true, 1], true /* okifnotexist*/, 'fallback'/* returnifnotexist */, false/* ok if parent*/));
-    Util512.callAsMethodOnClass(TestClsWithMethodsChild.name, o2, 'goAbc', [true, 1], false /* okifnotexist*/, undefined/* returnifnotexist */, true/* ok if parent*/);
+    assertThrows('', () =>
+        Util512.callAsMethodOnClass(
+            TestClsWithMethodsChild.name,
+            o2,
+            'goAbc',
+            [true, 1],
+            true /* okifnotexist*/,
+            'fallback' /* returnifnotexist */,
+            false /* ok if parent*/
+        )
+    );
+    Util512.callAsMethodOnClass(
+        TestClsWithMethodsChild.name,
+        o2,
+        'goAbc',
+        [true, 1],
+        false /* okifnotexist*/,
+        undefined /* returnifnotexist */,
+        true /* ok if parent*/
+    );
     assertEq(true, o2.calledAbc);
     assertEq(false, o2.calledZ);
     assertEq(false, o2.calledMethodOnChild);
@@ -357,7 +397,17 @@ t.test('callAsMethod.BadCharInMethodName', () => {
 t.test('callAsMethod.MissingMethodWhenAllowed', () => {
     let o = new TestClsWithMethods();
     Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], true);
-    assertEq('fallback', Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], true, 'fallback'));
+    assertEq(
+        'fallback',
+        Util512.callAsMethodOnClass(
+            TestClsWithMethods.name,
+            o,
+            'notExist',
+            [true, 1],
+            true,
+            'fallback'
+        )
+    );
 });
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
@@ -474,7 +524,10 @@ t.test('stringToCharArray', () => {
     assertEq([], ldSplit('', ''));
     assertEq(['a'], ldSplit('a', ''));
     assertEq(['a', 'b', ' ', 'c', 'd'], ldSplit('ab cd', ''));
-    assertEq([97, 98, 32, 99, 100], ldSplit('ab cd', '').map(c => c.charCodeAt(0)));
+    assertEq(
+        [97, 98, 32, 99, 100],
+        ldSplit('ab cd', '').map(c => c.charCodeAt(0))
+    );
 });
 t.test('sortDecorated', () => {
     class MyClass {
@@ -519,13 +572,28 @@ t.test('keepOnlyUnique', () => {
     );
 });
 t.test('mapValuesDeep', () => {
-    assertEq({}, Util512.mapValuesDeep({}, v => v + 1));
-    assertEq({a:2}, Util512.mapValuesDeep({a:1}, v => v + 1));
-    assertEq({a:2, b:{c:3,d:4}}, Util512.mapValuesDeep({a:1, b:{c:2,d:3}}, v => v + 1));
-    assertEq({a:2, b:{c:3,d:[4,5]}}, Util512.mapValuesDeep({a:1, b:{c:2,d:[3, 4]}}, v => v + 1));
-    
-    const ignoreObj = new TestClsOne()
-    assertEq({a:2, b:{c:3,d:ignoreObj}}, Util512.mapValuesDeep({a:1, b:{c:2,d:ignoreObj}}, v => v + 1));
+    assertEq(
+        {},
+        Util512.mapValuesDeep({}, v => v + 1)
+    );
+    assertEq(
+        { a: 2 },
+        Util512.mapValuesDeep({ a: 1 }, v => v + 1)
+    );
+    assertEq(
+        { a: 2, b: { c: 3, d: 4 } },
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: 3 } }, v => v + 1)
+    );
+    assertEq(
+        { a: 2, b: { c: 3, d: [4, 5] } },
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: [3, 4] } }, v => v + 1)
+    );
+
+    const ignoreObj = new TestClsOne();
+    assertEq(
+        { a: 2, b: { c: 3, d: ignoreObj } },
+        Util512.mapValuesDeep({ a: 1, b: { c: 2, d: ignoreObj } }, v => v + 1)
+    );
 });
 
 /**
@@ -563,7 +631,7 @@ class TestClsWithMethods {
  * test-only code.
  */
 class TestClsWithMethodsChild extends TestClsWithMethods {
-    calledMethodOnChild = false
+    calledMethodOnChild = false;
     goMethodOnChild(p1: boolean, p2: number) {
         assertEq(false, p1);
         assertEq(0, p2);

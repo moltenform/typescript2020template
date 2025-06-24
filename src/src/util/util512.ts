@@ -1,15 +1,7 @@
-import { O, tostring, Util512StaticClass } from './util512Base';
-import {
-    assertTrue,
-    assertWarn,
-    checkThrow512,
-    ensureDefined,
-    make512Error
-} from './util512Assert';
-import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
-    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
-    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
 
+import { O, tostring, Util512StaticClass } from './util512Base';
+import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
+import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -432,7 +424,7 @@ export type TypeLikeAnEnum = { __isUI512Enum: number };
 /**
  * list enum vals
  */
-export function listEnumValsIncludingAlternates<T>(Enm: T):string {
+export function listEnumValsIncludingAlternates<T>(Enm: T): string {
     let ret: string[] = [];
     for (let enumMember in Enm) {
         /* show possible values */
@@ -455,7 +447,7 @@ export function listEnumValsIncludingAlternates<T>(Enm: T):string {
 /**
  * list enum vals
  */
-export function listEnumVals<T>(Enm: T, makeLowercase: boolean):string {
+export function listEnumVals<T>(Enm: T, makeLowercase: boolean): string {
     let s = '';
     for (let enumMember in Enm) {
         /* show possible values */
@@ -551,13 +543,10 @@ export function findEnumToStr(Enm: TypeLikeAnEnum, n: number): O<string> {
 /**
  * findEnumToStr, but throws
  */
-export function getEnumToStr(
-    Enm: TypeLikeAnEnum,
-    n: number,
-): string {
-    const ret = findEnumToStr(Enm, n) 
+export function getEnumToStr(Enm: TypeLikeAnEnum, n: number): string {
+    const ret = findEnumToStr(Enm, n);
     checkThrow512(ret !== undefined, `Not a valid choice for this value.`);
-    return ret
+    return ret;
 }
 
 /**
@@ -639,7 +628,7 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * [1, 'abc'] -> ['number', 'string']
  * { a: {b: 1, c: 'abc'} } -> { a: {b: 'number', c: 'string'}}
  */
-export function getShapeRecurse(origObj: unknown,): unknown {
+export function getShapeRecurse(origObj: unknown): unknown {
     const getValType = (val: unknown): string => {
         if (val === undefined) {
             return 'undefined';
@@ -650,9 +639,9 @@ export function getShapeRecurse(origObj: unknown,): unknown {
         } else {
             return typeof val;
         }
-    }
+    };
 
-    return Util512.mapValuesDeep(origObj, getValType)
+    return Util512.mapValuesDeep(origObj, getValType);
 }
 
 /**
@@ -663,17 +652,20 @@ export function getShapeRecurse(origObj: unknown,): unknown {
  * if attempting to compare a string and number.
  * This is a stable sort.
  */
-export function sortConsistentType(arr: unknown[], mapper=(x:unknown)=>x):unknown[] {
+export function sortConsistentType(
+    arr: unknown[],
+    mapper = (x: unknown) => x
+): unknown[] {
     if (!arr.length) {
-        return arr
+        return arr;
     }
 
     const shapeFirst = getShapeRecurse(mapper(arr[0]));
-    if (arr.some((v) => !ldIsEqual(getShapeRecurse(mapper(v)), shapeFirst))) {
+    if (arr.some(v => !ldIsEqual(getShapeRecurse(mapper(v)), shapeFirst))) {
         throw new Error('cannot compare arrays with different types/shapes');
     }
 
-    return ldSortBy(arr, mapper)
+    return ldSortBy(arr, mapper);
 }
 
 /**
@@ -688,7 +680,9 @@ export function assertEq<T>(
     c3?: unknown
 ): asserts got is T {
     if (!ldIsEqual(expected, got)) {
-        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(
+            got
+        )}'.`;
         msgEq += c1 ?? '';
         assertTrue(false, msgEq, c2, c3);
     }
@@ -699,7 +693,7 @@ export function assertEq<T>(
  * to break on uncaught exceptions if shouldBreakOnExceptions===true
  */
 declare global {
-  var shouldBreakOnExceptions: boolean
+    var shouldBreakOnExceptions: boolean;
 }
 
 /**
@@ -736,7 +730,9 @@ export function assertWarnEq(
     c3?: unknown
 ) {
     if (!ldIsEqual(expected, got)) {
-        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(
+            got
+        )}'.`;
         msgEq += c1 ?? '';
         assertWarn(false, msgEq, c2, c3);
     }
@@ -756,7 +752,9 @@ export function checkThrowEq<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (!ldIsEqual(expected, got)) {
-        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(
+            got
+        )}'.`;
         throw new Error(`checkThrowEq ${msgEq} ${msg} ${c1} ${c2}`);
     }
 }
@@ -773,7 +771,9 @@ export function checkThrowEq512<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (!ldIsEqual(expected, got)) {
-        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(got)}'.`;
+        let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(
+            got
+        )}'.`;
         checkThrow512(false, msg + msgEq, c1, c2);
     }
 }

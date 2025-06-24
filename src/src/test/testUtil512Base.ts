@@ -1,5 +1,5 @@
 
-import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage, } from './../util/util512Base';
+import { RingBuffer, UI512Compress, tostring, Util512StaticClass, O, RingBufferLocalStorage } from './../util/util512Base';
 import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
 import { assertEq, assertWarnEq } from './../util/util512';
 import { SimpleUtil512TestCollection, assertAsserts, assertThrows, t } from './testHelpers';
@@ -75,24 +75,24 @@ t.test('StaticClass Illustrating Problems', () => {
     assertEq(9, Class1.addNumbers(4, 5));
 
     // this works but loses typing info
-    const stored = Class1.addNumbers.bind(Class1) 
+    const stored = Class1.addNumbers.bind(Class1);
     assertEq(9, stored(4, 5));
 
     // this works (unless the minifier/transpiler rewrites it which is possible)
     try {
-        const storedWorks = Class1.addNumbersHelper
+        const storedWorks = Class1.addNumbersHelper;
         assertEq(9, storedWorks(4, 5));
-    } catch(e) {
-        console.log("test passed: transpiler made `this` refer to something else")
+    } catch (e) {
+        console.log('test passed: transpiler made `this` refer to something else');
     }
-    
+
     // this fails (!)
     // the approach doesn't work because `this` is invalid
-    assertThrows('undefined', ()=> {
+    assertThrows('undefined', () => {
         const storedFails = Class1.addNumbers;
         assertEq(9, storedFails(4, 5));
-    })
-})
+    });
+});
 t.test('StaticClass Illustrating Problems 2', () => {
     const Class2 = {
         addNumbers: (a: number, b: number): number => {
@@ -101,39 +101,40 @@ t.test('StaticClass Illustrating Problems 2', () => {
         addNumbersHelper: (a: number, b: number): number => {
             return a + b;
         }
-    }
+    };
 
     // this works, and i like the feel where it shows this
     // will never have another instantiation.
     assertEq(9, Class2.addNumbers(4, 5));
 
     // and it doesn't run into binding problems
-    const stored = Class2.addNumbers
+    const stored = Class2.addNumbers;
     assertEq(9, stored(4, 5));
 
     // drawbacks: can't refer to `this`, need to type the full name out.
     // and I don't think you could add private methods.
-})
+});
 t.test('StaticClass Best', () => {
     // put the classname in there twice for better callstacks
-    const TestUI512StaticClass = new class TestUI512StaticClass extends Util512StaticClass {
-        addNumbers = (a: number, b: number): number => {
-            return this.addNumbersHelper(a, b);   
-        }
-        addNumbersHelper = (a: number, b: number): number => {
-            return a + b;
-        }
-    }
+    const TestUI512StaticClass =
+        new (class TestUI512StaticClass extends Util512StaticClass {
+            addNumbers = (a: number, b: number): number => {
+                return this.addNumbersHelper(a, b);
+            };
+            addNumbersHelper = (a: number, b: number): number => {
+                return a + b;
+            };
+        })();
 
     // simple calls
-    assertEq(9, TestUI512StaticClass.addNumbers(4, 5,));
+    assertEq(9, TestUI512StaticClass.addNumbers(4, 5));
 
     // by using =method()=> style methods, we can even store references
     // like this without needing bind(), which otherise would fail mysteriously on `this`
     const stored = TestUI512StaticClass.addNumbers;
     assertEq(9, stored(4, 5));
-    // only drawback is that the syntax 
-})
+    // only drawback is that the syntax
+});
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''));
     assertEq('\u10E8 ', UI512Compress.compressString('a'));
@@ -186,7 +187,7 @@ t.test('unknownToString', () => {
 class RingBufferArray extends RingBuffer {
     arr: string[] = [];
     ptrLatest = 0;
-    override  getAt(index: number): string {
+    override getAt(index: number): string {
         return this.arr[index] ?? '';
     }
 
@@ -194,25 +195,25 @@ class RingBufferArray extends RingBuffer {
         this.arr[index] = s;
     }
 
-   override  getLatestIndex() {
+    override getLatestIndex() {
         return this.ptrLatest;
     }
 
-   override  setLatestIndex(index: number) {
+    override setLatestIndex(index: number) {
         this.ptrLatest = index;
     }
 }
 
 class RingBufferLocalStorageMock extends RingBufferLocalStorage {
-    _store: O<Storage>
-    override store(): Storage  {
+    _store: O<Storage>;
+    override store(): Storage {
         class MockStore {
             getItem(key: string): string | null {
                 // use null to match what localstorage.getItem does
                 return this[key] ?? null;
             }
             setItem(key: string, value: string): void {
-                 this[key] = value;
+                this[key] = value;
             }
         }
 
@@ -220,6 +221,6 @@ class RingBufferLocalStorageMock extends RingBufferLocalStorage {
             this._store = new MockStore() as Storage;
         }
 
-        return this._store
+        return this._store;
     }
 }

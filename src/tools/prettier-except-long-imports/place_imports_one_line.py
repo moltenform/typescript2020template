@@ -18,7 +18,7 @@ def placeImportsOnOneLine(s):
     while i < len(lines):
         line = lines[i]
         i += 1
-        if line.startswith('/* auto */ import {') and not ';' in line:
+        if (line.startswith('/* auto */ import {') or line.startswith('import {')) and not ';' in line:
             outlines.append(line)
             while True:
                 line = lines[i]
@@ -52,7 +52,7 @@ testInput = r'''
 not an import
 not an import {
 not an import { from "invalid.js";
-import { a, b, c } from
+importted { a, b, c } from
     "leave.js";
 /* auto */ import { a } from "good1.js";
 /* auto */ import { a, b, c } from "good2.js";
@@ -82,7 +82,7 @@ testExpected = r'''
 not an import
 not an import {
 not an import { from "invalid.js";
-import { a, b, c } from
+importted { a, b, c } from
     "leave.js";
 /* auto */ import { a } from "good1.js";
 /* auto */ import { a, b, c } from "good2.js";

@@ -126,11 +126,11 @@ export abstract class RingBuffer {
  * ui512LogPtr should be in local storage, we could be running in 2 browser windows.
  */
 export class RingBufferLocalStorage extends RingBuffer {
-    store(): Storage  {
+    store(): Storage {
         return window.localStorage;
     }
-    
-    override  getAt(index: number): string {
+
+    override getAt(index: number): string {
         if (this.store()) {
             return this.store().getItem('ui512Log_' + index.toString()) ?? '';
         } else {
@@ -138,7 +138,7 @@ export class RingBufferLocalStorage extends RingBuffer {
         }
     }
 
-    override  setAt(index: number, s: string) {
+    override setAt(index: number, s: string) {
         if (this.store()) {
             this.store().setItem('ui512Log_' + index.toString(), s);
         }
@@ -170,35 +170,34 @@ export class RingBufferLocalStorage extends RingBuffer {
  */
 export type O<T> = T | undefined;
 
-
 /**
  * Helper for creating a 'static class' that has no state.
  * By using freeze we ensure state won't accidentally be attached.
- * 
+ *
  * Why not static methods on a class, maybe with a private ctor?
  * 1) verbose to specify static everywhere.
  * 2) can't use `this` to refer to methods in the class--
  * works in raw JS but transpilation/minifying/retargeting will often
- * rewrite the code such that `this` no longer references 
+ * rewrite the code such that `this` no longer references
  * the class - it's legit fragile.
  * 3) also, there's a pitfall with unbound (i.e. stored calls)
  * for code like: const stored = MyClass.method; stored();
  * Works if the method happens to not reference `this` but fails at runtime
  * otherwise, which is not good. Probably possible to use typing
  * magic to have a const stored = MyClass.bound('method'), but ugly.
- * 
+ *
  * Why not the pattern const MyObject = { method: ()=> { return 1; } }
  * I do like the feel of this, and no binding issues with MyObject.method.
  * But again, you can't use `this` to call other methods, you'd need
  * to specify the full name which is verbose.
- * 
+ *
  * Why not namespaces? They're deprecated these days.
- * 
+ *
  * A singleton pattern would work but it's more lines of code
  * and has different semantics, we don't want it to feel like
  * there's one instance we want it to feel like it can't be instantiated.
  * Downside: unlike a true static method, needs to be bound
- * 
+ *
  * See automated tests for an example usage.
  */
 export class Util512StaticClass {
@@ -206,7 +205,7 @@ export class Util512StaticClass {
     // (Can't use a constructor that calls Object.freeze(this)
     // but that would stop our method=()=>{} style methods from being added.)
     private static instancesToFreeze: Util512StaticClass[] = [];
-    
+
     constructor() {
         Util512StaticClass.instancesToFreeze.push(this);
     }
@@ -223,17 +222,16 @@ export class Util512StaticClass {
  * I use compressToUTF16() instead of compress() to use only valid utf sequences.
  */
 
-export const UI512Compress = new class UI512Compress extends Util512StaticClass {
+export const UI512Compress = new (class UI512Compress extends Util512StaticClass {
     protected stringEscapeNewline = '##Newline##';
     protected reEscapeNewline = new RegExp(this.stringEscapeNewline, 'g');
     protected reNewline = /\n/g;
     compressString = (s: string): string => {
         let compressed = LzString.compressToUTF16(s);
         return compressed;
-    }
+    };
 
-    decompressString= (s: string): string  => {
+    decompressString = (s: string): string => {
         return LzString.decompressFromUTF16(s) ?? '';
-    }
-}
-
+    };
+})();

@@ -1,23 +1,15 @@
+
 import { AsyncFn, VoidFn } from './../util/util512Higher';
-import {
-    UI512ErrorHandling,
-    assertTrue,
-    assertWarn
-} from './../util/util512Assert';
-import {  shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
-import {
-    SimpleUtil512TestCollection,
-    notifyUserIfDebuggerIsSetToAllExceptions,
-    t,
-    tSlow
-} from './testHelpers';
-import  './testUtil512Higher';
+import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
+import { shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
+import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, t, tSlow } from './testHelpers';
+import './testUtil512Higher';
 import './testUtil512Class';
 import './testUtil512Assert';
 import './testUtil512Base';
 import './testUtil512';
 import { Util512StaticClass } from '../util/util512Base';
-import {sum, sortBy} from 'lodash'
+import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -25,99 +17,106 @@ import {sum, sortBy} from 'lodash'
 /**
  * a very simple testing framework.
  */
-export const SimpleUtil512Tests = new (class SimpleUtil512Tests extends Util512StaticClass {
-     runTests = async(includeSlow=true)=>{
-        if (UI512ErrorHandling.runningTests) {
-            console.log('Apparently already running tests...');
-            return;
-        }
-
-        shouldBreakOnExceptions_Enable()
-        UI512ErrorHandling.runningTests = true;
-        console.log('Running tests...');
-        try {
-            await this.runTestsImpl(includeSlow);
-        } finally {
-            UI512ErrorHandling.runningTests = false;
-        }
-    }
-
-     runTestsImpl=async(includeSlow: boolean) =>{
-        /* order tests from high to low */
-        let colls: SimpleUtil512TestCollection[] = [
-            t,
-            tSlow
-        ];
-
-        if (!colls || !colls.length) {
-            console.log('no tests have been included.');
-            return;
-        }
-
-        /* run tests from low level to high level */
-        colls.reverse();
-        let colNamesSeen = new Map<string, boolean>();
-        let mapSeen = new Map<string, boolean>();
-
-        /* put slow tests after fast tests */
-        let slowTests = colls.filter(item => item.slow);
-        let fastTests = colls.filter(item => !item.slow);
-        colls = fastTests.concat(slowTests);
-        let testsIncluded = colls
-            .filter(item => includeSlow || !item.slow)
-        let countTotal = sum(
-            testsIncluded.map(item => item.tests.length));
-        let counter = new ValHolder(1);
-        for (let coll of colls) {
-            if (colNamesSeen.has(coll.name.toLowerCase())) {
-                assertTrue(false, 'duplicate collection name', coll.name);
+export const SimpleUtil512Tests =
+    new (class SimpleUtil512Tests extends Util512StaticClass {
+        runTests = async (includeSlow = true) => {
+            if (UI512ErrorHandling.runningTests) {
+                console.log('Apparently already running tests...');
+                return;
             }
 
-            colNamesSeen.set(coll.name.toLowerCase(), true);
-            console.log(`Collection: ${coll.name}`);
-            if (includeSlow || !coll.slow) {
-                await this.runCollection(coll, countTotal, counter, mapSeen);
+            shouldBreakOnExceptions_Enable();
+            UI512ErrorHandling.runningTests = true;
+            console.log('Running tests...');
+            try {
+                await this.runTestsImpl(includeSlow);
+            } finally {
+                UI512ErrorHandling.runningTests = false;
+            }
+        };
+
+        runTestsImpl = async (includeSlow: boolean) => {
+            /* order tests from high to low */
+            let colls: SimpleUtil512TestCollection[] = [t, tSlow];
+
+            if (!colls || !colls.length) {
+                console.log('no tests have been included.');
+                return;
+            }
+
+            /* run tests from low level to high level */
+            colls.reverse();
+            let colNamesSeen = new Map<string, boolean>();
+            let mapSeen = new Map<string, boolean>();
+
+            /* put slow tests after fast tests */
+            let slowTests = colls.filter(item => item.slow);
+            let fastTests = colls.filter(item => !item.slow);
+            if (includeSlow) {
+                colls = fastTests.concat(slowTests);
             } else {
-                console.log('(Skipped)');
+                colls = fastTests;
             }
-        }
 
-        if (UI512ErrorHandling.silenceWarnings) {
-            console.log(`A test may have failed, warning occurred.`);
-        } else {
-            console.log(`All tests complete.`);
-        }
-    }
+            let countTotal = ldSum(
+                colls.map(item =>
+                    ldSum(Util512.getMapVals(item.tests).map(subTest => subTest.length))
+                )
+            );
 
-    /**
-     * run a collection of tests
-     */
-    runCollection = async(
-        coll: SimpleUtil512TestCollection,
-        countTotal: number,
-        counter: ValHolder<number>,
-        mapSeen: Map<string, boolean>
-    ) => {
-        notifyUserIfDebuggerIsSetToAllExceptions();
-
-        /* if it says runFirst, run it first. */
-        for (let k in coll.tests) {
-            coll.tests[k] = sortBy(coll.tests[k], tt=>tt[0].startsWith('runFirst') ? 0 : 1);
-            console.log(k)
-            const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];
-
-            for (let i = 0; i < tests.length; i++) {
-                let [tstname, fnTest] = tests[i];
-                if (mapSeen.has(tstname.toLowerCase())) {
-                    assertWarn(false, 'duplicate test name', tstname);
+            let counter = new ValHolder(1);
+            for (let coll of colls) {
+                if (colNamesSeen.has(coll.name.toLowerCase())) {
+                    assertTrue(false, 'duplicate collection name', coll.name);
                 }
 
-                /* fine to use await for both sync and async, since it's a no-op on sync fns. */
-                mapSeen.set(tstname.toLowerCase(), true);
-                console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
-                await fnTest();
-                counter.val += 1;
+                colNamesSeen.set(coll.name.toLowerCase(), true);
+                console.log(`=== Collection: ${coll.name} ===`);
+                if (includeSlow || !coll.slow) {
+                    await this.runCollection(coll, countTotal, counter, mapSeen);
+                } else {
+                    console.log('(Skipped)');
+                }
             }
-        }
-    }
-})();
+
+            if (UI512ErrorHandling.silenceWarnings) {
+                console.log(`A test may have failed, warning occurred.`);
+            } else {
+                console.log(`All tests complete.`);
+            }
+        };
+
+        /**
+         * run a collection of tests
+         */
+        runCollection = async (
+            coll: SimpleUtil512TestCollection,
+            countTotal: number,
+            counter: ValHolder<number>,
+            mapSeen: Map<string, boolean>
+        ) => {
+            notifyUserIfDebuggerIsSetToAllExceptions();
+
+            /* if it says runFirst, run it first. */
+            for (let k in coll.tests) {
+                coll.tests[k] = ldSortBy(coll.tests[k], tt =>
+                    tt[0].startsWith('runFirst') ? 0 : 1
+                );
+                console.log(`=== Group: ${k} ===`);
+                const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];
+
+                for (let i = 0; i < tests.length; i++) {
+                    let [tstname, fnTest] = tests[i];
+                    if (mapSeen.has(tstname.toLowerCase())) {
+                        assertWarn(false, 'duplicate test name', tstname);
+                    }
+
+                    /* fine to use await for both sync and async, since it's a no-op on sync fns. */
+                    mapSeen.set(tstname.toLowerCase(), true);
+                    console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
+                    await fnTest();
+                    counter.val += 1;
+                }
+            }
+        };
+    })();

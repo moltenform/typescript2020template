@@ -15,20 +15,20 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
      * weakUuid, by broofa
      * uses the weak Math.random, not cryptographically sound.
      */
-     weakUuid =()=> {
+    weakUuid = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             let r = (Math.random() * 16) | 0;
             let v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
-    }
+    };
 
     /**
      * random number between min and max, inclusive
      * uses the weak Math.random, don't use this for crypto.
      * slightly an uneven distribution.
      */
-     getRandIntInclusiveWeak=(min: number, max: number)=> {
+    getRandIntInclusiveWeak = (min: number, max: number) => {
         assertTrue(min >= 1 && max >= 1, `invalid min ${min}`);
         if (min === max) {
             return min;
@@ -37,19 +37,19 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-    }
+    };
 
     /**
      * random number between min and max, inclusive
      */
-     getRandIntInclusiveStrong=(min: number, max: number)=> {
+    getRandIntInclusiveStrong = (min: number, max: number) => {
         assertTrue(min >= 1 && max >= 1, 'getRandIntInclusiveStrong must be >= 1');
         min = Math.ceil(min);
         max = Math.floor(max);
         if (min === max) {
             return min;
         }
-        
+
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,
@@ -72,21 +72,21 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                 }
             }
         }
-    }
+    };
 
     /**
      * make random bytes, return as base64.
      */
-     makeCryptRandString=(bytes: number) =>{
+    makeCryptRandString = (bytes: number) => {
         let buf = new Uint8Array(bytes);
         window.crypto.getRandomValues(buf);
         return Util512.arrayToBase64(Array.from(buf));
-    }
+    };
 
     /**
      * generate random string, first byte is specified
      */
-     generateUniqueBase64UrlSafe=(nBytes: number, charPrefix: string)=> {
+    generateUniqueBase64UrlSafe = (nBytes: number, charPrefix: string) => {
         assertEq(1, charPrefix.length, 'expected one char');
         let buf = new Uint8Array(nBytes + 1);
         window.crypto.getRandomValues(buf);
@@ -95,12 +95,12 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             .map(item => String.fromCharCode(item))
             .join('');
         return Util512.toBase64UrlSafe(dataAsString);
-    }
+    };
 
     /**
      * download image asynchronously
      */
-     beginLoadImage=(url: string, img: HTMLImageElement, callback: () => void) =>{
+    beginLoadImage = (url: string, img: HTMLImageElement, callback: () => void) => {
         let haveRunCallback = false;
         let on_load = () => {
             if (!haveRunCallback) {
@@ -130,7 +130,7 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                 }
             }, 'LoadImage.on_load');
         }
-    }
+    };
 
     loadImageAsync(url: string, img: HTMLImageElement) {
         return new Promise<void>((resolve, reject) => {
@@ -140,10 +140,10 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                     haveRunCallback = true;
                     resolve();
                 }
-        });
-            img.addEventListener('error', () =>{
+            });
+            img.addEventListener('error', () => {
                 reject(new Error('failed to load ' + url));
-        });
+            });
             img.src = url;
             if (img.complete) {
                 /* apparently it might be possible for .complete to be set
@@ -153,13 +153,13 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                     resolve();
                 }
             }
-        })
+        });
     }
 
     /**
      * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
-    private loadJsonImpl=(
+    private loadJsonImpl = (
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
@@ -186,12 +186,12 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             showMsgIfExceptionThrown(on_error, 'loadJson.on_error')
         );
         req.send();
-    }
+    };
 
     /**
      * download json asynchronously, and return string.
      */
-     asyncLoadJsonString = (url: string):Promise<string> => {
+    asyncLoadJsonString = (url: string): Promise<string> => {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
             this.loadJsonImpl(
@@ -205,21 +205,21 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                 }
             );
         });
-    }
+    };
 
     /**
      * download json asynchronously, and return parsed js object.
      */
-      asyncLoadJson = async (url: string): Promise<AnyUnshapedJson>=> {
+    asyncLoadJson = async (url: string): Promise<AnyUnshapedJson> => {
         let s = await this.asyncLoadJsonString(url);
         return JSON.parse(s);
-    }
+    };
 
     /**
      * load and run script. must be on same domain.
      */
-     private scriptsAlreadyLoaded: Record<string, boolean> = {};
-     asyncLoadJsIfNotAlreadyLoaded = (url: string): Promise<void>=> {
+    private scriptsAlreadyLoaded: Record<string, boolean> = {};
+    asyncLoadJsIfNotAlreadyLoaded = (url: string): Promise<void> => {
         return new Promise((resolve, reject) => {
             assertTrue(url.startsWith('/'));
             if (this.scriptsAlreadyLoaded[url]) {
@@ -257,17 +257,13 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             /* if you need to support old browsers, use onreadystatechange */
             window.document.getElementsByTagName('head')[0].appendChild(script);
         });
-    }
+    };
 
     /**
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
      */
-     syncToAsyncTransition = <T>(
-        fn: Promise<T>,
-        context: string,
-        rtype: RespondToErr
-    ) => {
+    syncToAsyncTransition = <T>(fn: Promise<T>, context: string, rtype: RespondToErr) => {
         fn.then(
             () => {
                 /* fulfilled with no exceptions */
@@ -276,35 +272,35 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
                 respondUI512Error(err, context, rtype === RespondToErr.ConsoleErrOnly);
             }
         );
-    }
+    };
 
     /**
      * essentially a replacement for timeout, but responds to exceptions.
      */
-     syncToAsyncAfterPause = (
+    syncToAsyncAfterPause = (
         fn: () => unknown,
         nMilliseconds: number,
         context: string,
         rtype: RespondToErr
-    )=> {
+    ) => {
         let fnWithSleep = async () => {
             await this.sleep(nMilliseconds);
             fn();
         };
 
         this.syncToAsyncTransition(fnWithSleep(), context, rtype);
-    }
+    };
 
     /**
      * call this in an async function: await sleep(1000) to wait one second.
      */
-     sleep=(ms: number) =>{
+    sleep = (ms: number) => {
         return new Promise<void>(resolve => {
             /* it's ok to use an old-style promise, we're not going from sync to async */
             /* eslint-disable-next-line ban/ban */
             setTimeout(resolve, ms);
         });
-    }
+    };
 
     /**
      * rejects if operation takes too long.
@@ -313,8 +309,8 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             2) use a try/finally in case fn throws exceptions
         I think my approach is simpler.
      */
-     runAsyncWithTimeout = async <T>(fn: Promise<T>, ms: number): Promise<T> => {
-        let tokenIndicatingTimeout = Symbol()
+    runAsyncWithTimeout = async <T>(fn: Promise<T>, ms: number): Promise<T> => {
+        let tokenIndicatingTimeout = Symbol();
         let fTimeout = async () => {
             await this.sleep(ms);
             return tokenIndicatingTimeout;
@@ -327,12 +323,12 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
         } else {
             return ret as T;
         }
-    }
+    };
 
     /**
      * takes at least ms seconds.
      */
-      runAsyncWithMinimumTime =async<T>(fn: Promise<T>, ms: number): Promise<T> =>{
+    runAsyncWithMinimumTime = async <T>(fn: Promise<T>, ms: number): Promise<T> => {
         let fTimeout = async (): Promise<void> => {
             return this.sleep(ms);
         };
@@ -340,12 +336,12 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
         let ps: [Promise<T>, Promise<void>] = [fn, fTimeout()];
         let ret = await Promise.all(ps);
         return ret[0];
-    }
+    };
 
     /**
      * get date as month day hh mm
      */
-     getDateString=(includeSeconds = false) =>{
+    getDateString = (includeSeconds = false) => {
         let d = new Date();
         let hours = d.getHours();
         if (hours > 12) {
@@ -362,8 +358,8 @@ export const Util512Higher = new (class Util512Higher extends Util512StaticClass
             ('0' + d.getMinutes().toString()).slice(-2) +
             sc
         );
-    }
-})
+    };
+})();
 
 /**
  * by default, alert on every exception

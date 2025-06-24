@@ -2,10 +2,8 @@
 import { AsyncFn, VoidFn } from '../util/util512Higher';
 import { O } from '../util/util512Base';
 import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
-import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512, } from '../util/util512';
-import {sortBy as ldSortBy, clone as ldClone, sum as ldSum, 
-    split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, 
-    isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues} from 'lodash';
+import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable, sortConsistentType, Util512 } from '../util/util512';
+import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, last as ldLast, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -43,7 +41,7 @@ export async function assertThrowsAsync<T>(
  * assert that an exception is thrown, with a certain message
  */
 export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
-    let errStored: any
+    let errStored: any;
     let msg: O<string>;
     shouldBreakOnExceptions_Disable();
     UI512ErrorHandling.silenceAssertMsgs = true;
@@ -51,7 +49,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
     try {
         fn();
     } catch (e) {
-        errStored = e
+        errStored = e;
         ensureIsError(e);
         msg = e.message ?? '';
     } finally {
@@ -67,7 +65,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
         `message "${msg}" did not contain "${expectedErr}"`,
         context
     );
-    return errStored
+    return errStored;
 }
 
 /**
@@ -136,7 +134,7 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
  */
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public slow = false) {}
-    currentLabel = ''
+    currentLabel = '';
     tests: Record<string, [string, VoidFn][]> = {};
     _context = '';
 
@@ -173,4 +171,3 @@ export class SimpleUtil512TestCollection {
 export const t = new SimpleUtil512TestCollection('main');
 export const tSlow = new SimpleUtil512TestCollection('mainSlow', true);
 export const tSkipped = new SimpleUtil512TestCollection('mainSkipped');
-

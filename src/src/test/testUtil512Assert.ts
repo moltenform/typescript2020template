@@ -100,5 +100,3 @@ t.test('built-in includes', () => {
     assertTrue(!''.includes('test'));
     assertTrue(''.includes(''));
 });
-
-

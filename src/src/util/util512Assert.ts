@@ -193,7 +193,7 @@ export class UI512ErrorHandling {
         return UI512Compress.decompressString(compressed);
     }
 
-    static appendErrMsgToLogs  (severity: boolean, s: string) {
+    static appendErrMsgToLogs(severity: boolean, s: string) {
         if (this.shouldRecordErrors) {
             if (!this.runningTests) {
                 let sseverity = severity ? '1' : '2';
@@ -203,7 +203,7 @@ export class UI512ErrorHandling {
         }
     }
 
-    static getLatestErrLogs  (amount: number): string[] {
+    static getLatestErrLogs(amount: number): string[] {
         return this.store.retrieve(amount);
     }
 }
