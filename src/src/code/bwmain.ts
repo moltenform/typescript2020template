@@ -64,7 +64,7 @@ async function onTestAsserts() {
     assertWarnEq(1, 2, 'You should be able to continue from this warning');
     try {
         assertTrue(false, 'An example assertion message.');
-    } catch(e) {
+    } catch (e) {
         // nothing needs to be done.
     }
 }

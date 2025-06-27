@@ -21,13 +21,10 @@
     - hit Ctrl-Shift-B to run commands like lint, prettier, and autoimportmodules
     - line numbers in the output are clickable links
     - there's also integration with the SciTE code editor; edit a .ts file and press F5
-- development builds with `npm start` will watch+auto recompile when source changes
+- development builds with `npm run start` will watch+auto recompile when source changes
 - es-lint is included and working, with curated rules enabled
-- no need for grunt/gulp, just use the scripts referenced in `package.json`
-    - if you have a script `foo` and `prefoo`, `npm run foo` will run both.
 - prettier is included and working
     - in vscode, install Prettier extension, hit ctrl-shift-p then look for Format Selection
-    - confirmed that it is reading our `.prettierrc.js`
     - another way to run prettier:
         - my `prettierexceptlongimports` is included, a script that runs prettier on every file
         - it also leaves long import lines on one line as I prefer that visually
@@ -38,14 +35,14 @@
 - utils classes are included
     - `util512 utils`, along with full unit tests
 - `sass`
-    - run sass separately, not with webpack's sass-loader
+    - we run sass separately, not with webpack's sass-loader
     - run `npm run buildstyle` or `npm run buildstylewatch`
     - note that these days, css variables make sass less necessary.
 - `lzstring` as an example javascript+typescript types dependency
     - shows that node modules get bundled in successfully.
 - includes my tool to prevent dependency cycles
     - it's useful to have strict layering, modules can only call lower in the list, not higher
-    - make sure `layers.cfg` up to date, then
+    - write your layering in `layers.cfg` then
     - run `npm run autoimportmodules`
 - code knows if built as release or not
     - use `checkIsProductionBuild()`
@@ -61,12 +58,8 @@
     - hit code is shown in blue, not-hit in red
     - retry the steps if no colors are shown or if all colors are in red,
     - it seems to not run correctly sometimes... perhaps because it takes a while to load the sourcemaps
-- confirmed that async/await code runs correctly
-    - load the page and click the "go async" test button
 - separate tsconfig files for development and production
     - useful for e.g. ignoring minor eslint items until building for production
-- you can optionally run a script to add assert markers
-    - if a user says they are getting an error message, you can know the origin of the error message.
 
 Started with sample ts-loader code [here](https://github.com/TypeStrong/ts-loader/tree/master/examples/fork-ts-checker-webpack-plugin).
 
@@ -76,17 +69,15 @@ For more scripts, see the "scripts" section of `package.json`.
 
 * base64-js
 * es6-error
-* file-saver (more recent than FileSaver) 
+* file-saver
 * immer
 * js-lru
 * lodash
 * lru-map
 * lz-string
-* serializer.ts
-* no longer needed: polyfills for whatwg-fetch, string.includes, string.startsWith
 
 ### vscode tips
 
 * hit ctrl-shift-b, then can run the npm scripts
-* the project includes a `launch.json` for an easy way to attach a debugger. just run `npm run start` in a console, then open vscode, and run the "launch chrome" debugger task.
+* the project includes a `launch.json` for an easy way to attach a debugger for client code. just run `npm run start` in a console, then open vscode, and run the "launch chrome" debugger task.
 

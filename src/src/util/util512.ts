@@ -1,5 +1,5 @@
 
-/* auto */ import type { O} from './util512Base';
+/* auto */ import type { O } from './util512Base';
 /* auto */ import { Util512StaticClass, tostring } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, make512Error } from './util512Assert';
 

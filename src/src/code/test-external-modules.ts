@@ -2,7 +2,6 @@
 /* auto */ import { assertTrue } from './../util/util512Assert';
 /* auto */ import { Util512, assertEq } from './../util/util512';
 
-
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 

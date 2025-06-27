@@ -1,5 +1,5 @@
 
-/* auto */ import type { O} from './../util/util512Base';
+/* auto */ import type { O } from './../util/util512Base';
 /* auto */ import { RingBuffer, RingBufferLocalStorage, UI512Compress, Util512StaticClass, tostring } from './../util/util512Base';
 /* auto */ import { assertEq } from './../util/util512';
 /* auto */ import { assertThrows, t } from './testHelpers';
