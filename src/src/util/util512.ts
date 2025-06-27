@@ -735,7 +735,7 @@ export function assertWarnEq(
     if (!ldIsEqual(expected, got)) {
         let msgEq = ` expected '${JSON.stringify(expected)}' but got '${JSON.stringify(
             got
-        )}'.`;
+        )}'. `;
         msgEq += c1 ?? '';
         assertWarn(false, msgEq, c2, c3);
     }

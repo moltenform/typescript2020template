@@ -108,6 +108,7 @@ export function assertTrue(
         if (!UI512ErrorHandling.silenceAssertMsgs) {
             let msg = joinIntoMessage('assertTrue:', 'ui512', s1, s2, s3);
             console.error(msg);
+            window.alert(msg);
             callDebuggerIfNotInProduction(msg);
         }
 
@@ -218,9 +219,9 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
     callDebuggerIfNotInProduction(e.message);
     if (message) {
         /* not really an error, just a message */
-        if (logOnly) {
-            console.error(e.message);
-        } else {
+        console.error(e.message);
+
+        if (!logOnly) {
             window.alert(e.message);
         }
 

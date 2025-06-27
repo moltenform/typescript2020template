@@ -1,8 +1,10 @@
 # typescript2020template
 
-how I start a typescript webapp in 2020
+how I start a typescript webapp in ~~2020~~ 2025
 
 by moltenform.com(Ben Fisher)
+
+(see also the "withvite" branch)
 
 `npm run start`
 
@@ -13,6 +15,4 @@ to build for development
 to build for release
 
 The template comes with these [contents](./src/contents.md).
-
-
 

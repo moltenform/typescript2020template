@@ -41,11 +41,11 @@
         "strict": true, /* Enable all strict type-checking options. */
         "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
         // "strictNullChecks": true, /* Enable strict null checks. */
-        "strictNullChecks": false, //TEMPORARY /* Enable strict null checks. */
+        "strictNullChecks": false, // leaving this off
         "strictFunctionTypes": true /* Enable strict checking of function types. */,
         "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
         // "strictPropertyInitialization": true, /* Enable strict checking of property initialization in classes. */
-        "strictPropertyInitialization": false, //TEMPORARY, /* Enable strict checking of property initialization in classes. */
+        "strictPropertyInitialization": false, // turning off, code often assumes class was initialized correctly.
         "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
         "alwaysStrict": true /* Parse in strict mode and emit "use strict" for each source file. */,
         /* Additional Checks */
@@ -87,7 +87,7 @@
         // newLine, noEmit, noEmitHelpers
         // noEmitOnError
         "preserveConstEnums": true
-        // preserveValueImports, removeComments
+        // preserveValueImports,
         // maxNodeModuleJsDepth, disableSizeLimit
         // jsx, jsxFactory, jsxImportSource, reactNamespace
         // noLib

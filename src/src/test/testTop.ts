@@ -106,8 +106,8 @@ export const SimpleUtil512Tests =
                 console.log(`=== Group: ${k} ===`);
                 const tests: [string, VoidFn | AsyncFn][] = coll.tests[k];
 
-                for (let i = 0; i < tests.length; i++) {
-                    let [tstname, fnTest] = tests[i];
+                for (let test of tests) {
+                    let [tstname, fnTest] = test;
                     if (mapSeen.has(tstname.toLowerCase())) {
                         assertWarn(false, 'duplicate test name', tstname);
                     }

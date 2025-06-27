@@ -2,7 +2,7 @@
 /* auto */ import { type AsyncFn, RespondToErr, Util512Higher } from './../util/util512Higher';
 /* auto */ import { Util512StaticClass, checkIsProductionBuild } from './../util/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../util/util512Assert';
-/* auto */ import { Util512, assertWarnEq, shouldBreakOnExceptions_Enable } from './../util/util512';
+/* auto */ import { Util512, assertWarnEq, shouldBreakOnExceptions_Enable, checkThrowEq } from './../util/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 /* auto */ import { onDemoSave, testExternalModules } from './test-external-modules';
 
@@ -59,9 +59,9 @@ export function runOnLoad() {
 }
 
 async function onTestAsserts() {
-    alert("You will see 3 'warning' or 'error' dialogs, this is intentional");
-    assertWarn(false, 'You should be able to continue from this warning');
-    assertWarnEq(1, 2, 'You should be able to continue from this warning');
+    alert("You will see 3 'warning' or 'error' dialogs, this is intentional.");
+    assertWarn(false, 'You should be able to continue from this warning.');
+    assertWarnEq(1, 2, 'You should be able to continue from this warning.');
     try {
         assertTrue(false, 'An example assertion message.');
     } catch (e) {

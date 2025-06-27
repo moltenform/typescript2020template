@@ -29,7 +29,7 @@ export async function assertThrowsAsync<T>(
         UI512ErrorHandling.silenceAssertMsgs = false;
     }
 
-    let expectedErr = expectedErrAndContext.split('|')[0];
+    let expectedErr = expectedErrAndContext.split('|')[0] ?? '';
     let context = expectedErrAndContext.split('|')[1] ?? '';
     assertTrue(msg !== undefined, `did not throw ${context}`);
     assertTrue(
@@ -58,7 +58,7 @@ export function assertThrows(expectedErrAndContext: string, fn: VoidFn) {
         UI512ErrorHandling.silenceAssertMsgs = false;
     }
 
-    let expectedErr = expectedErrAndContext.split('|')[0];
+    let expectedErr = expectedErrAndContext.split('|')[0] ?? '';
     let context = expectedErrAndContext.split('|')[1] ?? '';
     assertTrue(msg !== undefined, `did not throw`, context);
     assertTrue(
@@ -85,7 +85,7 @@ export function assertAsserts(expectedErrAndContext: string, fn: VoidFn) {
         UI512ErrorHandling.silenceAssertMsgs = saved;
     }
 
-    let expectedErr = expectedErrAndContext.split('|')[0];
+    let expectedErr = expectedErrAndContext.split('|')[0] ?? '';
     let context = expectedErrAndContext.split('|')[1] ?? '';
     assertTrue(msg !== undefined, `did not throw`, context);
     assertTrue(
