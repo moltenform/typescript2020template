@@ -1,12 +1,17 @@
 
+/* auto */ import { assertTrue } from './../util/util512Assert';
+/* auto */ import { Util512, assertEq } from './../util/util512';
+
+
+/* (c) 2020 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 import { sum as lodashSum } from 'lodash';
 import Base64js from 'base64-js';
-import { assertEq, Util512 } from '../util/util512';
 import FileSaver from 'file-saver';
 import produce from 'immer';
 import lzstring from 'lz-string';
 import { LRUMap } from 'lru_map';
-import { assertTrue } from '../util/util512Assert';
 
 export async function testExternalModules() {
     let results: string[] = [];

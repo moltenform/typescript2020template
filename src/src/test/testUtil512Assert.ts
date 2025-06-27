@@ -1,7 +1,7 @@
 
-import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
-import { assertEq, assertWarnEq } from './../util/util512';
-import { assertAsserts, assertThrows, t } from './testHelpers';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../util/util512Assert';
+/* auto */ import { assertEq, assertWarnEq } from './../util/util512';
+/* auto */ import { assertAsserts, assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -43,13 +43,7 @@ t.test('AssertAsserts', () => {
         assertTrue(0, 'a message');
     });
     assertAsserts('a message', () => {
-        assertWarn(0, 'a message');
-    });
-    assertAsserts('a message', () => {
         assertEq(3, 1 + 1, 'a message');
-    });
-    assertAsserts('a message', () => {
-        assertWarnEq(3, 1 + 1, 'a message');
     });
 });
 t.test('ThrowIfUndefined', () => {

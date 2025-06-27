@@ -1,6 +1,8 @@
 
-import { type O, tostring, Util512StaticClass } from './util512Base';
-import { assertTrue, assertWarn, checkThrow512, make512Error } from './util512Assert';
+/* auto */ import type { O} from './util512Base';
+/* auto */ import { Util512StaticClass, tostring } from './util512Base';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, make512Error } from './util512Assert';
+
 import { sortBy as ldSortBy, clone as ldClone, isEqual as ldIsEqual, isPlainObject as ldIsPlainObject, isObject as ldIsObject, isArray as ldIsArray, range as ldRange, padStart as ldPadStart, map as ldMap, mapValues as ldMapValues } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -713,7 +715,7 @@ export function shouldBreakOnExceptions_Enable() {
 export function shouldBreakOnExceptions_Disable() {
     if (typeof globalThis !== 'undefined') {
         // this would be better if it were a stack to push/pop,
-        // so that it would work during functions like assertAsserts,
+        // so that it would work during functions like assert-throws,
         // but it's not worth the complexity (and even with a stack
         // there'd be await/async issues).
         globalThis.shouldBreakOnExceptions = false;

@@ -1,15 +1,16 @@
 
-import { type AsyncFn, type VoidFn } from './../util/util512Higher';
-import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
-import { shouldBreakOnExceptions_Enable, Util512, ValHolder } from './../util/util512';
-import { type SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, t, tSlow } from './testHelpers';
+/* auto */ import { type AsyncFn, type VoidFn } from './../util/util512Higher';
+/* auto */ import { Util512StaticClass } from './../util/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../util/util512Assert';
+/* auto */ import { Util512, ValHolder, shouldBreakOnExceptions_Enable } from './../util/util512';
+/* auto */ import { type SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, t, tSlow } from './testHelpers';
+
+import { sortBy as ldSortBy, sum as ldSum } from 'lodash';
 import './testUtil512Higher';
 import './testUtil512Class';
 import './testUtil512Assert';
 import './testUtil512Base';
 import './testUtil512';
-import { Util512StaticClass } from '../util/util512Base';
-import { sortBy as ldSortBy, sum as ldSum } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

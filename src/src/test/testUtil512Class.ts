@@ -1,7 +1,8 @@
 
-import { assertTrue } from './../util/util512Assert';
-import { Util512, assertEq } from './../util/util512';
-import { assertThrows, sorted, t } from './testHelpers';
+/* auto */ import { assertTrue } from './../util/util512Assert';
+/* auto */ import { Util512, assertEq } from './../util/util512';
+/* auto */ import { assertThrows, sorted, t } from './testHelpers';
+
 import { sortBy as ldSortBy, clone as ldClone, sum as ldSum, split as ldSplit } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */

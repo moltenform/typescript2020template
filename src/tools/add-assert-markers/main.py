@@ -9,6 +9,9 @@ import readconfig
 # and it works across multiple lines
 
 def go(srcdirectory, previewOnly):
+    if not getInputBool("This project is no longer maintained. Continue?"):
+        return
+    
     assertTrueMsg(files.isDir(srcdirectory), 'directory not found', srcdirectory)
     currentSavedFile = './current_assert_id.txt'
     firstNum = int(files.readAll(currentSavedFile, encoding='utf-8').strip()) if files.exists(currentSavedFile) else 1

@@ -1,5 +1,6 @@
 
-import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+/* auto */ import { RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+
 import ExtendableError from 'es6-error';
 
 /* (c) 2020 moltenform(Ben Fisher) */
@@ -120,14 +121,6 @@ export function assertTrue(
  */
 export function assertWarn(condition: unknown, s1?: string, s2?: unknown, s3?: unknown) {
     if (!condition) {
-        if (UI512ErrorHandling.silenceAssertMsgs) {
-            /* we are in a assertAsserts test,
-            for testing convenience throw, we won't normally. */
-            throw new Error(
-                'assert:' + s1 + (s2 ? tostring(s2) : '') + (s3 ? tostring(s3) : '')
-            );
-        }
-
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
         console.error(msg);
         callDebuggerIfNotInProduction(msg);

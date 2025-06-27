@@ -1,9 +1,10 @@
 
-import { type AsyncFn, RespondToErr, Util512Higher } from './../util/util512Higher';
-import { checkIsProductionBuild, Util512StaticClass } from './../util/util512Base';
-import { SimpleUtil512Tests } from './../test/testTop';
-import { onDemoSave, testExternalModules } from './test-external-modules';
-import { shouldBreakOnExceptions_Enable, Util512 } from '../util/util512';
+/* auto */ import { type AsyncFn, RespondToErr, Util512Higher } from './../util/util512Higher';
+/* auto */ import { Util512StaticClass, checkIsProductionBuild } from './../util/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../util/util512Assert';
+/* auto */ import { Util512, assertWarnEq, shouldBreakOnExceptions_Enable } from './../util/util512';
+/* auto */ import { SimpleUtil512Tests } from './../test/testTop';
+/* auto */ import { onDemoSave, testExternalModules } from './test-external-modules';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -39,6 +40,7 @@ export function runOnLoad() {
         idBtnSimpleTest: onSimpleTest,
         idBtnDemoModules: onDemoModules,
         idBtnDemoSave: onDemoSave,
+        idBtnTestAsserts: onTestAsserts,
         idBtnRunUtil512Tests: SimpleUtil512Tests.runTests
     };
 
@@ -53,6 +55,17 @@ export function runOnLoad() {
                 );
             });
         }
+    }
+}
+
+async function onTestAsserts() {
+    alert("You will see 3 'warning' or 'error' dialogs, this is intentional");
+    assertWarn(false, 'You should be able to continue from this warning');
+    assertWarnEq(1, 2, 'You should be able to continue from this warning');
+    try {
+        assertTrue(false, 'An example assertion message.');
+    } catch(e) {
+        // nothing needs to be done.
     }
 }
 

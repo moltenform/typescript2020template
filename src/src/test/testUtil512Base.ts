@@ -1,7 +1,8 @@
 
-import { RingBuffer, UI512Compress, tostring, Util512StaticClass, type O, RingBufferLocalStorage } from './../util/util512Base';
-import { assertEq } from './../util/util512';
-import { assertThrows, t } from './testHelpers';
+/* auto */ import type { O} from './../util/util512Base';
+/* auto */ import { RingBuffer, RingBufferLocalStorage, UI512Compress, Util512StaticClass, tostring } from './../util/util512Base';
+/* auto */ import { assertEq } from './../util/util512';
+/* auto */ import { assertThrows, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

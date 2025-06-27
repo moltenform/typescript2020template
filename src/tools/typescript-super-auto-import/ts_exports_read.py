@@ -2,8 +2,6 @@
 # Ben Fisher, 2018
 # MIT license
 
-import os
-import sys
 import re
 from collections import OrderedDict
 from ts_parsing import *
@@ -68,15 +66,6 @@ def readAlreadyImportedNotByUs(filelines):
     # 1) many prettifiers want to put the imports on multiple lines, so it's annoying to parse
     # 2) typescript will warn us if a symbol is imported twice, so no need.
     return {}
-    if False:
-        imports = dict()
-        for line in filelines:
-            if line.startswith('import ') and '{' in line and not '/* auto */' in line:
-                a, b = line.split('{')
-                c, d = line.split('}')
-                for item in c.split(','):
-                    imports[item.strip()] = True
-        return imports
 
 def collectExportsAddedManually(line, found):
     assertTrueMsg(line.startswith('/* ts_exports_read.py add '), 'internal error, no prefix', line)

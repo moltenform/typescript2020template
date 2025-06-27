@@ -1,8 +1,8 @@
 
-import { Util512Higher } from './../util/util512Higher';
-import { assertTrue } from './../util/util512Assert';
-import { Util512, assertEq } from './../util/util512';
-import { assertThrowsAsync, t } from './testHelpers';
+/* auto */ import { Util512Higher } from './../util/util512Higher';
+/* auto */ import { assertTrue } from './../util/util512Assert';
+/* auto */ import { Util512, assertEq } from './../util/util512';
+/* auto */ import { assertThrowsAsync, t } from './testHelpers';
 
 /* (c) 2020 moltenform(Ben Fisher) */
 /* Released under the MIT license */

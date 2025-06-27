@@ -1,8 +1,9 @@
 
-import { type AsyncFn, type VoidFn } from '../util/util512Higher';
-import { type O } from '../util/util512Base';
-import { UI512ErrorHandling, assertTrue, ensureIsError } from '../util/util512Assert';
-import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable } from '../util/util512';
+/* auto */ import { type AsyncFn, type VoidFn } from './../util/util512Higher';
+/* auto */ import { type O } from './../util/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, ensureIsError } from './../util/util512Assert';
+/* auto */ import { shouldBreakOnExceptions_Disable, shouldBreakOnExceptions_Enable } from './../util/util512';
+
 import { sortBy as ldSortBy, clone as ldClone } from 'lodash';
 
 /* (c) 2020 moltenform(Ben Fisher) */
