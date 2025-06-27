@@ -34,6 +34,7 @@ async function onDemoModules() {
 }
 
 export function runOnLoad() {
+    alert('hi')
     shouldBreakOnExceptions_Enable();
     Util512StaticClass.callAfterAppLoad();
     const mapping: Record<string, AsyncFn> = {
@@ -69,6 +70,4 @@ async function onTestAsserts() {
     }
 }
 
-export async function start() {
-    document.addEventListener('load', runOnLoad);
-}
+window.addEventListener('load', runOnLoad);

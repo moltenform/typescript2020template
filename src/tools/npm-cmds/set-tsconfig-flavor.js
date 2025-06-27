@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -31,7 +31,7 @@ function copyConstant(isProd) {
         (isProd ? 'true' : 'false') +
         ';' +
         os.EOL;
-        
+
     fs.writeFileSync('./src/util/util512Productname.ts', code, { encoding: 'utf8' });
 }
 
@@ -46,8 +46,8 @@ function main(argv) {
         return process.exit(1);
     }
 
-    //~ copyTsConfig(isProd);
-    //~ copyConstant(isProd);
+    copyTsConfig(isProd);
+    copyConstant(isProd);
 }
 
 main(process.argv);
