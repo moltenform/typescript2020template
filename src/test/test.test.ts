@@ -1,5 +1,5 @@
 import { assert, describe, expect, test } from 'vitest'
-import {add2Things} from '../components/util512/util512.ts';
+import {add2Things} from '../src/components/util512/util512.ts';
 
 function assertEq(a,b) {
     expect(a).toBe(b);
