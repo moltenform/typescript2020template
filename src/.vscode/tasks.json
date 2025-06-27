@@ -3,56 +3,56 @@
     // for the documentation about the tasks.json format
 
     // Note: to get the $gcc problem matcher you should install the
-    // c/c++ vscode extension
+    // c/c++ vscode extension. "C/C++ for Visual Studio Code".
     "version": "2.0.0",
     "tasks": [
         {
             "type": "npm",
             "script": "build",
+            "group": "build",
             "problemMatcher": [
                 "$tsc"
             ],
-            "group": "build"
         },
         {
             "type": "npm",
             "script": "start",
+            "group": "build",
             "problemMatcher": [
                 "$tsc"
             ],
-            "group": "build"
         },
         {
             "type": "npm",
             "script": "lint",
+            "group": "build",
             "problemMatcher": [
                 "$eslint-stylish"
             ],
-            "group": "build"
+        },
+        {
+            "type": "npm",
+            "script": "lintfix",
+            "group": "build",
+            "problemMatcher": [
+                "$eslint-stylish"
+            ],
         },
         {
             "type": "npm",
             "script": "autoimportmodules",
+            "group": "build",
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "build"
         },
         {
             "type": "npm",
             "script": "prettierexceptlongimports",
+            "group": "build",
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "build"
-        },
-        {
-            "type": "npm",
-            "script": "addassertmarkers",
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
         },
     ]
 }
